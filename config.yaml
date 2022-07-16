@@ -14,15 +14,15 @@ redis:
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
 db:
   db-type: 'mysql'
-  path: ''
-  port: ''
-  config: ''
-  db-name: ''
-  username: ''
-  password: ''
+  path: 127.0.0.1
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: gva
+  username: root
+  password: "123456"
   max-idle-conns: 10
   max-open-conns: 100
-  log-mode: ""
+  log-mode: error
   log-zap: false
 
 # autocode configuration

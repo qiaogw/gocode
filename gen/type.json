@@ -1,0 +1,94 @@
+[
+  {
+    "type": "int",
+    "label": "smallint"
+  },
+  {
+    "type": "int",
+    "label": "mediumint"
+  },
+  {
+    "type": "int",
+    "label": "int"
+  },
+  {
+    "type": "int",
+    "label": "bigint"
+  },
+  {
+    "type": "time.Time",
+    "label": "date"
+  },
+  {
+    "type": "time.Time",
+    "label": "time"
+  },
+  {
+    "type": "time.Time",
+    "label": "year"
+  },
+  {
+    "type": "time.Time",
+    "label": "datetime"
+  },
+  {
+    "type": "time.Time",
+    "label": "timestamp"
+  },
+  {
+    "type": "float64",
+    "label": "float"
+  },
+  {
+    "type": "float64",
+    "label": "double"
+  },
+  {
+    "type": "float64",
+    "label": "decimal"
+  },
+  {
+    "type": "string",
+    "label": "char"
+  },
+  {
+    "type": "string",
+    "label": "varchar"
+  },
+  {
+    "type": "string",
+    "label": "tinyblob"
+  },
+  {
+    "type": "string",
+    "label": "tinytext"
+  },
+  {
+    "type": "string",
+    "label": "text"
+  },
+  {
+    "type": "string",
+    "label": "blob"
+  },
+  {
+    "type": "string",
+    "label": "mediumblob"
+  },
+  {
+    "type": "string",
+    "label": "mediumtext"
+  },
+  {
+    "type": "string",
+    "label": "longblob"
+  },
+  {
+    "type": "string",
+    "label": "longtext"
+  },
+  {
+    "type": "bool",
+    "label": "tinyint"
+  }
+]
