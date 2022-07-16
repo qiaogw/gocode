@@ -2,7 +2,7 @@
 package {{.Package}}
 
 import (
-	"https://github.com/qiaogw/gocode/global"
+	"github.com/qiaogw/gocode/global"
 	{{ if .HasTimer }}"time"{{ end }}
 )
 
