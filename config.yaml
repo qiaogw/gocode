@@ -1,8 +1,11 @@
-
-
 # system configuration
 system:
-  db-type: 'mysql'
+  template_path:
+  name: admin
+  api_host: 0.0.0.0
+  api_port: 8080
+  rpc_host: 0.0.0.0
+  rpc_port: 8000
 
 # redis configuration
 redis:
@@ -10,36 +13,41 @@ redis:
   addr: '127.0.0.1:6379'
   password: ''
 
+etcd:
+  hosts:
+    - etcd:2379
+  key: admin.rpc
+
+Auth:
+  AccessSecret: zd-AccessSecret
+  AccessExpire: 3600
+  RefreshAfter: 3600
+
 # mysql connect configuration
-# 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
+# db-type: 'mysql','postgres'
 db:
   db-type: 'mysql'
   path: 127.0.0.1
   port: "3306"
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name: gva
+  db-name: zero
   username: root
   password: "123456"
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: error
   log-zap: false
+  TablePrefix: sys_
 
 # autocode configuration
 autocode:
-  transfer-restart: true
-  # root 自动适配项目根目录
-  # 请不要手动配置,他会在项目加载的时候识别出根路径
-  root: ""
   server: /server
-  server-plug: /plugin/%s
-  server-api: /api/v1/%s
+  rpc-logic: /rpc/internal/logic
+  api-logic: /api/internal/logic
+  server-api: /api
+  server-rpc: /rpc
   server-initialize: /initialize
-  server-model: /model/%s
-  server-request: /model/%s/request/
+  server-model: /model
   server-router: /router/%s
-  server-service: /service/%s
-  web: /web/src
-  web-api: /api
-  web-form: /view
-  web-table: /view
+  server-service: /rpc
+  common: /common

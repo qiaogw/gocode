@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/logrusorgru/aurora"
-	"gocode/global"
+	"github.com/qiaogw/gocode/global"
 	"runtime"
 )
 

@@ -4,9 +4,9 @@ import (
 	_ "embed"
 	"fmt"
 	"github.com/logrusorgru/aurora"
+	"github.com/qiaogw/gocode/cmd/gen"
+	"github.com/qiaogw/gocode/global"
 	"github.com/spf13/cobra"
-	"gocode/cmd/gen"
-	"gocode/global"
 	"os"
 	"runtime"
 	"strings"
@@ -25,7 +25,7 @@ var (
 	usageTpl string
 
 	rootCmd = &cobra.Command{
-		Use:   "gocode",
+		Use:   "github.com/qiaogw/gocode",
 		Short: "生成 go-zero 代码工具",
 		Long:  "代码生产工具，根据数据库生成 api, zrpc, model code",
 	}

@@ -1,6 +1,6 @@
 package main
 
-import "gocode/cmd"
+import "github.com/qiaogw/gocode/cmd"
 
 func main() {
 	cmd.Execute()

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
+	"github.com/qiaogw/gocode/global"
 	"github.com/spf13/viper"
-	"gocode/global"
 	"os"
 	"path/filepath"
 )
@@ -64,8 +64,9 @@ func Viper(path, api string) *viper.Viper {
 	}
 
 	// root 适配性 根据root位置去找到对应迁移位置,保证root路径有效
-	global.GenConfig.AutoCode.Root, _ = filepath.Abs("..")
+	//global.GenConfig.AutoCode.Root, _ = filepath.Abs("..")
 	p, _ := os.Getwd()
+	global.GenConfig.AutoCode.Pkg = api
 	global.GenConfig.AutoCode.Root = filepath.Join(p, api)
 	return v
 }
