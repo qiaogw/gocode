@@ -32,7 +32,7 @@ func (acd *AutoCodeService) CreateModel(table *model.Table, ids ...uint) (err er
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, table.Table, ids...)
+	err = acd.genAfter(dataList, ids...)
 	if err != nil {
 		return
 	}

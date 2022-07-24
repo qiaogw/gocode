@@ -17,11 +17,10 @@ import (
 var (
 	configYml  string
 	apiPackage string
-	prefix     string
 	Cmd        = &cobra.Command{
 		Use:          "gen",
 		Short:        "生成代码",
-		Example:      "gocode gen -c  config.yaml",
+		Example:      "gocode gen -p admin -c  config.yaml",
 		SilenceUsage: true,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			setup()
@@ -35,8 +34,8 @@ var (
 func init() {
 	configFile := global.GetDefaultConfigFile()
 	pack := "app-service"
-	Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件")
 	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "生成包名")
+	Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件")
 }
 
 func setup() {

@@ -1,0 +1,53 @@
+# system configuration
+system:
+  template_path:
+  name: admin
+  api_host: 0.0.0.0
+  api_port: 8080
+  rpc_host: 0.0.0.0
+  rpc_port: 8000
+
+# redis configuration
+redis:
+  db: 0
+  addr: '127.0.0.1:6379'
+  password: ''
+
+etcd:
+  hosts:
+    - etcd:2379
+  key: admin.rpc
+
+Auth:
+  AccessSecret: zd-AccessSecret
+  AccessExpire: 3600
+  RefreshAfter: 3600
+
+# mysql connect configuration
+# db-type: 'mysql','postgres'
+db:
+  db-type: 'mysql'
+  path: 127.0.0.1
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: zero
+  username: root
+  password: "123456"
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: error
+  log-zap: false
+  TablePrefix: sys_
+
+# autocode configuration
+autocode:
+  server: /server
+  rpc-logic: /rpc/internal/logic
+  api-logic: /api/internal/logic
+  server-api: /api
+  server-rpc: /rpc
+  server-initialize: /initialize
+  server-model: /model
+  server-router: /router/%s
+  server-service: /rpc
+  common: /common

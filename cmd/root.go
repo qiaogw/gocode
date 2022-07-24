@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/logrusorgru/aurora"
 	"github.com/qiaogw/gocode/cmd/gen"
+	"github.com/qiaogw/gocode/cmd/inital"
 	"github.com/qiaogw/gocode/global"
 	"github.com/spf13/cobra"
 	"os"
@@ -104,4 +105,5 @@ func init() {
 
 	rootCmd.SetUsageTemplate(usageTpl)
 	rootCmd.AddCommand(gen.Cmd)
+	rootCmd.AddCommand(inital.Cmd)
 }

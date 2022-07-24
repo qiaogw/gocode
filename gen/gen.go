@@ -3,8 +3,8 @@ package gen
 import (
 	"fmt"
 	"github.com/qiaogw/gocode/global"
+	"github.com/qiaogw/gocode/inital"
 	"github.com/qiaogw/gocode/util"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -31,7 +31,8 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	}
 	// 生成 *Template, 填充 template 字段
 	for index, value := range dataList {
-		dataList[index].template, err = template.ParseFiles(value.locationPath)
+		dataList[index].template, err = template.ParseFS(inital.TemplateTpl, value.locationPath)
+		//dataList[index].template, err = template.ParseFiles(value.locationPath)
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -70,7 +71,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 					fileName)
 			}
 		}
-		//log.Printf("value.autoMoveFilePath is %+v\n", dataList[index])
+		//log.Printf("dataList[index] is %+v\n", dataList[index])
 		if lastSeparator := strings.LastIndex(dataList[index].autoCodePath, string(os.PathSeparator)); lastSeparator != -1 {
 			needMkdir = append(needMkdir, dataList[index].autoCodePath[:lastSeparator])
 		}
@@ -85,7 +86,8 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 //@param: pathName string, fileList []string
 //@return: []string, error
 func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([]string, error) {
-	files, err := ioutil.ReadDir(pathName)
+	//files, err := ioutil.ReadDir(pathName)
+	files, err := inital.TemplateTpl.ReadDir(pathName)
 	for _, fi := range files {
 		if fi.IsDir() {
 			fileList, err = acd.GetAllTplFile(pathName+"/"+fi.Name(), fileList)
@@ -113,7 +115,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	if n <= 2 {
 		return
 	}
-	//log.Printf("fileSlice is %s\n", fileSlice)
+	//log.Printf("fileSlice[n-2] is %s\n", fileSlice[n-2])
 	if strings.Contains(fileSlice[n-2], "model_gen") {
 		bn := strings.TrimSuffix(base, ".go")
 		base = bn + "_gen.go"
@@ -144,14 +146,15 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 			global.GenConfig.AutoCode.SApi, base)
 	} else {
 		//log.Printf("strings.Contains(fileSlice[2]: %+v\n", fileSlice[2:])
-		tp := filepath.Join(fileSlice[2:]...)
+		tp := filepath.Join(fileSlice[1:]...)
 		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root, tp)
 	}
 	//log.Printf("data.autoCodePath is %s;;;;;data.autoMoveFilePath is %s\n", data.autoCodePath, data.autoMoveFilePath)
 }
 
 func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData, err error) {
-	tPath := filepath.Join(tempPath, packPath)
+	//tPath := filepath.Join(tempPath, packPath)
+	tPath := tempPath + "/" + packPath
 	dataList, _, needMkdir, err := acd.getNeedList(pack, tPath)
 	injectionCodeMeta := strings.Builder{}
 	err = injectionCode(pack, &injectionCodeMeta)
@@ -170,7 +173,7 @@ func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData
 	return
 }
 
-func (acd *AutoCodeService) genAfter(dataList []tplData, pack string, ids ...uint) error {
+func (acd *AutoCodeService) genAfter(dataList []tplData, ids ...uint) error {
 
 	bf := strings.Builder{}
 	idBf := strings.Builder{}

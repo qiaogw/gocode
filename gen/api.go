@@ -31,5 +31,5 @@ func (acd *AutoCodeService) CreateApi(db *model.Db, ids ...uint) (err error) {
 		}
 	}()
 
-	return acd.genAfter(dataList, db.Database, ids...)
+	return acd.genAfter(dataList, ids...)
 }

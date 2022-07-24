@@ -30,7 +30,7 @@ func (acd *AutoCodeService) CreateRpc(db *model.Db, ids ...uint) (err error) {
 			return
 		}
 	}()
-	return acd.genAfter(dataList, db.Database, ids...)
+	return acd.genAfter(dataList, ids...)
 }
 
 // CreateRpcLogic 创建Rpc 代码
@@ -76,7 +76,7 @@ func (acd *AutoCodeService) createRpcLogic(table *model.Table, ids ...uint) (err
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, table.Table, ids...)
+	err = acd.genAfter(dataList, ids...)
 	if err != nil {
 		return
 	}
@@ -108,7 +108,7 @@ func (acd *AutoCodeService) createApiLogic(table *model.Table, ids ...uint) (err
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, table.Table, ids...)
+	err = acd.genAfter(dataList, ids...)
 	if err != nil {
 		return
 	}
