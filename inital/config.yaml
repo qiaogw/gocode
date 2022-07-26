@@ -25,6 +25,8 @@ Auth:
 
 # mysql connect configuration
 # db-type: 'mysql','postgres'
+#   mysql config: charset=utf8mb4&parseTime=True&loc=Local
+#   postgres config: "sslmode=disable TimeZone=Asia/Shanghai"
 db:
   db-type: 'mysql'
   path: 127.0.0.1
@@ -39,7 +41,7 @@ db:
   log-zap: false
   TablePrefix: sys_
 
-# autocode configuration
+# autocode configuration. DO NOT EDIT IT !!!
 autocode:
   server: /server
   rpc-logic: /rpc/internal/logic

@@ -89,8 +89,8 @@ func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 }
 
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
-// Author [piexlmax](https://github.com/piexlmax)
-// Author [SliverHorn](https://github.com/SliverHorn)
+// Author [qiaogw](https://github.com/qiaogw)
+// Author [qiaogw](https://github.com/qiaogw)
 func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 	querySql := `
 	select 

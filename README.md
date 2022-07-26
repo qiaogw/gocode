@@ -1,4 +1,12 @@
-go-zero 代码自动生成辅助工具
+go-zero 代码自动生成辅助工具，支持gorm。
+
+# 安装
+GOPROXY=https://goproxy.cn/,direct go install github.com/qiaogw/gocode@latest
+# 使用
+## 首先 gocode init，在当前目录下生成config.yaml,根据业务自行编辑。
+
+## gocode gen -p 服务名 即可生成遵循go-zero标准的api和rpc服务。
+## 其他配置参考 go-zero 和 gorm
 
 # 数据库
 ## 支持mysql、postgres
