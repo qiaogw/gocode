@@ -23,8 +23,9 @@ type (
 		ParentPkg  string //项目路径
 	}
 	Table struct {
-		Db          string
-		Table       string `json:"table" gorm:"column:table_name"`
+		Db          string //小写服务名称
+		Table       string `json:"table" gorm:"column:table_name"` //表首字母大写驼峰
+		Name        string
 		PackageName string //表首字母小写驼峰
 		TableUrl    string //url 表全小写驼峰
 		Columns     []*Column
@@ -49,13 +50,16 @@ type (
 	}
 	DbColumn struct {
 		Name            string      `json:"name" gorm:"column:COLUMN_NAME"`
+		GormName        string      `json:"gormName" gorm:"-"`
 		DataType        string      `json:"dataType" gorm:"column:DATA_TYPE"`
+		DataTypeLong    string      `json:"data_type_long" gorm:"column:data_type_long"`
 		DataTypeProto   string      `json:"dataTypeProto" gorm:"-"`
-		DataTypeLong    string      `json:"dataTypeLong" gorm:"-"`
+		IsPage          bool        `json:"isPage" gorm:"-"`
 		Extra           string      `json:"extra" gorm:"column:EXTRA"`
 		Comment         string      `json:"comment" gorm:"column:COLUMN_COMMENT"`
 		ColumnDefault   interface{} `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
 		IsNullAble      string      `json:"isNullAble" gorm:"column:IS_NULLABLE"`
+		IsNull          bool        `json:"isNull" gorm:"-"`
 		OrdinalPosition int         `json:"ordinalPosition" gorm:"column:ORDINAL_POSITION"`
 		FieldJson       string      `json:"fieldJson"`
 		FieldName       string      `json:"fieldName"`
@@ -63,6 +67,7 @@ type (
 		DictType        string      `json:"dictType"`  // 字典
 		Require         bool        `json:"require"`   // 是否必填
 		ErrorText       string      `json:"errorText"` // 校验失败文字
+		TableName       string      `json:"tableName"`
 	}
 
 	DbIndex struct {
@@ -88,11 +93,12 @@ type (
 // Convert converts column data into Table
 func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	var table Table
+	table.Name = c.Table
 	table.Table = util.CamelString(strings.TrimLeft(c.Table, global.GenConfig.DB.TablePrefix))
 	table.PackageName = util.LeftLower(table.Table)
 	table.TableUrl = strings.ToLower(table.Table)
 	//log.Printf("table.Table is %s,table.PackageName is %s\n", table.Table, table.PackageName)
-	table.Db = global.GenConfig.System.Name
+	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
 	table.Service = util.LeftUpper(table.Db)
 	table.TableComment = tableComment
 	//table.Columns = c.Columns
@@ -104,9 +110,20 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	table.GitUser = getGitName()
 	table.GitEmail = getGitEmail()
 	m := make(map[string][]*Column)
+	var pageIndex, pageSize DbColumn
 
-	for i, each := range c.Columns {
-		//log.Printf("each.DataType is %s\n", each.DataType)
+	pageIndex.Name = "PageIndex"
+	pageIndex.DataType = "int"
+	pageIndex.GormName = "-"
+	pageIndex.IsPage = true
+	pageSize.Name = "PageSize"
+	pageSize.DataType = "int"
+	pageSize.GormName = "-"
+	pageSize.IsPage = true
+	c.Columns = append(c.Columns, &Column{DbColumn: &pageIndex}, &Column{DbColumn: &pageSize})
+	ct := 0
+	for _, each := range c.Columns {
+		//log.Printf("each.name is %s,is pk is %+v\n", each.Name, each.IsPk)
 		if each.Index != nil {
 			if each.Index.IndexName == "PRIMARY" {
 				each.IsPk = true
@@ -127,39 +144,49 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		if each.Name == "update_by" {
 			continue
 		}
-		isDefaultNull := each.ColumnDefault == nil && each.IsNullAble == "YES"
+		var isDefaultNull bool
+		//isDefaultNull = each.ColumnDefault == nil && each.IsNullAble == "YES"
 
 		dt, err := converter.ConvertStringDataType(each.DataType, isDefaultNull)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("表： %s, 字段： %s 错误： %v", c.Table, each.Name, err)
 		}
 		each.DataType = dt
 		each.DataTypeProto = dt
+		each.IsNull = each.IsNullAble == "YES"
 		if dt == "time.Time" {
 			each.DataTypeProto = "string"
-		}
-		if each.DataType == "time.Time" {
 			table.HasTimer = true
+		}
+		if !each.IsPk && !each.IsNull && each.ColumnDefault != nil {
+			each.ColumnDefault = converter.ConvertDefault(each.ColumnDefault)
+		}
+		if each.GormName == "" {
+			each.GormName = each.Name
 		}
 		each.FieldName = util.LeftUpper(util.CamelString(each.Name))
 		each.FieldJson = util.LeftLower(util.CamelString(each.Name))
 		each.Comment = util.TrimNewLine(each.Comment)
-
+		each.TableName = c.Table
 		if each.Index != nil {
 			m[each.Index.IndexName] = append(m[each.Index.IndexName], each)
 		}
-		each.Indexs = i + 1
+		ct++
+		each.Indexs = ct
 		table.Columns = append(table.Columns, each)
 	}
 
 	primaryColumns := m[indexPri]
 	//log.Printf("primaryColumns:%+v\n", m)
 	if len(primaryColumns) == 0 {
-		return nil, fmt.Errorf("db:%s, table:%s, missing primary key", c.Db, c.Table)
+		return nil, fmt.Errorf("db:%s, table:%s, 缺失主键", c.Db, c.Table)
 	}
 
 	if len(primaryColumns) > 1 {
-		return nil, fmt.Errorf("db:%s, table:%s, joint primary key is not supported", c.Db, c.Table)
+		return nil, fmt.Errorf("db:%s, table:%s, 程序不支持联合主键", c.Db, c.Table)
+	}
+	if primaryColumns[0].Name != "id" {
+		return nil, fmt.Errorf("gocode 要求表主键唯一，且主键名称为\"id\",表%s 主键为%s,请更新表！", c.Table, primaryColumns[0].Name)
 	}
 
 	table.PrimaryKey = primaryColumns[0]
@@ -170,7 +197,6 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		}
 
 		for _, one := range columns {
-			//log.Printf("each is %+v\n", columns)
 			if one.Index != nil {
 				if one.Index.NonUnique == 0 {
 					table.UniqueIndex[indexName] = columns

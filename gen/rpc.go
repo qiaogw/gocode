@@ -19,6 +19,7 @@ func (acd *AutoCodeService) CreateRpc(db *model.Db, ids ...uint) (err error) {
 			return err
 		}
 		if err = value.template.Execute(f, db); err != nil {
+			//if err = value.template.Execute(f, db); err != nil {
 			log.Printf("err is %v\n", err)
 			return err
 		}

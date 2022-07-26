@@ -18,6 +18,7 @@ func (acd *AutoCodeService) CreateApi(db *model.Db, ids ...uint) (err error) {
 		if err != nil {
 			return err
 		}
+		//log.Printf("db.tt is %+v\n",db.Table)
 		if err = value.template.Execute(f, db); err != nil {
 			log.Printf("err is %v\n", err)
 			return err

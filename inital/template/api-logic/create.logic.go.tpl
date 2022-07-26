@@ -31,7 +31,10 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(req *types.Create{{.Table}}Requ
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 			{{- else}}
+				{{- if .IsPage}}
+				{{- else}}
 				{{.FieldName}}: req.{{.FieldName}},
+				{{- end}}
 			{{- end}}
 		{{- end }}
 	})

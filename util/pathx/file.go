@@ -175,7 +175,7 @@ func InitTemplates(category string, templates map[string]string) error {
 	}
 
 	for k, v := range templates {
-		if err := createTemplate(filepath.Join(dir, k), v, false); err != nil {
+		if err := CreateFile(filepath.Join(dir, k), v, false); err != nil {
 			return err
 		}
 	}
@@ -189,7 +189,7 @@ func CreateTemplate(category, name, content string) error {
 	if err != nil {
 		return err
 	}
-	return createTemplate(filepath.Join(dir, name), content, true)
+	return CreateFile(filepath.Join(dir, name), content, true)
 }
 
 // Clean deletes all templates and removes the parent directory.
@@ -239,7 +239,7 @@ func SameFile(path1, path2 string) (bool, error) {
 	return os.SameFile(stat1, stat2), nil
 }
 
-func createTemplate(file, content string, force bool) error {
+func CreateFile(file, content string, force bool) error {
 	if FileExists(file) && !force {
 		return nil
 	}

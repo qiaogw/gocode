@@ -5,7 +5,6 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/inital"
 	"github.com/qiaogw/gocode/util"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -17,6 +16,7 @@ import (
 func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []tplData, fileList []string, needMkdir []string, err error) {
 	// 去除所有空格
 	// 获取 basePath 文件夹下所有tpl文件
+	//log.Printf("templatePath is %s  \n", templatePath)
 	tplFileList, err := acd.GetAllTplFile(templatePath, nil)
 	//log.Printf("templatePath is %s ,tplFileList is %v\n", templatePath, tplFileList)
 	if err != nil {
@@ -31,11 +31,18 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	}
 	// 生成 *Template, 填充 template 字段
 	for index, value := range dataList {
-		dataList[index].template, err = template.ParseFS(inital.TemplateTpl, value.locationPath)
-		//dataList[index].template, err = template.ParseFiles(value.locationPath)
+		//添加 template 函数 iota 自增
+		funcMap := template.FuncMap{
+			"add": add,
+		}
+		t1 := template.New(value.locationPath)
+		t1 = t1.Funcs(funcMap)
+		mi, _ := inital.TemplateTpl.ReadFile(value.locationPath)
+		t2, err := t1.Parse(string(mi))
 		if err != nil {
 			return nil, nil, nil, err
 		}
+		dataList[index].template = t2
 	}
 	// 生成文件路径，填充 autoCodePath 字段，readme.txt.tpl不符合规则，需要特殊处理
 	// resource/template/web/api.js.tpl -> autoCode/web/autoCode.PackageName/api/autoCode.PackageName.js
@@ -58,7 +65,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 				if origFileName == "config.go" || origFileName == "servicecontext.go" {
 					fileName = origFileName
 				} else if fileSlice[1] == "logic" {
-					//log.Printf("fileSlice[1] is %s\n", fileSlice[1])
+					//log.Printf("templatePath is %s\n", templatePath)
 					fileName = fileSlice[0] + pack + "logic.go"
 					//log.Printf("pack is %s,origFileName is %s\n", pack, origFileName)
 				} else if origFileName[firstDot:] != ".go" {
@@ -121,6 +128,11 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		base = bn + "_gen.go"
 		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
 			global.GenConfig.AutoCode.SModel, base)
+	} else if strings.Contains(fileSlice[n-2], "dto_gen") {
+		bn := strings.TrimSuffix(base, ".go")
+		base = bn + "_dto.go"
+		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
+			global.GenConfig.AutoCode.SModel, base)
 	} else if strings.Contains(fileSlice[n-2], "model") {
 		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
 			global.GenConfig.AutoCode.SModel, base)
@@ -133,7 +145,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
 			global.GenConfig.AutoCode.ApiLogic, base)
 	} else if strings.Contains(fileSlice[n-2], "common") {
-		log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2:])
+		//log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2:])
 		data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
 			global.GenConfig.AutoCode.Common, base)
 	} else if strings.Contains(fileSlice[n-2], "rpc") {
@@ -167,7 +179,7 @@ func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData
 	}
 	// 写入文件前，先创建文件夹
 	if err = util.CreateDir(needMkdir...); err != nil {
-		log.Printf("err is %+v\n", err)
+		//log.Printf("err is %+v\n", err)
 		return
 	}
 	return
@@ -191,19 +203,26 @@ func (acd *AutoCodeService) genAfter(dataList []tplData, ids ...uint) error {
 	for _, value := range dataList { // 移动文件
 		// 判断目标文件是否都可以移动
 		if util.FileExist(value.autoMoveFilePath) {
-			fmt.Printf("目标文件已存在:%s\n", value.autoMoveFilePath)
+			fmt.Println(util.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
 			continue
 		}
 		//fmt.Printf("value.autoCodePath is %s, value.autoMoveFilePath is %s\n", value.autoCodePath, value.autoMoveFilePath)
 		if err := util.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
-			log.Printf("err is %v\n", err)
 			return err
 		}
 		if len(value.autoMoveFilePath) != 0 {
 			bf.WriteString(value.autoMoveFilePath)
 			bf.WriteString(";")
 		}
+		if err := util.FmtCode(value.autoMoveFilePath); err != nil {
+			return err
+		}
 	}
 	//Init(table.Table)
 	return nil
+}
+
+func add(i int) int {
+	i++
+	return i
 }

@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/global"
+	"{{.ParentPkg}}/common/global"
 	"context"
 	"google.golang.org/grpc/status"
 
@@ -9,6 +9,7 @@ import (
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
+
 )
 
 type Get{{.Table}}Logic struct {
@@ -38,7 +39,14 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(in *{{.Db}}.Get{{.Table}}Request) (*{
 
 	return &{{.Db}}.Get{{.Table}}Response{
       {{- range  .Columns }}
-        {{.FieldName}}: res.{{.FieldName}},
+		  {{- if eq .DataType "time.Time"}}
+			  {{.FieldName}}: res.{{.FieldName}}.String(),
+		  {{- else}}
+			  {{- if .IsPage}}
+			  {{- else}}
+			  {{.FieldName}}: res.{{.FieldName}},
+			  {{- end}}
+		  {{- end}}
       {{- end -}}
 	}, nil
 }

@@ -42,7 +42,10 @@ func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (
 	for _, item := range res.Data {
 	dataList = append(dataList, &types.List{{.Table}}Response{
 			{{- range  .Columns }}
+				{{- if .IsPage}}
+				{{- else}}
 				{{.FieldName}}: item.{{.FieldName}},
+				{{- end}}
 			{{- end }}
 		})
 	}

@@ -135,7 +135,7 @@ func ConvertDataType(dataBaseType int, isDefaultNull bool) (string, error) {
 func ConvertStringDataType(dataBaseType string, isDefaultNull bool) (string, error) {
 	tp, ok := commonMysqlDataTypeMapString[strings.ToLower(dataBaseType)]
 	if !ok {
-		return "", fmt.Errorf("unsupported database type: %s", dataBaseType)
+		return "", fmt.Errorf("不支持数据库数据类型: %s", dataBaseType)
 	}
 
 	return mayConvertNullType(tp, isDefaultNull), nil

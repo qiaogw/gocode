@@ -12,7 +12,7 @@ option go_package="./{{.Package}}";
     //提取 {{.Table}} ({{.TableComment}}) Request
     message Get{{.Table}}Request {
        {{- range  .Columns }}
-         {{- if .IsPk -}}
+         {{- if .IsPk }}
           {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
          {{- end }}
        {{- end }}
@@ -20,29 +20,39 @@ option go_package="./{{.Package}}";
     //提取 {{.Table}} ({{.TableComment}}) Response
     message Get{{.Table}}Response {
       {{- range  .Columns }}
-        {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
+          {{- if .IsPage }}
+          {{- else}}
+            {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
+          {{- end}}
       {{- end }}
     }
 
     //列表 {{.Table}} ({{.TableComment}}) Request
     message List{{.Table}}Request {
-    {{- range  .Columns }}
-        {{- if .IsPk }}
-        {{- else}}
-            {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
-        {{- end}}
-    {{- end }}
+        {{- $i :=0 -}}
+        {{- range  .Columns }}
+            {{- if .IsPk }}
+            {{- else}}
+                {{- $i = add $i }}
+                {{.DataTypeProto}} {{.FieldName}}={{- $i -}};
+            {{- end}}
+        {{- end }}
     }
     //列表 {{.Table}} ({{.TableComment}}) Response
     message List{{.Table}}Response {
-      repeated Get{{.Table}}Response data = 1;
+        repeated Get{{.Table}}Response data = 1;
     }
     //创建 {{.Table}} ({{.TableComment}}) Request
     message Create{{.Table}}Request {
+        {{- $x :=0 -}}
        {{- range  .Columns }}
            {{- if .IsPk }}
            {{- else}}
-               {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
+               {{- if .IsPage }}
+               {{- else}}
+                   {{- $x = add $x }}
+                   {{.DataTypeProto}} {{.FieldName}}={{- $x -}};
+               {{- end}}
            {{- end}}
        {{- end }}
     }
@@ -50,7 +60,7 @@ option go_package="./{{.Package}}";
     //创建 {{.Table}} ({{.TableComment}}) Response
     message Create{{.Table}}Response {
       {{- range  .Columns }}
-       {{- if .IsPk -}}
+       {{- if .IsPk }}
         {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
        {{- end }}
      {{- end }}
@@ -59,13 +69,16 @@ option go_package="./{{.Package}}";
     //修改 {{.Table}} ({{.TableComment}}) Request
     message Update{{.Table}}Request {
        {{- range  .Columns }}
-         {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
+           {{- if .IsPage }}
+           {{- else}}
+               {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
+           {{- end}}
        {{- end }}
     }
     //修改 {{.Table}} ({{.TableComment}}) Response
     message Update{{.Table}}Response {
        {{- range  .Columns }}
-         {{- if .IsPk -}}
+         {{- if .IsPk }}
           {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
          {{- end }}
        {{- end }}
@@ -74,7 +87,7 @@ option go_package="./{{.Package}}";
     //删除 {{.Table}} ({{.TableComment}}) Request
     message Delete{{.Table}}Request {
        {{- range  .Columns }}
-         {{- if .IsPk -}}
+         {{- if .IsPk }}
           {{.DataTypeProto}} {{.FieldName}}={{.Indexs}};
          {{- end }}
        {{- end }}

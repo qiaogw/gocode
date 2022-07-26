@@ -19,7 +19,10 @@ type (
     //Get{{.Table}}Response 提取-{{.TableComment}}
     Get{{.Table}}Response {
         {{- range  .Columns }}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+            {{- if .IsPage }}
+            {{- else}}
+                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+            {{- end}}
         {{- end }}
     }
     //List{{.Table}}Request 列表-{{.TableComment}}-
@@ -27,7 +30,7 @@ type (
     {{- range  .Columns }}
         {{- if .IsPk }}
         {{else}}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}},optional"`
         {{- end }}
     {{- end }}
     }
@@ -42,7 +45,10 @@ type (
         {{- range  .Columns }}
             {{- if .IsPk }}
             {{else}}
-                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+                {{- if .IsPage }}
+                {{- else}}
+                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
+                {{- end }}
             {{- end }}
         {{- end }}
     }
@@ -57,7 +63,10 @@ type (
     //Update{{.Table}}Request 修改-{{.TableComment}}
     Update{{.Table}}Request {
         {{- range  .Columns }}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+            {{- if .IsPage }}
+            {{- else}}
+            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
+            {{- end }}
         {{- end }}
     }
 

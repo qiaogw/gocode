@@ -22,8 +22,8 @@ var (
 		Short:        "生成代码",
 		Example:      "gocode gen -p admin -c  config.yaml",
 		SilenceUsage: true,
-		PreRun: func(cmd *cobra.Command, args []string) {
-			setup()
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return setup()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return run()
@@ -33,36 +33,50 @@ var (
 
 func init() {
 	configFile := global.GetDefaultConfigFile()
-	pack := "app-service"
+	pack := "service"
 	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "生成包名")
 	Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件")
 }
 
-func setup() {
+func setup() error {
 	// 读取配置
-	global.GenViper = setting.Viper(configYml, apiPackage)
-	global.GenDB = setting.Gorm()
 	log.SetFlags(log.Flags() | log.Llongfile)
+	global.GenViper = setting.Viper(configYml, apiPackage)
+	ed, err := setting.GormInit()
+	if err != nil {
+		return err
+	}
+
+	global.GenDB = ed
+
+	return nil
 }
 
 func run() error {
 	//var caser = cases.Title(language.English)
-	fmt.Println(`start gen `, configYml)
-
+	fmt.Println(util.Green(`start gen ` + configYml))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
+	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	tables, err := genApp.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(util.Red(fmt.Sprintf("获取表 err is %v", err)))
 		return err
 	}
 	var db model.Db
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
 	db.Service = util.LeftUpper(db.Database)
-	matchTables := make(map[string]*model.Table)
+
 	db.Option = global.GenConfig
 	db.DriverName = global.GenDB.Name()
+	dir, _ := os.Getwd()
+	parentPkg, err := golang.GetParentPackage(dir)
+	if err != nil {
+		return err
+	}
+	db.ParentPkg = parentPkg + "/" + global.GenConfig.AutoCode.Pkg
 
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
@@ -70,18 +84,19 @@ func run() error {
 		}
 		columnData, err := genApp.DB.GetColumn(global.GenConfig.DB.Dbname, v.Table)
 		if err != nil {
-			log.Printf("GetColumn err is %v\n", err)
+			log.Println(util.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
 		}
+		//log.Println("columnData len is ", len(columnData.Columns))
 		tb, err := columnData.Convert(v.TableComment)
 		if err != nil {
-			log.Printf("Convert err is %v\n", err)
+			fmt.Println(util.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
 			continue
 		}
 		if tb.HasTimer {
 			db.HasTimer = true
 		}
-		matchTables[v.Table] = tb
+		tb.ParentPkg = db.ParentPkg
 		//fmt.Printf("tb is %+v\n", v)
 		err = genApp.CreateModel(tb)
 		if err != nil {
@@ -92,12 +107,7 @@ func run() error {
 		db.GitUser = tb.GitUser
 		//fmt.Printf("err is %v\n", err)
 	}
-	dir, _ := os.Getwd()
-	parentPkg, err := golang.GetParentPackage(dir)
-	if err != nil {
-		return err
-	}
-	db.ParentPkg = parentPkg + "/" + global.GenConfig.AutoCode.Pkg
+
 	err = genApp.CreateRpc(&db)
 	if err != nil {
 		log.Printf("CreateRpc err is %v\n", err)
@@ -118,5 +128,6 @@ func run() error {
 		log.Printf("CreateCommon err is %v\n", err)
 		return err
 	}
+	fmt.Println(util.Green("Done!"))
 	return err
 }

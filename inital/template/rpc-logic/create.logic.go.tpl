@@ -8,6 +8,7 @@ import (
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	{{ if .HasTimer }}"{{.ParentPkg}}/common/timex"{{ end }}
 )
 
 type Create{{.Table}}Logic struct {
@@ -30,7 +31,14 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Req
 		{{- range  .Columns }}
 		{{- if .IsPk }}
 		{{- else}}
-			{{.FieldName}}: in.{{.FieldName}},
+			{{- if eq .DataType "time.Time"}}
+				{{.FieldName}}: timex.DatetimeStrToTime(in.{{.FieldName}}),
+			{{- else}}
+				{{- if .IsPage}}
+				{{- else}}
+				{{.FieldName}}: in.{{.FieldName}},
+				{{- end}}
+			{{- end}}
 		{{- end}}
 		{{- end }}
 	}
@@ -43,7 +51,11 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Req
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		return nil, status.Error(500, err.Error())
+		if err.Error() == "LastInsertId is not supported by this driver"{
+			logx.Infof("res is %v,err is %v\n", res,err)
+		} else {
+			return nil, status.Error(500, err.Error())
+		}
 	}
 
 

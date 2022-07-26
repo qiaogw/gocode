@@ -31,7 +31,10 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Requ
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 			{{- else}}
+				{{- if .IsPage}}
+				{{- else}}
 				{{.FieldName}}: req.{{.FieldName}},
+				{{- end}}
 			{{- end}}
 		{{- end }}
 	})

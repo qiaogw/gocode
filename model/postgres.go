@@ -56,9 +56,15 @@ func (m *ModelPostgres) GetDB() (data []Db, err error) {
 	return entities, err
 }
 
+type tb struct {
+	TableName    string `json:"table_name" gorm:"table_name"`
+	TableComment string `json:"table_comment" gorm:"table_comment"`
+}
+
 // GetTables 获取数据库的所有表名
 func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 	var entities []Table
+	var tables []tb
 	sql := `
 		SELECT
 			relname AS table_name,
@@ -71,7 +77,14 @@ func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 			AND relname NOT LIKE 'sql_%' 
 		ORDER BY
 			relname`
-	err := global.GenDB.Raw(sql, db, "public").Scan(&entities).Error
+	err := global.GenDB.Raw(sql).Scan(&tables).Error
+	for _, v := range tables {
+		entities = append(entities, Table{
+			TableComment: v.TableComment,
+			Table:        v.TableName,
+		})
+	}
+
 	return entities, err
 }
 
@@ -116,15 +129,16 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
          ORDER BY a.attnum
 	) AS t
          left join information_schema.columns AS c on t.relname = c.table_name 
-		and t.field = c.column_name and c.table_schema = $2`
+		and t.field = c.column_name and c.table_schema = 'public'`
 
 	var reply []*PostgreColumn
-	err := m.DB.Raw(querySql, table, db).Scan(&reply).Error
+	err := m.DB.Raw(querySql, table).Scan(&reply).Error
 	if err != nil {
 		return nil, err
 	}
+	schame := "public"
 
-	list, err := m.getColumns(db, table, reply)
+	list, err := m.getColumns(schame, table, reply)
 	if err != nil {
 		return nil, err
 	}
@@ -144,6 +158,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 
 	var list []*Column
 	for _, e := range in {
+		//log.Printf("each.name is %s,is pk is %+v\n", e.Field, e.Comment)
 		var dft interface{}
 		if len(e.ColumnDefault.String) > 0 {
 			dft = e.ColumnDefault
@@ -166,7 +181,9 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		}
 
 		if len(index[e.Field.String]) > 0 {
+			//log.Printf("e.Field is %v,index[e.Field.String] is %v,index[e.Field.String] len is %d\n", e.Field, index[e.Field.String], len(index[e.Field.String]))
 			for _, i := range index[e.Field.String] {
+				//log.Printf("e.Field is %v,\n", i.IndexName)
 				list = append(list, &Column{
 					DbColumn: &DbColumn{
 						Name:            e.Field.String,
@@ -194,7 +211,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 			})
 		}
 	}
-
+	//log.Println("list len is ", len(list))
 	return list, nil
 }
 
@@ -223,16 +240,16 @@ func (m *ModelPostgres) getIndex(schema, table string) (map[string][]*DbIndex, e
 			continue
 		}
 
-		nonUnique := 0
-		if !e.IsUnique.Bool {
-			nonUnique = 1
-		}
+		//nonUnique := 0
+		//if !e.IsUnique.Bool {
+		//	nonUnique = 1
+		//}
 
-		index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
-			IndexName:  e.IndexName.String,
-			NonUnique:  nonUnique,
-			SeqInIndex: int(e.IndexSort.Int32),
-		})
+		//index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
+		//	IndexName:  e.IndexName.String,
+		//	NonUnique:  nonUnique,
+		//	SeqInIndex: int(e.IndexSort.Int32),
+		//})
 	}
 
 	return index, nil

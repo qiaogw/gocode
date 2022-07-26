@@ -1,8 +1,11 @@
 package util
 
 import (
+	"bytes"
+	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -78,4 +81,25 @@ func FileExist(path string) bool {
 		return !fi.IsDir()
 	}
 	return !os.IsNotExist(err)
+}
+
+func FmtCode(f string) (err error) {
+	cmd := exec.Command("gofmt", "-w", f)
+
+	var out, errBuf bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &errBuf
+	err = cmd.Start() //如果用start则直接向后运行
+	if err != nil {
+		return err
+	}
+	go func() {
+		err = cmd.Wait()
+		if err != nil {
+			fmt.Println(Yellow(fmt.Sprintf("%s 文件非 .go文件 不支持格式化！", f)))
+		} else {
+			//fmt.Println(Green(fmt.Sprintf("%s 生成！", f)))
+		}
+	}()
+	return err
 }

@@ -2,7 +2,7 @@
 package model
 
 import (
-	"github.com/qiaogw/gocode/global"
+	"{{.ParentPkg}}/common/global"
 	"context"
     "database/sql"
     "fmt"
@@ -15,6 +15,7 @@ import (
 
     "gorm.io/gorm"
 	{{ if .HasTimer }}"time"{{ end }}
+	{{ if .PostgreSql }}_ "github.com/lib/pq"{{ end}}
 )
 
 var (
@@ -23,7 +24,7 @@ var (
 	{{.PackageName}}RowsExpectAutoSet   = strings.Join(stringx.Remove({{.PackageName}}FieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
 	{{.PackageName}}RowsWithPlaceHolder = strings.Join(stringx.Remove({{.PackageName}}FieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
 
-	cacheZero{{.Table}}IdPrefix     = "cache:zero:{{.PackageName}}:id:"
+	cacheZero{{.Table}}IdPrefix     = "cache:{{.Db}}:{{.PackageName}}:id:"
 )
 
 type (
@@ -42,29 +43,31 @@ type (
 
 	{{.Table}} struct {
 		global.BaseModel
-        {{range .Columns }}
-        {{- if .IsPk -}}
-        {{else}}
-        {{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" db:"{{.Name}}" gorm:"column:{{.Name}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.Comment}};"`
-        {{- end -}}
-        {{end }}
+        {{- range .Columns }}
+			{{- if .IsPk -}}
+			{{- else}}
+				{{- if .IsPage}}
+				{{- else}}
+				{{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" db:"{{.Name}}" {{- if ne .GormName "-" }} gorm:"column:{{.GormName}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.Comment}};"{{- end -}}`
+				{{- end -}}
+			{{- end -}}
+        {{- end }}
+		global.ControlBy
         global.ModelTime
-        global.ControlBy
-		global.Pagination
 	}
 )
 
 {{ if .Table }}
-// Table {{.Table}} 表名
-func ({{.Table}}) Table() string {
-  return "{{.Table}}"
+// TableName {{.Table}} 表名
+func ({{.Table}}) TableName() string {
+  return "{{.Name}}"
 }
 {{ end }}
 
 func new{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormx *gorm.DB) *default{{.Table}}Model {
 	return &default{{.Table}}Model{
 		CachedConn: sqlc.NewConn(conn, c),
-		table:      "`sys_user`",
+		table:      "{{.Name}}",
 		gormDB:     gormx,
 	}
 }

@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"errors"
 	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/driver/mysql"
@@ -8,14 +9,15 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"log"
 )
 
-// Gorm 初始化数据库并产生数据库全局变量
-func Gorm() *gorm.DB {
+// GormInit 初始化数据库并产生数据库全局变量
+func GormInit() (*gorm.DB, error) {
 	switch global.GenConfig.DB.DbType {
 	case "mysql":
 		return GormMysql()
-	case "pgsql":
+	case "postgres":
 		return GormPgSql()
 	default:
 		return GormMysql()
@@ -23,10 +25,10 @@ func Gorm() *gorm.DB {
 }
 
 // GormMysql 初始化Mysql数据库
-func GormMysql() *gorm.DB {
+func GormMysql() (*gorm.DB, error) {
 	dbConf := global.GenConfig.DB
 	if dbConf.Dbname == "" {
-		return nil
+		return nil, errors.New("数据库不能为空，请修改配置文件")
 	}
 
 	mysqlConfig := mysql.Config{
@@ -42,21 +44,21 @@ func GormMysql() *gorm.DB {
 		},
 	}); err != nil {
 		fmt.Printf("gorm.Open err is %v", err)
-		return nil
+		return nil, err
 	} else {
 		global.GenConfig.DB.DataSource = dbConf.MysqlDsn()
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(dbConf.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(dbConf.MaxOpenConns)
-		return db
+		return db, nil
 	}
 }
 
 // GormPgSql 初始化 Postgresql 数据库
-func GormPgSql() *gorm.DB {
+func GormPgSql() (*gorm.DB, error) {
 	dbConf := global.GenConfig.DB
 	if dbConf.Dbname == "" {
-		return nil
+		return nil, errors.New("数据库不能为空，请修改配置文件")
 	}
 
 	pgsqlConfig := postgres.Config{
@@ -70,12 +72,13 @@ func GormPgSql() *gorm.DB {
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {
-		return nil
+		log.Fatal(err)
+		return nil, err
 	} else {
 		global.GenConfig.DB.DataSource = dbConf.PgsqlDsn()
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(dbConf.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(dbConf.MaxOpenConns)
-		return db
+		return db, nil
 	}
 }

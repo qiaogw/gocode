@@ -40,7 +40,10 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(req *types.Get{{.Table}}Request) (res
 	
 	return &types.Get{{.Table}}Response{
 		{{- range  .Columns }}
+			{{- if .IsPage}}
+			{{- else}}
 			{{.FieldName}}: res.{{.FieldName}},
+			{{- end -}}
 		{{- end -}}
 	}, nil
 }

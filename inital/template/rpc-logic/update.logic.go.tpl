@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/global"
+	"{{.ParentPkg}}/common/global"
 	"context"
 	"google.golang.org/grpc/status"
 
@@ -9,6 +9,7 @@ import (
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	{{ if .HasTimer }}"{{.ParentPkg}}/common/timex"{{ end }}
 )
 
 type Update{{.Table}}Logic struct {
@@ -36,7 +37,14 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 		return nil, status.Error(500, err.Error())
 	}
 	{{- range  .Columns }}
-		res.{{.FieldName}}=in.{{.FieldName}}
+		{{- if eq .DataType "time.Time"}}
+			res.{{.FieldName}}=timex.DatetimeStrToTime(in.{{.FieldName}})
+		{{- else}}
+			{{- if .IsPage}}
+			{{- else}}
+			res.{{.FieldName}}=in.{{.FieldName}}
+			{{- end}}
+		{{- end}}
 	{{- end }}
 
 	err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)

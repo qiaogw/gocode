@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/gorm"
@@ -38,11 +39,30 @@ func (m *ModelMysql) GetTables(db string) ([]Table, error) {
 	return entities, err
 }
 
+type MysqlColumn struct {
+	Name            string         `json:"name" gorm:"column:COLUMN_NAME"`
+	DataType        string         `json:"dataType" gorm:"column:DATA_TYPE"`
+	DataTypeProto   string         `json:"dataTypeProto" gorm:"-"`
+	DataTypeLong    string         `json:"dataTypeLong" gorm:"-"`
+	Extra           string         `json:"extra" gorm:"column:EXTRA"`
+	Comment         string         `json:"comment" gorm:"column:COLUMN_COMMENT"`
+	ColumnDefault   sql.NullString `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
+	IsNullAble      string         `json:"isNullAble" gorm:"column:IS_NULLABLE"`
+	IsNull          bool           `json:"isNull" gorm:"-"`
+	OrdinalPosition int            `json:"ordinalPosition" gorm:"column:ORDINAL_POSITION"`
+	FieldJson       string         `json:"fieldJson"`
+	FieldName       string         `json:"fieldName"`
+	Clearable       bool           `json:"clearable"` // 是否可清空
+	DictType        string         `json:"dictType"`  // 字典
+	Require         bool           `json:"require"`   // 是否必填
+	ErrorText       string         `json:"errorText"` // 校验失败文字
+}
+
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
 // Author [piexlmax](https://github.com/piexlmax)
 // Author [SliverHorn](https://github.com/SliverHorn)
 func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
-	var reply []*DbColumn
+	var reply []*MysqlColumn
 	sql := `
 	SELECT c.COLUMN_NAME,
 		c.DATA_TYPE,
@@ -69,6 +89,19 @@ func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
 	}
 	var list []*Column
 	for _, item := range reply {
+		var dft interface{}
+		if len(item.ColumnDefault.String) > 0 {
+			dft = item.ColumnDefault
+		}
+		dbc := &DbColumn{
+			Name:            item.Name,
+			DataType:        item.DataType,
+			Extra:           item.Extra,
+			Comment:         item.Comment,
+			ColumnDefault:   dft,
+			IsNullAble:      item.IsNullAble,
+			OrdinalPosition: item.OrdinalPosition,
+		}
 		index, err := m.FindIndex(db, table, item.Name)
 		if err != nil {
 			if err != gorm.ErrRecordNotFound {
@@ -80,13 +113,13 @@ func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
 		if len(index) > 0 {
 			for _, i := range index {
 				list = append(list, &Column{
-					DbColumn: item,
+					DbColumn: dbc,
 					Index:    i,
 				})
 			}
 		} else {
 			list = append(list, &Column{
-				DbColumn: item,
+				DbColumn: dbc,
 			})
 		}
 	}

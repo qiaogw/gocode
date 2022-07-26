@@ -23,9 +23,9 @@ var (
 func run() error {
 	// 读取配置
 	name := global.GetDefaultConfigFile()
-	category := ""
+	//category := ""
 	configYml := inital.ConfTpl
-	err := pathx.CreateTemplate(category, name, configYml)
+	err := pathx.CreateFile(name, configYml, true)
 	if err != nil {
 		log.Fatal(err)
 		return err

@@ -1,3 +1,5 @@
 /vendor/
 /app/
 /app-service/
+/gocode.exe
+/app-init/

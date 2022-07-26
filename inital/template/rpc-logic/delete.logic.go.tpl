@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/global"
+	"{{.ParentPkg}}/common/global"
 	"context"
 	"google.golang.org/grpc/status"
 

@@ -10,8 +10,6 @@ const (
 	BuildVersion = "1.0.0"
 	// ProjectName the const value of zero
 	ProjectName = "zero"
-	// ProjectOpenSourceURL the github url of go-zero
-	ProjectOpenSourceURL = "github.com/zeromicro/go-zero"
 	// OsWindows represents os windows
 	OsWindows = "windows"
 	// OsMac represents os mac

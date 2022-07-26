@@ -1,6 +1,6 @@
 Name: {{.Service}}-Rpc
-Host: {{.Option.System.RpcHost}}
-Port: {{.Option.System.RpcPort}}
+ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
+
 
 Database:
   DriverName: {{.Option.DB.DbType}}
