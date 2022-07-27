@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BuildVersion = "1.0.0"
+	BuildVersion = "1.0.1"
 	// ProjectName the const value of zero
 	ProjectName = "zero"
 	// OsWindows represents os windows
