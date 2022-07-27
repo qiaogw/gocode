@@ -22,6 +22,12 @@ type (
 		DriverName string
 		ParentPkg  string //项目路径
 	}
+	CacheKey struct {
+		Key       string
+		Value     string
+		Field     string
+		FieldJson string
+	}
 	Table struct {
 		Db          string //小写服务名称
 		Table       string `json:"table" gorm:"column:table_name"` //表首字母大写驼峰
@@ -32,6 +38,7 @@ type (
 		// Primary key not included
 		UniqueIndex  map[string][]*Column
 		PrimaryKey   *Column
+		CacheKeys    []*CacheKey
 		NormalIndex  map[string][]*Column
 		HasTimer     bool
 		NeedValid    bool
@@ -94,16 +101,19 @@ type (
 func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	var table Table
 	table.Name = c.Table
-	table.Table = util.CamelString(strings.TrimLeft(c.Table, global.GenConfig.DB.TablePrefix))
+	table.Table = util.CamelString(strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix))
 	table.PackageName = util.LeftLower(table.Table)
 	table.TableUrl = strings.ToLower(table.Table)
 	//log.Printf("table.Table is %s,table.PackageName is %s\n", table.Table, table.PackageName)
+	//log.Printf("table.Name is %s,table.prefix is %s,table.table is %s\n", table.Name,
+	//	strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix), table.Table)
 	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
 	table.Service = util.LeftUpper(table.Db)
 	table.TableComment = tableComment
 	//table.Columns = c.Columns
 	table.UniqueIndex = map[string][]*Column{}
 	table.NormalIndex = map[string][]*Column{}
+
 	if global.GenDB.Name() == "postgres" {
 		table.PostgreSql = true
 	}
@@ -169,10 +179,12 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		each.Comment = util.TrimNewLine(each.Comment)
 		each.TableName = c.Table
 		if each.Index != nil {
+			//log.Printf("each.Index is %+v\n", each.Index)
 			m[each.Index.IndexName] = append(m[each.Index.IndexName], each)
 		}
 		ct++
 		each.Indexs = ct
+		//log.Printf("table is %s,FieldName is %s\n", c.Table, each.FieldName)
 		table.Columns = append(table.Columns, each)
 	}
 
@@ -191,15 +203,23 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 
 	table.PrimaryKey = primaryColumns[0]
 	for indexName, columns := range m {
-		//log.Printf("columns is %+v\n", len(columns))
+
 		if indexName == indexPri {
 			continue
 		}
 
 		for _, one := range columns {
+			//log.Printf("table is %s ,columns is %+v,pk is %v\n", table.Table, one.Name, table.PrimaryKey.Name)
 			if one.Index != nil {
-				if one.Index.NonUnique == 0 {
+				if one.Index.NonUnique == 0 && one.Name != table.PrimaryKey.Name {
 					table.UniqueIndex[indexName] = columns
+					ck := new(CacheKey)
+					ck.Key = "cache" + table.Service + table.Table + one.FieldName
+					ck.Value = "cache:" + table.Service + ":" + table.PackageName + ":" + one.FieldJson + ":"
+					ck.Field = one.FieldName
+					ck.FieldJson = one.FieldJson
+					//log.Printf("%s = %s\n", k, v)
+					table.CacheKeys = append(table.CacheKeys, ck)
 				} else {
 					table.NormalIndex[indexName] = columns
 				}

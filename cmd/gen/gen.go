@@ -102,6 +102,7 @@ func run() error {
 		if err != nil {
 			continue
 		}
+		//log.Printf("tb is %s,CacheKeys is  %+v\n", tb.Name, tb.CacheKeys)
 		db.Tables = append(db.Tables, tb)
 		db.GitEmail = tb.GitEmail
 		db.GitUser = tb.GitUser

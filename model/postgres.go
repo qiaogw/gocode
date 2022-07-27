@@ -155,9 +155,10 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	if err != nil {
 		return nil, err
 	}
-
+	//log.Printf("tableis %s,is len is %+v\n", table, len(in))
 	var list []*Column
 	for _, e := range in {
+		//log.Printf("table is %s,FieldName is %s\n", table, e.Field)
 		//log.Printf("each.name is %s,is pk is %+v\n", e.Field, e.Comment)
 		var dft interface{}
 		if len(e.ColumnDefault.String) > 0 {
@@ -183,7 +184,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		if len(index[e.Field.String]) > 0 {
 			//log.Printf("e.Field is %v,index[e.Field.String] is %v,index[e.Field.String] len is %d\n", e.Field, index[e.Field.String], len(index[e.Field.String]))
 			for _, i := range index[e.Field.String] {
-				//log.Printf("e.Field is %v,\n", i.IndexName)
+				//log.Printf("table is %s,e.Field is%v,e.index is %v,\n", table, e.Field, i)
 				list = append(list, &Column{
 					DbColumn: &DbColumn{
 						Name:            e.Field.String,
@@ -231,25 +232,29 @@ func (m *ModelPostgres) getIndex(schema, table string) (map[string][]*DbIndex, e
 	}
 
 	index := make(map[string][]*DbIndex)
+	var pkName string
 	for _, e := range indexes {
 		if e.IsPrimary.Bool {
+			pkName = e.ColumnName.String
 			index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
 				IndexName:  indexPri,
 				SeqInIndex: int(e.IndexSort.Int32),
 			})
 			continue
 		}
+		if e.ColumnName.String == pkName {
+			continue
+		}
+		nonUnique := 0
+		if !e.IsUnique.Bool {
+			nonUnique = 1
+		}
 
-		//nonUnique := 0
-		//if !e.IsUnique.Bool {
-		//	nonUnique = 1
-		//}
-
-		//index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
-		//	IndexName:  e.IndexName.String,
-		//	NonUnique:  nonUnique,
-		//	SeqInIndex: int(e.IndexSort.Int32),
-		//})
+		index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
+			IndexName:  e.IndexName.String,
+			NonUnique:  nonUnique,
+			SeqInIndex: int(e.IndexSort.Int32),
+		})
 	}
 
 	return index, nil

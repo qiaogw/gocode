@@ -27,7 +27,18 @@ func NewCreate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // Create{{.Table}} 创建 {{.TableComment}}
 func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Request) (*{{.Db}}.Create{{.Table}}Response, error) {
-	new{{.Table}} := model.{{.Table}}{
+
+{{$table:=.Table}}
+{{$tableComment:=.TableComment}}
+{{- range  .CacheKeys}}
+	// 判断该{{.Field}}记录是否已经存在
+	_, err := l.svcCtx.{{$table}}Model.FindOneBy{{.Field}}(l.ctx,in.{{.Field}})
+	if err == nil {
+	return nil, status.Error(100, "该{{$tableComment}}已存在")
+	}
+{{- end}}
+
+new{{.Table}} := model.{{.Table}}{
 		{{- range  .Columns }}
 		{{- if .IsPk }}
 		{{- else}}

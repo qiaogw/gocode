@@ -37,7 +37,7 @@ db:
   max-open-conns: 100
   log-mode: error
   log-zap: false
-  TablePrefix: admin_
+  TablePrefix: "admin_"
 
 # autocode configuration
 autocode:
