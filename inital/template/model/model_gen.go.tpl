@@ -95,7 +95,7 @@ func (m *default{{.Table}}Model) FindOne(ctx context.Context, id interface{}) (*
 		query, values := m.GeneralSQL(func(tx *gorm.DB) *gorm.DB {
 			return tx.First(&resp, id)
 		})
-		return conn.QueryRow(ctx, query, values...)
+		return conn.QueryRow(v, query, values...)
 	})
 	switch err {
 	case nil:

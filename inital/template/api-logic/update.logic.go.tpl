@@ -29,13 +29,10 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Requ
 	l.Logger.Infof("l.svcCtx.{{.Service}}Rpc is %v\n", l.svcCtx.{{.Service}}Rpc)
 	_, err = l.svcCtx.{{.Service}}Rpc.Update{{.Table}}(l.ctx, &{{.Db}}.Update{{.Table}}Request{
 		{{- range  .Columns }}
-			{{- if .IsPk }}
-			{{- else}}
 				{{- if .IsPage}}
 				{{- else}}
 				{{.FieldName}}: req.{{.FieldName}},
 				{{- end}}
-			{{- end}}
 		{{- end }}
 	})
 	if err != nil {
