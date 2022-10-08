@@ -1,0 +1,52 @@
+# system configuration
+system:
+  template_path:
+  name: admin
+  api_host: 0.0.0.0
+  api_port: 8080
+  rpc_host: 0.0.0.0
+  rpc_port: 8000
+
+# redis configuration
+redis:
+  db: node
+  addr: "127.0.0.1:6379"
+  password: ""
+
+etcd:
+  hosts:
+    - 127.0.0.1:2379
+  key: admin.rpc
+
+Auth:
+  AccessSecret: zd-AccessSecret
+  AccessExpire: 3600
+  RefreshAfter: 3600
+
+# mysql connect configuration
+# db-type: 'mysql','postgres'
+db:
+  db-type: "postgres"
+  path: 127.0.0.1
+  port: "5432"
+  config: "sslmode=disable TimeZone=Asia/Shanghai"
+  db-name: zero
+  username: admin
+  password: "123456"
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: error
+  log-zap: false
+  TablePrefix: "admin_"
+
+# autocode configuration
+autocode:
+  model: model
+  api: api
+  rpc: rpc
+  etc: etc
+  config: config
+  svc: svc
+  common: common
+  coverFile:
+    - servicecontext.go
