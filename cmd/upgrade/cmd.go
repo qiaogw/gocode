@@ -28,6 +28,6 @@ func upgrade(_ *cobra.Command, _ []string) error {
 		return err
 	}
 	fmt.Println(info, "")
-	fmt.Print(util.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return nil
 }
