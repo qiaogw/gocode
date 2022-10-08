@@ -1,0 +1,59 @@
+package svc
+
+import (
+"github.com/Pacific73/gorm-cache/cache"
+cacheConfig "github.com/Pacific73/gorm-cache/config"
+	"{{.ParentPkg}}/model"
+	"github.com/qiaogw/gocode/common/gormx"
+	"{{.ParentPkg}}/rpc/internal/config"
+"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"gorm.io/driver/{{.DriverName}}"
+"github.com/go-redis/redis"
+	"gorm.io/gorm"
+)
+
+type ServiceContext struct {
+	Config    config.Config
+	{{- range .Tables }}
+	{{.Table}}Model model.{{.Table}}Model
+	{{- end }}
+}
+
+func NewServiceContext(c config.Config) *ServiceContext {
+	conn := sqlx.NewSqlConn(c.Database.DriverName, c.Database.DataSource) //.NewMysql(c.Mysql.DataSource)
+	dsn := c.Database.DataSource
+	db, _ := gorm.Open({{.DriverName}}.Open(dsn), &gorm.Config{})
+
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: c.CacheRedis[0].Host,
+	})
+	_ = db.Use(&gormx.ZeroGorm{})
+	caches, err := cache.NewGorm2Cache(&cacheConfig.CacheConfig{
+	CacheLevel:           cacheConfig.CacheLevelAll,
+	CacheStorage:         cacheConfig.CacheStorageRedis,
+	RedisConfig:          cache.NewRedisConfigWithClient(redisClient),
+	InvalidateWhenUpdate: true,       // when you create/update/delete objects, invalidate cache
+	CacheTTL:             5000 * 3600, // 5000 ms
+	CacheMaxItemCnt:      5,           // if length of objects retrieved one single time
+	// exceeds this number, then don't cache
+	})
+	if err != nil {
+	logx.Errorf("setup all cache error: %v", err)
+	} else {
+	err = db.Use(caches) // use gorm plugin
+	if err != nil {
+	logx.Errorf("setup all cache error: %v", err)
+	}
+	}
+
+
+
+
+	return &ServiceContext{
+		Config:    c,
+    {{- range .Tables }}
+        {{.Table}}Model: model.New{{.Table}}Model(conn, c.CacheRedis, db),
+    {{- end }}
+	}
+}
