@@ -2,7 +2,7 @@
 package model
 {{$table:=.Table}}
 import (
-	"github.com/qiaogw/gocode/global"
+"github.com/qiaogw/gocode/common/modelx"
 	"context"
 
     "github.com/zeromicro/go-zero/core/stores/cache"
@@ -35,7 +35,7 @@ type (
 	}
 
 	{{.Table}} struct {
-		global.BaseModel
+		modelx.BaseModel
         {{- range .Columns }}
 			{{- if .IsPk -}}
 			{{- else}}
@@ -45,8 +45,8 @@ type (
 				{{- end -}}
 			{{- end -}}
         {{- end }}
-		global.ControlBy
-        global.ModelTime
+		modelx.ControlBy
+        modelx.ModelTime
 	}
 )
 
@@ -72,8 +72,8 @@ func (m *default{{.Table}}Model) FindOne(ctx context.Context, id interface{}) (*
 	case nil:
 	return &resp, nil
 	default:
-		if  err.Error()==global.ErrNotFound.Error(){
-			return nil, global.ErrNotFound
+		if  err.Error()==modelx.ErrNotFound.Error(){
+			return nil, modelx.ErrNotFound
 		}
 		return nil, err
 	}
@@ -87,8 +87,8 @@ func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.Fie
 	case nil:
 	return &resp, nil
 	default:
-		if  err.Error()==global.ErrNotFound.Error(){
-			return nil, global.ErrNotFound
+		if  err.Error()==modelx.ErrNotFound.Error(){
+			return nil, modelx.ErrNotFound
 		}
 		return nil, err
 	}

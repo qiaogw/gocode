@@ -1,12 +1,12 @@
 package model
 
 import (
-    "github.com/qiaogw/gocode/global"
+    "github.com/qiaogw/gocode/common/modelx"
 {{ if .HasTimer }}"time"{{ end }}
 )
 
 type List{{.Table}}Req struct {
-    global.Pagination `search:"-"`
+    modelx.Pagination `search:"-"`
 {{- range .Columns }}
     {{- if .IsPage}}
     {{- else}}

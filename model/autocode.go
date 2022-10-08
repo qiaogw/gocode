@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"github.com/qiaogw/gocode/global"
+	"github.com/qiaogw/gocode/common/modelx"
 	"go/token"
 	"strings"
 )
@@ -67,7 +67,7 @@ type Field struct {
 var AutoMoveErr error = errors.New("创建代码成功并移动文件成功")
 
 type SysAutoCode struct {
-	global.BaseModel
+	modelx.BaseModel
 	PackageName string `json:"packageName" gorm:"comment:包名"`
 	Label       string `json:"label" gorm:"comment:展示名"`
 	Desc        string `json:"desc" gorm:"comment:描述"`

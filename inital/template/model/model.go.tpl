@@ -4,7 +4,7 @@ package model
 import (
 	"context"
 
-	"github.com/qiaogw/gocode/global"
+"github.com/qiaogw/gocode/common/modelx"
 	"github.com/qiaogw/gocode/common/gormx"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -28,7 +28,7 @@ type (
 
 	Search{{.Table}}Model struct {
 		{{.Table}}
-		global.Pagination
+		modelx.Pagination
 	}
 )
 
@@ -54,8 +54,8 @@ func (m *custom{{.Table}}Model) FindAll(ctx context.Context, query *List{{.Table
 	switch err {
 	case nil:
 		return resp,count, nil
-	case global.ErrNotFound:
-		return nil,0, global.ErrNotFound
+	case modelx.ErrNotFound:
+		return nil,0, modelx.ErrNotFound
 	default:
 		return nil,0, err
 	}
