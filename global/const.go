@@ -29,6 +29,12 @@ func GetDefaultConfigFile() string {
 	if err != nil {
 		log.Fatal("当前路径错误")
 	}
-	//return filepath.Join(p, "config", "config.toml")
 	return filepath.Join(p, "config.yaml")
+}
+func GetConfigFile(f string) string {
+	p, err := os.Getwd()
+	if err != nil {
+		log.Fatal("当前路径错误")
+	}
+	return filepath.Join(p, f+".yaml")
 }

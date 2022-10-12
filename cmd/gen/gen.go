@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	configYml string
-	Cmd       = &cobra.Command{
+	apiPackage string
+	Cmd        = &cobra.Command{
 		Use:          "gen",
 		Short:        "生成代码",
 		Example:      "gocode gen -p admin -c  config.yaml",
@@ -32,13 +32,15 @@ var (
 )
 
 func init() {
-	configFile := global.GetDefaultConfigFile()
-	//pack := "service"
-	//Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "生成包名 ( default is service )")
-	Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件 ( default is ./config.yaml )")
+	//configFile := global.GetDefaultConfigFile()
+	//Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件 ( default is ./config.yaml )")
+	pack := "config"
+	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "包名")
+	_ = Cmd.MarkPersistentFlagRequired("package")
 }
 
 func setup() error {
+	configYml := global.GetConfigFile(apiPackage)
 	// 读取配置
 	global.GenViper = setting.Viper(configYml)
 	ed, err := setting.GormInit()
@@ -50,7 +52,7 @@ func setup() error {
 }
 
 func run() error {
-	fmt.Println(util.Green(`start gen ` + configYml))
+	fmt.Println(util.Green(`start gen ` + apiPackage))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
 	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",

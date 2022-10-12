@@ -2,16 +2,17 @@ package inital
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/common/pathx"
-	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/inital"
+	"github.com/qiaogw/gocode/gen"
+	"github.com/qiaogw/gocode/model"
 	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
 	"log"
+	"strings"
 )
 
 var (
-	Cmd = &cobra.Command{
+	apiPackage string
+	Cmd        = &cobra.Command{
 		Use:          "init",
 		Short:        "初始化",
 		Example:      "gocode init",
@@ -23,27 +24,32 @@ var (
 )
 
 func init() {
-	// pack := "service"
-	// Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "生成包名")
-	// _ = Cmd.MarkPersistentFlagRequired("package")
+	pack := "config"
+	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "生成包名")
+	_ = Cmd.MarkPersistentFlagRequired("package")
 }
 
 func run() {
 	// 读取配置
-	name := global.GetDefaultConfigFile()
-	// if len(apiPackage) < 1 {
-	// 	fmt.Println(util.Red("缺失必须的参数：--package 或 -p 以定义应用包名."))
-	// 	return
-	// }
-	configYml := inital.ConfTpl
-	if util.FileExist(name) {
-		fmt.Println(util.Red("配置文件" + name + "已存在，请删除后重新初始化."))
-		return
-	}
-	err := pathx.CreateFile(name, configYml, true)
+	genApp := gen.AutoCodeServiceApp
+	var db model.Db
+	db.Package = strings.ToLower(apiPackage)
+	err := genApp.CreateConfig(&db)
+
 	if err != nil {
-		log.Fatal(err)
-		return
+		log.Printf("CreateApi err is %v\n", err)
+		//return
 	}
+	//configYml := inital.ConfTpl
+	//if util.FileExist(name) {
+	//	fmt.Println(util.Red("配置文件" + name + "已存在，请删除后重新初始化."))
+	//	return
+	//}
+	//err := pathx.CreateFile(name, configYml, true)
+	//if err != nil {
+	//	log.Fatal(err)
+	//	return
+	//}
+	fmt.Println(util.Green("Done! init " + apiPackage + ".yaml"))
 	return
 }

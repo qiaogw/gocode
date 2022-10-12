@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/global"
+"github.com/qiaogw/gocode/common/modelx"
 	"github.com/qiaogw/gocode/common/errorx"
 	"context"
 	"google.golang.org/grpc/status"
@@ -47,7 +47,7 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) 
 	qData.Descending = in.Descending
 	list,count, err := l.svcCtx.{{.Table}}Model.FindAll(l.ctx, &qData)
 	if err != nil {
-		if err == global.ErrNotFound {
+		if err == modelx.ErrNotFound {
 			return nil, errorx.NewCodeError(errorx.NoData, "{{.TableComment}}-该查询无数据")
 		}
 		return nil, status.Error(500, err.Error())

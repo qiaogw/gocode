@@ -19,7 +19,6 @@ import (
 func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []tplData, fileList []string, needMkdir []string, err error) {
 	// 去除所有空格
 	// 获取 basePath 文件夹下所有tpl文件
-
 	tplFileList, err := acd.GetAllTplFile(templatePath, nil)
 	// log.Printf("templatePath is %s ,tplFileList is %v\n", templatePath, tplFileList)
 	if err != nil {
@@ -33,7 +32,6 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	for _, value := range tplFileList {
 		dataList = append(dataList, tplData{locationPath: value, autoPackage: pack})
 	}
-	// log.Printf("tplFileList is %v ,dataList is %v\n", tplFileList, dataList)
 	// 生成 *Template, 填充 template 字段
 	for index, value := range dataList {
 		//添加 template 函数 iota 自增
@@ -69,15 +67,12 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 				if origFileName == "config.go" || origFileName == "servicecontext.go" {
 					fileName = origFileName
 				} else if fileSlice[1] == "logic" {
-					//log.Printf("templatePath is %s\n", templatePath)
 					fileName = fileSlice[0] + pack + "logic.go"
-					//log.Printf("pack is %s,origFileName is %s\n", pack, origFileName)
 				} else if origFileName[firstDot:] != ".go" {
 					fileName = pack + origFileName[firstDot:]
 				} else {
 					fileName = pack + origFileName
 				}
-				//log.Printf("fileName is %s\n", fileName)
 				dataList[index].autoCodePath = filepath.Join(autoPath, trimBase[:lastSeparator],
 					fileName)
 			}
@@ -208,7 +203,6 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 }
 
 func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData, err error) {
-	//tPath := filepath.Join(tempPath, packPath)
 	tPath := tempPath + "/" + packPath
 	dataList, _, needMkdir, err := acd.getNeedList(pack, tPath)
 	if err = util.CreateDir(needMkdir...); err != nil {

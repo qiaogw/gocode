@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/global"
+	"github.com/qiaogw/gocode/common/modelx"
 	"github.com/qiaogw/gocode/common/errorx"
 	"context"
 	"google.golang.org/grpc/status"
@@ -31,7 +31,7 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(in *{{.Db}}.Get{{.Table}}Request) (*{
 	// 查询{{.TableComment}} 是否存在
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
-		if err == global.ErrNotFound {
+		if err == modelx.ErrNotFound {
 			return nil, errorx.NewCodeError(errorx.NoData, "该{{.TableComment}} 不存在")
 		}
 		return nil, status.Error(500, err.Error())

@@ -2,7 +2,7 @@ package svc
 
 import (
 	"{{.ParentPkg}}/api/internal/config"
-	"{{.ParentPkg}}/rpc/{{.Database}}client"
+	"{{.ParentPkg}}/rpc/{{.Package}}client"
 	"github.com/zeromicro/go-zero/zrpc"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/syncx"
