@@ -133,8 +133,10 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
 		fPath = filepath.Join(fPath, apiPath, apiDescPath)
 	case commonPath:
+		fp := strings.Split(fPath, string(os.PathSeparator))
+		cp := filepath.Join(fp[1 : len(fp)-1]...)
 		tp := filepath.Join(fileSlice[1 : n-1]...)
-		fPath = filepath.Join(fPath, tp)
+		fPath = filepath.Join(cp, tp)
 	case apiPath:
 		fPath = filepath.Join(fPath, apiPath)
 	case rpcPath:

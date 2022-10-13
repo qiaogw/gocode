@@ -1,4 +1,4 @@
-package global
+package modelx
 
 import (
 	"errors"
@@ -9,7 +9,9 @@ import (
 
 var (
 	ErrNotFound   = gorm.ErrRecordNotFound
+	PqErrNotFound = errors.New("record not found")
 )
+
 type BaseModel struct {
 	Id int64 `json:"id" db:"id" gorm:"column:id;primaryKey;autoIncrement;comment:主键编码"`
 }
@@ -36,11 +38,11 @@ func (e *ControlBy) SetUpdateBy(updateBy int64) {
 }
 
 type Pagination struct {
-	PageIndex int64 `json:"pageIndex" form:"pageIndex" gorm:"-"`
-	PageSize  int64 `json:"pageSize"  form:"pageSize" gorm:"-"`
-	SortBY     string `json:"sortBy,optional" form:"sortBy" gorm:"-"`
-	Descending bool   `json:"descending,optional" form:"descending" gorm:"-"`
-	SearchKey  string `json:"searchKey" form:"searchKey" gorm:"-"`
+	PageIndex  int64  `form:"pageIndex" json:"pageIndex" gorm:"-"`
+	PageSize   int64  `form:"pageSize" json:"pageSize"  gorm:"-"`
+	SortBY     string `json:"sortBy,optional" gorm:"-"`
+	Descending bool   `json:"descending,optional" gorm:"-"`
+	SearchKey  string `json:"searchKey"  gorm:"-"`
 }
 
 func (m *Pagination) GetPageIndex() int64 {
