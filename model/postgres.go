@@ -217,6 +217,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 					ColumnDefault:   dft,
 					IsNullAble:      isNullAble,
 					OrdinalPosition: int(e.Num),
+					DataTypeLong:    strconv.Itoa(e.DataTypeLong),
 				},
 			})
 		}
