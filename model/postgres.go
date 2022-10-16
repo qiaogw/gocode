@@ -224,7 +224,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 			})
 		}
 	}
-
 	return list, nil
 }
 
