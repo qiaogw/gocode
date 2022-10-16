@@ -176,7 +176,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		if e.NotNull.Bool {
 			isNullAble = "NO"
 		}
-
 		var extra string
 		// when identity is true, the column is auto increment
 		if e.IdentityIncrement.Int32 == 1 {
