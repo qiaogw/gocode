@@ -93,7 +93,6 @@ func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
 // Author [qiaogw](https://github.com/qiaogw)
-// Author [qiaogw](https://github.com/qiaogw)
 func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 	querySql := `
 	select
@@ -171,6 +170,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	}
 	var list []*Column
 	for _, e := range in {
+		//log.Printf("column is %+v\n", e)
 		var dft interface{}
 		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
@@ -204,6 +204,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 						OrdinalPosition: int(e.Num),
 					},
 					Index: i,
+					IsPk:  e.IsPk,
 				})
 			}
 		} else {
@@ -218,10 +219,13 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 					OrdinalPosition: int(e.Num),
 					DataTypeLong:    strconv.Itoa(e.DataTypeLong),
 				},
+				IsPk: e.IsPk,
 			})
 		}
 	}
-	//log.Println("list len is ", len(list))
+	//for _, o := range list {
+	//	log.Printf("cl is %+v\n", o.DbColumn)
+	//}
 	return list, nil
 }
 
