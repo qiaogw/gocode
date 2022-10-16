@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/gorm"
+	"log"
+	"strconv"
 	"strings"
 )
 
@@ -27,16 +29,27 @@ var p2m = map[string]string{
 	"timestamptz": "timestamp",
 }
 
-// PostgreColumn describes a column in table
-type PostgreColumn struct {
+// PostgresColumn describes a column in table
+type PostgresColumn struct {
 	Num               sql.NullInt32  `db:"num"`
 	Field             sql.NullString `db:"field"`
 	Type              sql.NullString `db:"type"`
-	DataTypeLong      sql.NullString `db:"dataTypeLong"`
+	DataTypeLong      sql.NullInt16  `db:"datatypelong" gorm:"datatypelong"`
 	NotNull           sql.NullBool   `db:"not_null"`
 	Comment           sql.NullString `db:"comment"`
 	ColumnDefault     sql.NullString `db:"column_default"`
 	IdentityIncrement sql.NullInt32  `db:"identity_increment"`
+}
+
+type PostgreColumn struct {
+	Num               int32  `json:"num" gorm:"column:num"`
+	Field             string `json:"field" gorm:"column:field" db:"field"`
+	Type              string `json:"type" gorm:"column:type" db:"type"`
+	DataTypeLong      int    `json:"data_type_long" gorm:"data_type_long"`
+	NotNull           bool   `json:"not_null" gorm:"not_null"`
+	Comment           string `json:"comment" gorm:"comment"`
+	ColumnDefault     string `json:"column_default" gorm:"column_default"`
+	IdentityIncrement int32  `json:"identity_increment" gorm:"identity_increment"`
 }
 
 // PostgreIndex describes an index for a column
@@ -98,7 +111,7 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 		t.num,
 		t.field,
 		t.type,
-		t.dataTypeLong,
+		t.dataTypeLong as data_type_long,
 		t.not_null,
 		t.comment, 
 		c.column_default, 
@@ -166,38 +179,38 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	var list []*Column
 	for _, e := range in {
 		//log.Printf("table is %s,FieldName is %s\n", table, e.Field)
-		//log.Printf("each.name is %s,is pk is %+v\n", e.Field, e.Comment)
+		log.Printf("Column is %+v,is DataTypeLong is %+v\n", e, e.DataTypeLong)
 		var dft interface{}
-		if len(e.ColumnDefault.String) > 0 {
+		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
 		}
 
 		isNullAble := "YES"
-		if e.NotNull.Bool {
+		if e.NotNull {
 			isNullAble = "NO"
 		}
 		var extra string
 		// when identity is true, the column is auto increment
-		if e.IdentityIncrement.Int32 == 1 {
+		if e.IdentityIncrement == 1 {
 			extra = "auto_increment"
 		}
 		// when type is serial, it'm auto_increment. and the default value is tablename_columnname_seq
-		if strings.Contains(e.ColumnDefault.String, table+"_"+e.Field.String+"_seq") {
+		if strings.Contains(e.ColumnDefault, table+"_"+e.Field+"_seq") {
 			extra = "auto_increment"
 		}
 
-		if len(index[e.Field.String]) > 0 {
-			for _, i := range index[e.Field.String] {
+		if len(index[e.Field]) > 0 {
+			for _, i := range index[e.Field] {
 				list = append(list, &Column{
 					DbColumn: &DbColumn{
-						Name:            e.Field.String,
-						DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type.String),
+						Name:            e.Field,
+						DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type),
 						Extra:           extra,
-						Comment:         e.Comment.String,
+						Comment:         e.Comment,
 						ColumnDefault:   dft,
 						IsNullAble:      isNullAble,
-						DataTypeLong:    e.DataTypeLong.String,
-						OrdinalPosition: int(e.Num.Int32),
+						DataTypeLong:    strconv.Itoa(e.DataTypeLong),
+						OrdinalPosition: int(e.Num),
 					},
 					Index: i,
 				})
@@ -205,13 +218,13 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		} else {
 			list = append(list, &Column{
 				DbColumn: &DbColumn{
-					Name:            e.Field.String,
-					DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type.String),
+					Name:            e.Field,
+					DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type),
 					Extra:           extra,
-					Comment:         e.Comment.String,
+					Comment:         e.Comment,
 					ColumnDefault:   dft,
 					IsNullAble:      isNullAble,
-					OrdinalPosition: int(e.Num.Int32),
+					OrdinalPosition: int(e.Num),
 				},
 			})
 		}
