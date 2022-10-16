@@ -170,7 +170,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	}
 	var list []*Column
 	for _, e := range in {
-		//log.Printf("column is %+v\n", e)
 		var dft interface{}
 		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
