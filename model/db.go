@@ -79,6 +79,7 @@ type (
 		Require         bool        `json:"require"`   // 是否必填
 		ErrorText       string      `json:"errorText"` // 校验失败文字
 		TableName       string      `json:"tableName"`
+		IsPk            bool        `json:"is_pk"`
 	}
 
 	DbIndex struct {
