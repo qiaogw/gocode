@@ -32,6 +32,7 @@ type PostgreColumn struct {
 	Num               sql.NullInt32  `db:"num"`
 	Field             sql.NullString `db:"field"`
 	Type              sql.NullString `db:"type"`
+	DataTypeLong      sql.NullString `db:"dataTypeLong"`
 	NotNull           sql.NullBool   `db:"not_null"`
 	Comment           sql.NullString `db:"comment"`
 	ColumnDefault     sql.NullString `db:"column_default"`
@@ -97,6 +98,7 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 		t.num,
 		t.field,
 		t.type,
+		t.dataTypeLong,
 		t.not_null,
 		t.comment, 
 		c.column_default, 
@@ -108,6 +110,10 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
                 t.typname     AS type,
                 a.atttypmod   AS lengthvar,
                 a.attnotnull  AS not_null,
+				(case
+					when a.attlen > 0 then a.attlen
+					when t.typname='bit' then a.atttypmod
+					else a.atttypmod - 4 end) AS dataTypeLong,
                 b.description AS comment
          FROM pg_class c,
               pg_attribute a
@@ -120,6 +126,7 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
            and a.atttypid = t.oid
  		 GROUP BY 
 			a.attnum, 
+			a.attlen,
 			c.relname, 
 			a.attname, 
 			t.typname, 
@@ -193,6 +200,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 						Comment:         e.Comment.String,
 						ColumnDefault:   dft,
 						IsNullAble:      isNullAble,
+						DataTypeLong:    e.DataTypeLong.String,
 						OrdinalPosition: int(e.Num.Int32),
 					},
 					Index: i,
