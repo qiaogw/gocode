@@ -224,9 +224,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 			})
 		}
 	}
-	//for _, o := range list {
-	//	log.Printf("cl is %+v\n", o.DbColumn)
-	//}
+
 	return list, nil
 }
 
