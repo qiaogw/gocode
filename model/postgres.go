@@ -189,7 +189,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		}
 
 		if len(index[e.Field.String]) > 0 {
-			//log.Printf("e.Field is %v,index[e.Field.String] is %v,index[e.Field.String] len is %d\n", e.Field, index[e.Field.String], len(index[e.Field.String]))
 			for _, i := range index[e.Field.String] {
 				list = append(list, &Column{
 					DbColumn: &DbColumn{
