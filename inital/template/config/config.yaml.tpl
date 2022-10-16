@@ -14,7 +14,7 @@ redis:
 
 etcd:
   hosts:
-    - etcd:2379
+    - 127.0.0.1:2379
   key: {{.Package}}.rpc
 
 Auth:

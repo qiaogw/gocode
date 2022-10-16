@@ -38,6 +38,7 @@ func (acd *AutoCodeService) CreateRpc(db *model.Db, ids ...uint) (err error) {
 func (acd *AutoCodeService) CreateRpcLogic(db *model.Db, ids ...uint) (err error) {
 	for _, v := range db.Tables {
 		v.ParentPkg = db.ParentPkg
+		v.PKG = db.PKG
 		err = acd.createRpcLogic(v)
 		if err != nil {
 			log.Printf("createRpcLogic err is %v\n", err)

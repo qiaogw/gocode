@@ -1,7 +1,7 @@
 package model
 
 import (
-    "github.com/qiaogw/gocode/common/modelx"
+    "{{.PKG}}/common/modelx"
 {{ if .HasTimer }}"time"{{ end }}
 )
 

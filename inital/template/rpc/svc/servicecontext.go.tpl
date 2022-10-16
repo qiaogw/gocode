@@ -1,10 +1,10 @@
 package svc
 
 import (
-"github.com/Pacific73/gorm-cache/cache"
-cacheConfig "github.com/Pacific73/gorm-cache/config"
+"github.com/qiaogw/gorm-cache/cache"
+cacheConfig "github.com/qiaogw/gorm-cache/config"
 	"{{.ParentPkg}}/model"
-	"github.com/qiaogw/gocode/common/gormx"
+	"{{.PKG}}/common/gormx"
 	"{{.ParentPkg}}/rpc/internal/config"
 "github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -27,6 +27,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: c.CacheRedis[0].Host,
+		Password: c.CacheRedis[0].Pass,
 	})
 	_ = db.Use(&gormx.ZeroGorm{})
 	caches, err := cache.NewGorm2Cache(&cacheConfig.CacheConfig{

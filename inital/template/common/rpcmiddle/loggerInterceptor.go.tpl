@@ -3,7 +3,7 @@ package rpcmiddle
 import (
 	"context"
 	"github.com/pkg/errors"
-"github.com/qiaogw/gocode/common/errorx"
+"{{.PKG}}/common/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

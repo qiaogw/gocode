@@ -9,8 +9,8 @@ import (
 	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	{{ if .HasTimer }}"github.com/qiaogw/gocode/common/timex"{{- end }}
-	{{ if .HasCacheKey}}"github.com/qiaogw/gocode/common/errorx"{{- end }}
+	{{ if .HasTimer }}"{{.PKG}}/common/timex"{{- end }}
+	{{ if .HasCacheKey}}"{{.PKG}}/common/errorx"{{- end }}
 )
 
 type Create{{.Table}}Logic struct {

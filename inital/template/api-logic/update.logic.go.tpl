@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-"github.com/qiaogw/gocode/common/errorx"
+"{{.PKG}}/common/errorx"
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"

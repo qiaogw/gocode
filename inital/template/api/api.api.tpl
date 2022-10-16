@@ -13,30 +13,14 @@ info (
 	author: "{{.GitUser}}"
 	email: "{{.GitEmail}}"
 )
-type (
-    // 用户登录
-    LoginRequest {
-        Mobile    string `json:"mobile"`
-        Password  string `json:"password"`
-        Captcha   string `json:"captcha"`   // 验证码
-        CaptchaId string `json:"captchaId"` // 验证码ID
-    }
-    // 验证码
-    CaptchaRequest  struct{}
-)
 
+// 需要登录
+@server(
+    group : {{.Package}}
+    prefix : /{{.Package}}
+    jwt: Auth
+)
 service {{.Package}} {
-@doc(
-summary: "验证码"
-)
-@handler Captcha //  
-post  /base/captcha (CaptchaRequest) returns(CommonResponse)
-
-@doc(
-summary: "用户登录"
-)
-@handler Login //  
-post  /base/login (LoginRequest) returns(CommonResponse)
 {{- range .Tables }}
     @doc(
         summary: "提取-{{.TableComment}}"

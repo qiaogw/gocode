@@ -1,8 +1,8 @@
 package logic
 
 import (
-"github.com/qiaogw/gocode/common/modelx"
-	"github.com/qiaogw/gocode/common/errorx"
+"{{.PKG}}/common/modelx"
+	"{{.PKG}}/common/errorx"
 	"context"
 	"google.golang.org/grpc/status"
 "github.com/jinzhu/copier"
@@ -10,7 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	{{ if .HasTimer }}"github.com/qiaogw/gocode/common/timex"{{ end }}
+	{{ if .HasTimer }}"{{.PKG}}/common/timex"{{ end }}
 )
 
 type Update{{.Table}}Logic struct {

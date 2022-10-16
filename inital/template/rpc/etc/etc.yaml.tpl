@@ -1,6 +1,18 @@
 Name: {{.Package}}-Rpc
 ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
 
+Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
+
+JwtAuth:
+  AccessSecret: {{.Option.Auth.AccessSecret}}
+  AccessExpire: {{.Option.Auth.AccessExpire}}
+  RefreshAfter: {{.Option.Auth.RefreshAfter}}
+
+Redis:                   # 指定 Redis 服务
+  Key: rpc:auth:{{.Package}}     # 指定 Key 应为 hash 类型
+  Host: {{.Option.Redis.Addr}}
+  Pass: {{.Option.Redis.Password}}
+  Type: {{.Option.Redis.DB}}
 
 Database:
   DriverName: {{.Option.DB.DbType}}
@@ -19,7 +31,7 @@ Etcd:
      {{- end }}
   Key: {{.Package}}.rpc
 
-Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
+
 
 Prometheus:
   Host: 0.0.0.0

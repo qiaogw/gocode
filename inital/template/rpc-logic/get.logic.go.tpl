@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"github.com/qiaogw/gocode/common/modelx"
-	"github.com/qiaogw/gocode/common/errorx"
+	"{{.PKG}}/common/modelx"
+	"{{.PKG}}/common/errorx"
 	"context"
 	"google.golang.org/grpc/status"
 "github.com/jinzhu/copier"

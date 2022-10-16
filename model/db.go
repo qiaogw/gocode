@@ -21,6 +21,7 @@ type (
 		Option     *config.APP
 		DriverName string
 		ParentPkg  string //项目路径
+		PKG        string //根目录
 	}
 	CacheKey struct {
 		Key       string
@@ -48,6 +49,7 @@ type (
 		GitUser      string
 		GitEmail     string
 		ParentPkg    string //项目路径
+		PKG          string //根目录
 		Service      string //模块首字母大写驼峰
 	}
 	Column struct {
@@ -59,6 +61,7 @@ type (
 	DbColumn struct {
 		Name            string      `json:"name" gorm:"column:COLUMN_NAME"`
 		GormName        string      `json:"gormName" gorm:"-"`
+		DbType          string      `json:"dbType" gorm:"column:db_TYPE"`
 		DataType        string      `json:"dataType" gorm:"column:DATA_TYPE"`
 		DataTypeLong    string      `json:"data_type_long" gorm:"column:data_type_long"`
 		DataTypeProto   string      `json:"dataTypeProto" gorm:"-"`
@@ -157,7 +160,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		}
 		var isDefaultNull bool
 		//isDefaultNull = each.ColumnDefault == nil && each.IsNullAble == "YES"
-
+		each.DbType = each.DataType
 		dt, err := converter.ConvertStringDataType(each.DataType, isDefaultNull)
 		if err != nil {
 			return nil, fmt.Errorf("表： %s, 字段： %s 错误： %v", c.Table, each.Name, err)

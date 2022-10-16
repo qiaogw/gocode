@@ -55,8 +55,6 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	// log.Printf("pack is %s ,dataList is %v\n", pack, dataList)
 	for index, value := range dataList {
 		trimBase := strings.TrimPrefix(value.locationPath, tempPath+"/")
-		// log.Printf("trimBase is %s\n", trimBase)
-
 		if lastSeparator := strings.LastIndex(trimBase, "/"); lastSeparator != -1 {
 			origFileName := strings.TrimSuffix(trimBase[lastSeparator+1:], ".tpl")
 			firstDot := strings.Index(origFileName, ".")
@@ -68,6 +66,9 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 					fileName = origFileName
 				} else if fileSlice[1] == "logic" {
 					fileName = fileSlice[0] + pack + "logic.go"
+				} else if trimBase[0:strings.Index(trimBase, "/")] == "common" {
+
+					fileName = origFileName
 				} else if origFileName[firstDot:] != ".go" {
 					fileName = pack + origFileName[firstDot:]
 				} else {
@@ -88,9 +89,9 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	return dataList, fileList, needMkdir, err
 }
 
-//GetAllTplFile 获取 pathName 文件夹下所有 tpl 文件
-//@param: pathName string, fileList []string
-//@return: []string, error
+// GetAllTplFile 获取 pathName 文件夹下所有 tpl 文件
+// @param: pathName string, fileList []string
+// @return: []string, error
 func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([]string, error) {
 	//files, err := ioutil.ReadDir(pathName)
 	files, err := inital.TemplateTpl.ReadDir(pathName)
@@ -110,9 +111,9 @@ func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([
 	return fileList, err
 }
 
-//addAutoMoveFile 生成对应的迁移文件路径
-//@param: *tplData
-//@return: null
+// addAutoMoveFile 生成对应的迁移文件路径
+// @param: *tplData
+// @return: null
 func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	base := filepath.Base(data.autoCodePath)
 	fileSlice := strings.Split(data.autoCodePath, string(os.PathSeparator))
@@ -133,8 +134,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
 		fPath = filepath.Join(fPath, apiPath, apiDescPath)
 	case commonPath:
-		fp := strings.Split(fPath, string(os.PathSeparator))
-		cp := filepath.Join(fp[1 : len(fp)-1]...)
+		cp, _ := os.Getwd()
 		tp := filepath.Join(fileSlice[1 : n-1]...)
 		fPath = filepath.Join(cp, tp)
 	case apiPath:
@@ -150,10 +150,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	case etcPath:
 		fPath = filepath.Join(fPath, etcPath)
 	case svcPath:
-		// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
-		// log.Printf("data.autoCodePath is %s,base is %s\n", data.autoCodePath, base)
 		fPath = filepath.Join(fPath, internalPath, svcPath)
-		// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
 	case configPath:
 		fPath = filepath.Join(fPath, internalPath, configPath)
 	case apiResponsePath:

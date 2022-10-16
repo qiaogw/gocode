@@ -70,11 +70,12 @@ func run() error {
 	db.Option = global.GenConfig
 	db.DriverName = global.GenDB.Name()
 	dir, _ := os.Getwd()
-	parentPkg, err := golang.GetParentPackage(dir)
+	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
 		return err
 	}
-	db.ParentPkg = parentPkg + "/" + global.GenConfig.AutoCode.Pkg
+	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
+	db.PKG = pkg
 
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
@@ -94,6 +95,7 @@ func run() error {
 			db.HasTimer = true
 		}
 		tb.ParentPkg = db.ParentPkg
+		tb.PKG = db.PKG
 		err = genApp.CreateModel(tb)
 		if err != nil {
 			continue
