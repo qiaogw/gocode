@@ -17,7 +17,6 @@ require (
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
 	github.com/wxnacy/wgo v1.0.4
-	github.com/zeromicro/ddl-parser v1.0.4
 	github.com/zeromicro/go-zero v1.4.1
 	github.com/zeromicro/go-zero/tools/goctl v1.4.0
 	go.uber.org/zap v1.21.0
@@ -26,6 +25,8 @@ require (
 	gorm.io/driver/postgres v1.3.8
 	gorm.io/gorm v1.23.8
 )
+
+require github.com/zeromicro/ddl-parser v1.0.4
 
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
