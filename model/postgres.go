@@ -182,7 +182,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 		if e.IdentityIncrement.Int32 == 1 {
 			extra = "auto_increment"
 		}
-
 		// when type is serial, it'm auto_increment. and the default value is tablename_columnname_seq
 		if strings.Contains(e.ColumnDefault.String, table+"_"+e.Field.String+"_seq") {
 			extra = "auto_increment"
