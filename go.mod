@@ -23,7 +23,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gorm.io/driver/mysql v1.4.1
 	gorm.io/driver/postgres v1.3.8
-	gorm.io/gorm v1.24.0
+	gorm.io/gorm v1.23.10
 )
 
 require github.com/zeromicro/ddl-parser v1.0.4
