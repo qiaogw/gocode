@@ -29,27 +29,30 @@ var p2m = map[string]string{
 	"timestamptz": "timestamp",
 }
 
-// PostgresColumn describes a column in table
-type PostgresColumn struct {
-	Num               sql.NullInt32  `db:"num"`
-	Field             sql.NullString `db:"field"`
-	Type              sql.NullString `db:"type"`
-	DataTypeLong      sql.NullInt16  `db:"datatypelong" gorm:"datatypelong"`
-	NotNull           sql.NullBool   `db:"not_null"`
-	Comment           sql.NullString `db:"comment"`
-	ColumnDefault     sql.NullString `db:"column_default"`
-	IdentityIncrement sql.NullInt32  `db:"identity_increment"`
-}
+//
+//// PostgresColumn describes a column in table
+//type PostgresColumn struct {
+//	Num               sql.NullInt32  `db:"num"`
+//	Field             sql.NullString `db:"field"`
+//	Type              sql.NullString `db:"type"`
+//	DataTypeLong      sql.NullInt16  `db:"datatypelong" gorm:"datatypelong"`
+//	NotNull           sql.NullBool   `db:"not_null"`
+//	Comment           sql.NullString `db:"comment"`
+//	ColumnDefault     sql.NullString `db:"column_default"`
+//	IdentityIncrement sql.NullInt32  `db:"identity_increment"`
+//}
 
 type PostgreColumn struct {
 	Num               int32  `json:"num" gorm:"column:num"`
-	Field             string `json:"field" gorm:"column:field" db:"field"`
-	Type              string `json:"type" gorm:"column:type" db:"type"`
+	Field             string `json:"field" gorm:"column:field" `
+	Type              string `json:"type" gorm:"column:type" `
 	DataTypeLong      int    `json:"data_type_long" gorm:"data_type_long"`
 	NotNull           bool   `json:"not_null" gorm:"not_null"`
 	Comment           string `json:"comment" gorm:"comment"`
 	ColumnDefault     string `json:"column_default" gorm:"column_default"`
 	IdentityIncrement int32  `json:"identity_increment" gorm:"identity_increment"`
+	IsPk              bool   `json:"is_pk" gorm:"is_pk"`
+	Extra             string `json:"extra" gorm:"extra"`
 }
 
 // PostgreIndex describes an index for a column
@@ -107,49 +110,54 @@ func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 // Author [qiaogw](https://github.com/qiaogw)
 func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 	querySql := `
-	select 
-		t.num,
-		t.field,
-		t.type,
-		t.dataTypeLong as data_type_long,
-		t.not_null,
-		t.comment, 
-		c.column_default, 
-		identity_increment
-	from (
-         SELECT a.attnum AS num,
-                c.relname,
-                a.attname     AS field,
-                t.typname     AS type,
-                a.atttypmod   AS lengthvar,
-                a.attnotnull  AS not_null,
-				(case
-					when a.attlen > 0 then a.attlen
-					when t.typname='bit' then a.atttypmod
-					else a.atttypmod - 4 end) AS dataTypeLong,
-                b.description AS comment
-         FROM pg_class c,
-              pg_attribute a
-                  LEFT OUTER JOIN pg_description b ON a.attrelid = b.objoid 
-					AND a.attnum = b.objsubid,
-              pg_type t
-         WHERE c.relname = $1
-           and a.attnum > 0
-           and a.attrelid = c.oid
-           and a.atttypid = t.oid
- 		 GROUP BY 
-			a.attnum, 
-			a.attlen,
-			c.relname, 
-			a.attname, 
-			t.typname, 
-			a.atttypmod, 
-			a.attnotnull, 
-			b.description
-         ORDER BY a.attnum
-	) AS t
-         left join information_schema.columns AS c on t.relname = c.table_name 
-		and t.field = c.column_name and c.table_schema = 'public'`
+	select
+	c.relname as "table_name",
+	a.attname as field,
+	(case
+		when a.attnotnull = true then true
+		else false end) as not_null,
+	(case
+		when (
+		select
+			count(pg_constraint.*)
+		from
+			pg_constraint
+		inner join pg_class on
+			pg_constraint.conrelid = pg_class.oid
+		inner join pg_attribute on
+			pg_attribute.attrelid = pg_class.oid
+			and pg_attribute.attnum = any(pg_constraint.conkey)
+		inner join pg_type on
+			pg_type.oid = pg_attribute.atttypid
+		where
+			pg_class.relname = c.relname
+			and pg_constraint.contype = 'p'
+			and pg_attribute.attname = a.attname) > 0 then true
+		else false end) as is_pk,
+	concat_ws('', t.typname) as type,
+	(case
+		when a.attlen > 0 then a.attlen
+		when t.typname='bit' then a.atttypmod
+		else a.atttypmod - 4 end) as data_type_long,
+	 col.is_identity	as extra,
+	 col.column_default	as column_default,
+	(select description from pg_description where objoid = a.attrelid
+	and objsubid = a.attnum) as comment
+from
+	pg_class c,
+	pg_attribute a ,
+	pg_type t,
+	information_schema.columns as col
+where
+	c.relname = $1
+	and a.attnum>0
+	and a.attrelid = c.oid
+	and a.atttypid = t.oid
+	and col.table_name=c.relname and col.column_name=a.attname
+order by
+	c.relname desc,
+	a.attnum asc
+`
 
 	var reply []*PostgreColumn
 	err := m.DB.Raw(querySql, table).Scan(&reply).Error
