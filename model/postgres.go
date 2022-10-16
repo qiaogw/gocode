@@ -169,7 +169,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	if err != nil {
 		return nil, err
 	}
-	//log.Printf("tableis %s,is len is %+v\n", table, len(in))
 	var list []*Column
 	for _, e := range in {
 		var dft interface{}
