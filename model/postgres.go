@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/gorm"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -28,19 +27,6 @@ var p2m = map[string]string{
 	"int4":        "integer",
 	"timestamptz": "timestamp",
 }
-
-//
-//// PostgresColumn describes a column in table
-//type PostgresColumn struct {
-//	Num               sql.NullInt32  `db:"num"`
-//	Field             sql.NullString `db:"field"`
-//	Type              sql.NullString `db:"type"`
-//	DataTypeLong      sql.NullInt16  `db:"datatypelong" gorm:"datatypelong"`
-//	NotNull           sql.NullBool   `db:"not_null"`
-//	Comment           sql.NullString `db:"comment"`
-//	ColumnDefault     sql.NullString `db:"column_default"`
-//	IdentityIncrement sql.NullInt32  `db:"identity_increment"`
-//}
 
 type PostgreColumn struct {
 	Num               int32  `json:"num" gorm:"column:num"`
@@ -186,8 +172,6 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	//log.Printf("tableis %s,is len is %+v\n", table, len(in))
 	var list []*Column
 	for _, e := range in {
-		//log.Printf("table is %s,FieldName is %s\n", table, e.Field)
-		log.Printf("Column is %+v,is DataTypeLong is %+v\n", e, e.DataTypeLong)
 		var dft interface{}
 		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
