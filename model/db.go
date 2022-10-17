@@ -160,7 +160,6 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			continue
 		}
 		var isDefaultNull bool
-		//isDefaultNull = each.ColumnDefault == nil && each.IsNullAble == "YES"
 		each.DbType = each.DataType
 		dt, err := converter.ConvertStringDataType(each.DataType, isDefaultNull)
 		if err != nil {
