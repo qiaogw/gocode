@@ -169,6 +169,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		each.DataType = dt
 		each.DataTypeProto = dt
 		each.IsNull = each.IsNullAble == "YES"
+		each.Require = !each.IsNull
 		if dt == "time.Time" {
 			each.DataTypeProto = "string"
 			table.HasTimer = true

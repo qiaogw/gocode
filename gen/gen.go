@@ -20,7 +20,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	// 去除所有空格
 	// 获取 basePath 文件夹下所有tpl文件
 	tplFileList, err := acd.GetAllTplFile(templatePath, nil)
-	// log.Printf("templatePath is %s ,tplFileList is %v\n", templatePath, tplFileList)
+	//log.Printf("pack is %s ,tplFileList is %v\n", pack, tplFileList)
 	if err != nil {
 		log.Printf("templatePath is %s ,err is %v\n", templatePath, err)
 		return nil, nil, nil, err
@@ -58,7 +58,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 		if lastSeparator := strings.LastIndex(trimBase, "/"); lastSeparator != -1 {
 			origFileName := strings.TrimSuffix(trimBase[lastSeparator+1:], ".tpl")
 			firstDot := strings.Index(origFileName, ".")
-			//log.Printf("pack is %s,origFileName is %s\n", pack, origFileName)
+
 			fileSlice := strings.Split(origFileName, ".")
 			if firstDot != -1 {
 				var fileName string
@@ -67,7 +67,6 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 				} else if fileSlice[1] == "logic" {
 					fileName = fileSlice[0] + pack + "logic.go"
 				} else if trimBase[0:strings.Index(trimBase, "/")] == "common" {
-
 					fileName = origFileName
 				} else if origFileName[firstDot:] != ".go" {
 					fileName = pack + origFileName[firstDot:]
@@ -131,7 +130,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	case rpcLogicPath:
 		fPath = filepath.Join(fPath, rpcPath, internalPath, logicPath)
 	case apiDescPath:
-		// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
+		//log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
 		fPath = filepath.Join(fPath, apiPath, apiDescPath)
 	case commonPath:
 		cp, _ := os.Getwd()

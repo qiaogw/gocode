@@ -34,12 +34,7 @@ type (
     //List{{.Table}}Response 列表-{{.TableComment}}
     List{{.Table}}Response {
         Count int64 `json:"count"`
-        {{- range  .Columns }}
-            {{- if .IsPage}}
-			{{- else}}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}},omitempty"`
-            {{- end }}
-        {{- end }}
+        List []Get{{.Table}}Response `json:"list"`
     }
 
     //Create{{.Table}}Request 创建-{{.TableComment}}
