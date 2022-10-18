@@ -30,19 +30,13 @@ type (
 		FieldJson string
 	}
 	Table struct {
-		Db          string //小写服务名称
-		Table       string `json:"table" gorm:"column:table_name"` //表首字母大写驼峰
-		Name        string //表名
-		PackageName string //表首字母小写驼峰
-		TableUrl    string //url 表全小写
-		Columns     []*Column
-		// Primary key not included
-		UniqueIndex  map[string][]*Column
-		PrimaryKey   *Column
-		CacheKeys    []*CacheKey
-		NormalIndex  map[string][]*Column
-		HasTimer     bool //存在时间
-		HasCacheKey  bool //存在非主键的唯一键
+		Db           string //小写服务名称
+		Table        string `json:"table" gorm:"column:table_name"` //表首字母大写驼峰
+		Name         string //表名
+		PackageName  string //表首字母小写驼峰
+		TableUrl     string //url 表全小写
+		HasTimer     bool   //存在时间
+		HasCacheKey  bool   //存在非主键的唯一键
 		NeedValid    bool
 		PostgreSql   bool
 		TableComment string `json:"table_comment" gorm:"column:table_comment"`
@@ -54,12 +48,18 @@ type (
 		IsCurd       bool
 		IsAuth       bool
 		IsDataScope  bool
+		Columns      []*Column
+		// Primary key not included
+		UniqueIndex map[string][]*Column
+		PrimaryKey  *Column
+		CacheKeys   []*CacheKey
+		NormalIndex map[string][]*Column
 	}
 	Column struct {
-		*DbColumn
-		Index  *DbIndex
 		IsPk   bool
 		Indexs int
+		*DbColumn
+		Index *DbIndex
 	}
 	DbColumn struct {
 		Name            string      `json:"name" gorm:"column:COLUMN_NAME"`
