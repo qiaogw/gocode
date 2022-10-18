@@ -205,7 +205,6 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	}
 
 	primaryColumns := m[indexPri]
-	//log.Printf("primaryColumns:%+v\n", m)
 	if len(primaryColumns) == 0 {
 		return nil, fmt.Errorf("db:%s, table:%s, 缺失主键", c.Db, c.Table)
 	}
