@@ -119,9 +119,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	table.Table = util.CamelString(strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix))
 	table.PackageName = util.LeftLower(table.Table)
 	table.TableUrl = strings.ToLower(table.Table)
-	//log.Printf("table.Table is %s,table.PackageName is %s\n", table.Table, table.PackageName)
-	//log.Printf("table.Name is %s,table.prefix is %s,table.table is %s\n", table.Name,
-	//	strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix), table.Table)
+
 	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
 	table.Service = util.LeftUpper(table.Db)
 	table.TableComment = tableComment
