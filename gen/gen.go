@@ -157,47 +157,6 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	default:
 	}
 	data.autoMoveFilePath = filepath.Join(fPath, base)
-	//if strings.Contains(fileSlice[n-2], "model_gen") {
-	//	bn := strings.TrimSuffix(base, ".go")
-	//	base = bn + "_gen.go"
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SModel, base)
-	//} else if strings.Contains(fileSlice[n-2], "dto_gen") {
-	//	bn := strings.TrimSuffix(base, ".go")
-	//	base = bn + "_dto.go"
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SModel, base)
-	//} else if strings.Contains(fileSlice[n-2], "model") {
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SModel, base)
-	//} else if strings.Contains(fileSlice[n-2], "rpc-logic") {
-	//	//log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2:])
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.RpcLogic, base)
-	//} else if strings.Contains(fileSlice[n-2], "api-logic") {
-	//	//log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2:])
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.ApiLogic, base)
-	//} else if strings.Contains(fileSlice[n-2], "common") {
-	//	//log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2:])
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.Common, base)
-	//} else if strings.Contains(fileSlice[n-2], "rpc") {
-	//	//log.Printf("strings.Contains(fileSlice[n-2]: %+v\n", fileSlice[n-2])
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SRpc, base)
-	//} else if strings.Contains(fileSlice[n-2], "api") {
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SApi, base)
-	//} else if strings.Contains(fileSlice[n-2], "request") {
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root,
-	//		global.GenConfig.AutoCode.SApi, "request", base)
-	//} else {
-	//	//log.Printf("strings.Contains(fileSlice[2]: %+v\n", fileSlice[2:])
-	//	tp := filepath.Join(fileSlice[1:]...)
-	//	data.autoMoveFilePath = filepath.Join(global.GenConfig.AutoCode.Root, tp)
-	//}
-	//log.Printf("data.autoCodePath is %s;;;;;data.autoMoveFilePath is %s\n", data.autoCodePath, data.autoMoveFilePath)
 }
 
 func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData, err error) {
