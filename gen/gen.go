@@ -196,7 +196,6 @@ func (acd *AutoCodeService) genAfter(dataList []tplData, ids ...uint) error {
 			fmt.Println(util.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
 			continue
 		}
-		//fmt.Printf("value.autoCodePath is %s, value.autoMoveFilePath is %s\n", value.autoCodePath, value.autoMoveFilePath)
 		if err := util.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
 			return err
 		}
