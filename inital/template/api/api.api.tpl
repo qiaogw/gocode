@@ -10,8 +10,8 @@ import (
 info (
 	title: "{{.Service}}"//  add title
 	desc: "{{.Service}}"//  add description
-	author: "{{.GitUser}}"
-	email: "{{.GitEmail}}"
+	author: "{{.Author}}"
+	email: "{{.Email}}"
 )
 
 // 需要登录

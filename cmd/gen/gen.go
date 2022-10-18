@@ -102,8 +102,8 @@ func run() error {
 		}
 
 		db.Tables = append(db.Tables, tb)
-		db.GitEmail = tb.GitEmail
-		db.GitUser = tb.GitUser
+		db.Email = tb.Email
+		db.Author = tb.Author
 		err = genApp.CreateApiDesc(tb)
 		if err != nil {
 			log.Printf("CreateApiDesc err is %v\n", err)

@@ -16,8 +16,8 @@ type (
 		Package    string //首字母小写驼峰
 		Service    string //首字母大写驼峰
 		HasTimer   bool
-		GitUser    string
-		GitEmail   string
+		Author     string
+		Email      string
 		Option     *config.APP
 		DriverName string
 		ParentPkg  string //项目路径
@@ -32,25 +32,28 @@ type (
 	Table struct {
 		Db          string //小写服务名称
 		Table       string `json:"table" gorm:"column:table_name"` //表首字母大写驼峰
-		Name        string
+		Name        string //表名
 		PackageName string //表首字母小写驼峰
-		TableUrl    string //url 表全小写驼峰
+		TableUrl    string //url 表全小写
 		Columns     []*Column
 		// Primary key not included
 		UniqueIndex  map[string][]*Column
 		PrimaryKey   *Column
 		CacheKeys    []*CacheKey
 		NormalIndex  map[string][]*Column
-		HasTimer     bool
+		HasTimer     bool //存在时间
 		HasCacheKey  bool //存在非主键的唯一键
 		NeedValid    bool
 		PostgreSql   bool
 		TableComment string `json:"table_comment" gorm:"column:table_comment"`
-		GitUser      string
-		GitEmail     string
+		Author       string
+		Email        string
 		ParentPkg    string //项目路径
 		PKG          string //根目录
 		Service      string //模块首字母大写驼峰
+		IsCurd       bool
+		IsAuth       bool
+		IsDataScope  bool
 	}
 	Column struct {
 		*DbColumn
@@ -65,20 +68,20 @@ type (
 		DataType        string      `json:"dataType" gorm:"column:DATA_TYPE"`
 		DataTypeLong    string      `json:"data_type_long" gorm:"column:data_type_long"`
 		DataTypeProto   string      `json:"dataTypeProto" gorm:"-"`
-		IsPage          bool        `json:"isPage" gorm:"-"`
 		Extra           string      `json:"extra" gorm:"column:EXTRA"`
 		Comment         string      `json:"comment" gorm:"column:COLUMN_COMMENT"`
 		ColumnDefault   interface{} `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
 		IsNullAble      string      `json:"isNullAble" gorm:"column:IS_NULLABLE"`
-		IsNull          bool        `json:"isNull" gorm:"-"`
 		OrdinalPosition int         `json:"ordinalPosition" gorm:"column:ORDINAL_POSITION"`
 		FieldJson       string      `json:"fieldJson"`
 		FieldName       string      `json:"fieldName"`
-		Clearable       bool        `json:"clearable"` // 是否可清空
 		DictType        string      `json:"dictType"`  // 字典
-		Require         bool        `json:"require"`   // 是否必填
 		ErrorText       string      `json:"errorText"` // 校验失败文字
-		TableName       string      `json:"tableName"`
+		Tablename       string      `json:"tablename"`
+		IsPage          bool        `json:"isPage" gorm:"-"`
+		IsNull          bool        `json:"isNull" gorm:"-"`
+		Clearable       bool        `json:"clearable"` // 是否可清空
+		Require         bool        `json:"require"`   // 是否必填
 		IsPk            bool        `json:"is_pk"`
 		IsList          bool        `json:"isList" form:"isList" db:"is_list" gorm:"column:is_list;size:1;comment:是否显示;"`
 		Increment       bool        `json:"increment" form:"increment" db:"increment" gorm:"column:increment;size:1;comment:是否自增;"`
@@ -130,8 +133,8 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	if global.GenDB.Name() == "postgres" {
 		table.PostgreSql = true
 	}
-	table.GitUser = getGitName()
-	table.GitEmail = getGitEmail()
+	table.Author = getGitName()
+	table.Email = getGitEmail()
 	m := make(map[string][]*Column)
 	var pageIndex, pageSize DbColumn
 
@@ -190,7 +193,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		each.FieldName = util.LeftUpper(util.CamelString(each.Name))
 		each.FieldJson = util.LeftLower(util.CamelString(each.Name))
 		each.Comment = util.TrimNewLine(each.Comment)
-		each.TableName = c.Table
+		each.Tablename = c.Table
 		if each.Index != nil {
 			//log.Printf("each.Index is %+v\n", each.Index)
 			m[each.Index.IndexName] = append(m[each.Index.IndexName], each)
