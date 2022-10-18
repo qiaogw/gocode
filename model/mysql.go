@@ -45,7 +45,7 @@ type MysqlColumn struct {
 	DataTypeProto   string         `json:"dataTypeProto" gorm:"-"`
 	DataTypeLong    string         `json:"dataTypeLong" gorm:"-"`
 	Extra           string         `json:"extra" gorm:"column:EXTRA"`
-	Comment         string         `json:"comment" gorm:"column:COLUMN_COMMENT"`
+	ColumnComment   string         `json:"comment" gorm:"column:COLUMN_COMMENT"`
 	ColumnDefault   sql.NullString `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
 	IsNullAble      string         `json:"isNullAble" gorm:"column:IS_NULLABLE"`
 	IsNull          bool           `json:"isNull" gorm:"-"`
@@ -97,7 +97,7 @@ func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
 			Name:            item.Name,
 			DataType:        item.DataType,
 			Extra:           item.Extra,
-			Comment:         item.Comment,
+			ColumnComment:   item.ColumnComment,
 			ColumnDefault:   dft,
 			IsNullAble:      item.IsNullAble,
 			OrdinalPosition: item.OrdinalPosition,

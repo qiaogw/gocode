@@ -54,7 +54,7 @@ type Field struct {
 	FieldType       string `json:"fieldType"`       // Field数据类型
 	FieldJson       string `json:"fieldJson"`       // FieldJson
 	DataTypeLong    string `json:"dataTypeLong"`    // 数据库字段长度
-	Comment         string `json:"comment"`         // 数据库字段描述
+	ColumnComment   string `json:"comment"`         // 数据库字段描述
 	ColumnName      string `json:"columnName"`      // 数据库字段
 	FieldSearchType string `json:"fieldSearchType"` // 搜索条件
 	DictType        string `json:"dictType"`        // 字典

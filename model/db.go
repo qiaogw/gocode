@@ -69,7 +69,7 @@ type (
 		DataTypeLong    string      `json:"data_type_long" gorm:"column:data_type_long"`
 		DataTypeProto   string      `json:"dataTypeProto" gorm:"-"`
 		Extra           string      `json:"extra" gorm:"column:EXTRA"`
-		Comment         string      `json:"comment" gorm:"column:COLUMN_COMMENT"`
+		ColumnComment   string      `json:"comment" gorm:"column:COLUMN_COMMENT"`
 		ColumnDefault   interface{} `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
 		IsNullAble      string      `json:"isNullAble" gorm:"column:IS_NULLABLE"`
 		OrdinalPosition int         `json:"ordinalPosition" gorm:"column:ORDINAL_POSITION"`
@@ -192,7 +192,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		}
 		each.FieldName = util.LeftUpper(util.CamelString(each.Name))
 		each.FieldJson = util.LeftLower(util.CamelString(each.Name))
-		each.Comment = util.TrimNewLine(each.Comment)
+		each.ColumnComment = util.TrimNewLine(each.ColumnComment)
 		each.Tablename = c.Table
 		if each.Index != nil {
 			//log.Printf("each.Index is %+v\n", each.Index)

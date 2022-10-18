@@ -10,7 +10,7 @@ type List{{.Table}}Req struct {
 {{- range .Columns }}
     {{- if .IsPage}}
     {{- else}}
-        {{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" search:"type:exact;column:{{.GormName}};table:{{.TableName}}"`
+        {{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" search:"type:exact;column:{{.GormName}};table:{{.Tablename}}"`
     {{- end -}}
 {{- end }}
     {{.Table}}Order
@@ -21,7 +21,7 @@ type {{.Table}}Order struct {
 {{- range .Columns }}
     {{- if .IsPage}}
     {{- else}}
-        {{.FieldName}}Order  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" search:"type:order;column:{{.GormName}};table:{{.TableName}}"`
+        {{.FieldName}}Order  {{.DataType}} `json:"{{.FieldJson}}" form:"{{.FieldJson}}" search:"type:order;column:{{.GormName}};table:{{.Tablename}}"`
     {{- end -}}
 {{- end }}
 }

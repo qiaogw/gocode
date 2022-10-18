@@ -34,7 +34,7 @@ type PostgreColumn struct {
 	Type              string `json:"type" gorm:"column:type" `
 	DataTypeLong      int    `json:"data_type_long" gorm:"data_type_long"`
 	NotNull           bool   `json:"not_null" gorm:"not_null"`
-	Comment           string `json:"comment" gorm:"comment"`
+	ColumnComment     string `json:"comment" gorm:"comment"`
 	ColumnDefault     string `json:"column_default" gorm:"column_default"`
 	IdentityIncrement int32  `json:"identity_increment" gorm:"identity_increment"`
 	IsPk              bool   `json:"is_pk" gorm:"is_pk"`
@@ -196,7 +196,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 						Name:            e.Field,
 						DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type),
 						Extra:           extra,
-						Comment:         e.Comment,
+						ColumnComment:   e.ColumnComment,
 						ColumnDefault:   dft,
 						IsNullAble:      isNullAble,
 						DataTypeLong:    strconv.Itoa(e.DataTypeLong),
@@ -213,7 +213,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 					Name:            e.Field,
 					DataType:        m.convertPostgreSqlTypeIntoMysqlType(e.Type),
 					Extra:           extra,
-					Comment:         e.Comment,
+					ColumnComment:   e.ColumnComment,
 					ColumnDefault:   dft,
 					IsNullAble:      isNullAble,
 					OrdinalPosition: int(e.Num),
