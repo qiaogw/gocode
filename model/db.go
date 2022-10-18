@@ -80,6 +80,16 @@ type (
 		ErrorText       string      `json:"errorText"` // 校验失败文字
 		TableName       string      `json:"tableName"`
 		IsPk            bool        `json:"is_pk"`
+		IsList          bool        `json:"isList" form:"isList" db:"is_list" gorm:"column:is_list;size:1;comment:是否显示;"`
+		Increment       bool        `json:"increment" form:"increment" db:"increment" gorm:"column:increment;size:1;comment:是否自增;"`
+		IsEdit          bool        `json:"isEdit" form:"isEdit" db:"is_edit" gorm:"column:is_edit;size:1;comment:是否编辑;"`
+		IsSort          bool        `json:"isSort" form:"isSort" db:"is_sort" gorm:"column:is_sort;size:1;comment:是否排序;"`
+		HtmlType        string      `json:"htmlType" form:"htmlType" db:"html_type" gorm:"column:html_type;size:255;comment:html类型;"`
+		FkTable         string      `json:"fkTable" form:"fkTable" db:"fk_table" gorm:"column:fk_table;size:256;comment:关联表;"`
+		FkTableClass    string      `json:"fkTableClass" form:"fkTableClass" db:"fk_table_class" gorm:"column:fk_table_class;size:256;comment:关联类;"`
+		FkTablePackage  string      `json:"fkTablePackage" form:"fkTablePackage" db:"fk_table_package" gorm:"column:fk_table_package;size:256;comment:关联包;"`
+		FkLabelId       string      `json:"fkLabelId" form:"fkLabelId" db:"fk_label_id" gorm:"column:fk_label_id;size:256;comment:关联id;"`
+		FkLabelName     string      `json:"fkLabelName" form:"fkLabelName" db:"fk_label_name" gorm:"column:fk_label_name;size:256;comment:关联名;"`
 	}
 
 	DbIndex struct {
