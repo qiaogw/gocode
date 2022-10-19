@@ -2,7 +2,6 @@ package util
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -95,11 +94,6 @@ func FmtCode(f string) (err error) {
 	}
 	go func() {
 		err = cmd.Wait()
-		if err != nil {
-			fmt.Println(Yellow(fmt.Sprintf("%s 文件非 .go文件 不支持格式化！", f)))
-		} else {
-			//fmt.Println(Green(fmt.Sprintf("%s 生成！", f)))
-		}
 	}()
 	return err
 }
