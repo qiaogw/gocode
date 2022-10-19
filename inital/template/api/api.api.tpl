@@ -16,7 +16,7 @@ info (
 
 // 需要登录
 @server(
-    group : {{.Package}}
+//    group : {{.Package}}
     prefix : /{{.Package}}
     jwt: Auth
 )

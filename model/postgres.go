@@ -34,7 +34,7 @@ type PostgreColumn struct {
 	Type              string `json:"type" gorm:"column:type" `
 	DataTypeLong      int    `json:"data_type_long" gorm:"data_type_long"`
 	NotNull           bool   `json:"not_null" gorm:"not_null"`
-	ColumnComment     string `json:"comment" gorm:"comment"`
+	ColumnComment     string `json:"column_comment" gorm:"column_comment"`
 	ColumnDefault     string `json:"column_default" gorm:"column_default"`
 	IdentityIncrement int32  `json:"identity_increment" gorm:"identity_increment"`
 	IsPk              bool   `json:"is_pk" gorm:"is_pk"`
@@ -127,7 +127,7 @@ func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
 	 col.is_identity	as extra,
 	 col.column_default	as column_default,
 	(select description from pg_description where objoid = a.attrelid
-	and objsubid = a.attnum) as comment
+	and objsubid = a.attnum) as column_comment
 from
 	pg_class c,
 	pg_attribute a ,

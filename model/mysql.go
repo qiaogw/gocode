@@ -45,7 +45,7 @@ type MysqlColumn struct {
 	DataTypeProto   string         `json:"dataTypeProto" gorm:"-"`
 	DataTypeLong    string         `json:"dataTypeLong" gorm:"-"`
 	Extra           string         `json:"extra" gorm:"column:EXTRA"`
-	ColumnComment   string         `json:"comment" gorm:"column:COLUMN_COMMENT"`
+	ColumnComment   string         `json:"column_comment" gorm:"column:column_comment"`
 	ColumnDefault   sql.NullString `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
 	IsNullAble      string         `json:"isNullAble" gorm:"column:IS_NULLABLE"`
 	IsNull          bool           `json:"isNull" gorm:"-"`
