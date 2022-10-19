@@ -179,7 +179,6 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		if dt == "int64" || dt == "float64" {
 			each.HtmlType = "number"
 		}
-
 		each.DataType = dt
 		each.DataTypeProto = dt
 		each.IsNull = each.IsNullAble == "YES"
