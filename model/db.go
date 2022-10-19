@@ -176,6 +176,10 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		if err != nil {
 			return nil, fmt.Errorf("表： %s, 字段： %s 错误： %v", c.Table, each.Name, err)
 		}
+		if dt == "int64" || dt == "float64" {
+			each.HtmlType = "number"
+		}
+
 		each.DataType = dt
 		each.DataTypeProto = dt
 		each.IsNull = each.IsNullAble == "YES"
