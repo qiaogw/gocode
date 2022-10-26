@@ -7,7 +7,7 @@ import (
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-	"{{.PKG}}/common/errorx"
+	"{{.PKG}}/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -39,7 +39,7 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(req *types.Delete{{.Table}}Requ
 	}
 	
 	return &types.CommonResponse{
-	Code: errorx.Success,
+	Code: errx.Success,
 	Msg: "删除成功",
 }, nil
 }

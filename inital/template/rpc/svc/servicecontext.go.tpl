@@ -10,11 +10,13 @@ cacheConfig "github.com/qiaogw/gorm-cache/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"gorm.io/driver/{{.DriverName}}"
 "github.com/go-redis/redis"
+redisX "github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
 	Config    config.Config
+	RedisClient     *redisX.Redis
 	{{- range .Tables }}
 	{{.Table}}Model model.{{.Table}}Model
 	{{- end }}
@@ -26,8 +28,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	db, _ := gorm.Open({{.DriverName}}.Open(dsn), &gorm.Config{})
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: c.CacheRedis[0].Host,
-		Password: c.CacheRedis[0].Pass,
+		Addr: c.Redis.Host,
+		Password: c.Redis.Pass,
 	})
 	_ = db.Use(&gormx.ZeroGorm{})
 	caches, err := cache.NewGorm2Cache(&cacheConfig.CacheConfig{
@@ -53,8 +55,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:    c,
+RedisClient: redisX.New(c.Redis.Host, func(r *redisX.Redis) {
+r.Type = c.Redis.Type
+r.Pass = c.Redis.Pass
+}),
     {{- range .Tables }}
-        {{.Table}}Model: model.New{{.Table}}Model(conn, c.CacheRedis, db),
+        {{.Table}}Model: model.New{{.Table}}Model(conn, c.Cache, db),
     {{- end }}
 	}
 }

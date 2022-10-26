@@ -7,7 +7,7 @@ import (
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-	"{{.PKG}}/common/errorx"
+	"{{.PKG}}/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -42,7 +42,7 @@ func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
 	return &types.CommonResponse{
-			Code: errorx.Success,
+			Code: errx.Success,
 			Msg: "查询成功",
 			Data: res,
 		}, nil

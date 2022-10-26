@@ -2,8 +2,9 @@ package logic
 
 import (
 	"{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errorx"
+	"{{.PKG}}/common/errx"
 	"context"
+"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 "github.com/jinzhu/copier"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
@@ -32,9 +33,11 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(in *{{.Db}}.Get{{.Table}}Request) (*{
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if err == modelx.ErrNotFound {
-			return nil, errorx.NewCodeError(errorx.NoData, "该{{.TableComment}} 不存在")
+return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
+"该{{.TableComment}}不存在，id is %v", in.Id)
 		}
-		return nil, status.Error(500, err.Error())
+		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
+"提取 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
 	}
 	var rep {{.Db}}.Get{{.Table}}Response
 	_ = copier.Copy(&rep, res)

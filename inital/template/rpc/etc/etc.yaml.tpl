@@ -18,7 +18,7 @@ Database:
   DriverName: {{.Option.DB.DbType}}
   DataSource: {{.Option.DB.DataSource}}
 
-CacheRedis:
+Cache:
   - Host: {{.Option.Redis.Addr}}
     Pass: {{.Option.Redis.Password}}
     Type: {{.Option.Redis.DB}}

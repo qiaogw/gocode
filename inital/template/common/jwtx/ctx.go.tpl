@@ -73,9 +73,7 @@ token, err := jwt.ParseWithClaims(tokenString, &SysJwtClaims{},
 func(token *jwt.Token) (i interface{}, e error) {
 return []byte(SigningKey), nil
 })
-fmt.Printf("token is %+v \n,err is: %v \n", token.Claims, err)
-fmt.Println("SigningKey is :", SigningKey)
-fmt.Println("token.Valid  is :", token.Valid)
+
 //拿到token
 if token != nil {
 if claims, ok := token.Claims.(*SysJwtClaims); ok {

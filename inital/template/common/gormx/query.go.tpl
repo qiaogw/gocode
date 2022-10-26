@@ -2,7 +2,6 @@ package gormx
 
 import (
 	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"reflect"
 	"strings"
 )
@@ -31,7 +30,7 @@ const (
 func ResolveSearchQuery(driver string, q interface{}, condition Condition) {
 	qType := reflect.TypeOf(q)
 	qValue := reflect.ValueOf(q)
-	logx.Infof("driver is %s,t.Type is %+v", driver, q)
+
 	var tag string
 	var ok bool
 	var t *resolveSearchTag
@@ -51,7 +50,7 @@ func ResolveSearchQuery(driver string, q interface{}, condition Condition) {
 		if qValue.Field(i).IsZero() {
 			continue
 		}
-		logx.Infof("driver is %s,t.Type is %+v", driver, t)
+
 		//解析
 		switch t.Type {
 		//fix Postgres 双引号

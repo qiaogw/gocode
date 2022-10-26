@@ -2,8 +2,9 @@ package logic
 
 import (
 "{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errorx"
+	"{{.PKG}}/common/errx"
 	"context"
+"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 
 	"{{.ParentPkg}}/rpc/{{.Db}}"
@@ -33,15 +34,17 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.Db}}.Delete{{.Table}}Req
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if err == modelx.ErrNotFound {
-			return nil, errorx.NewCodeError(errorx.NoData, "该{{.TableComment}}不存在")
+			return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "该{{.TableComment}}不存在，id: %v", in.Id)
 		}
-		return nil, status.Error(500, err.Error())
+		return nil,  errors.Wrapf(errx.NewErrCode(errx.NoData),
+"查询 {{.TableComment}} db fail，id: %v,err:%v", in.Id)
 	}
 
 	err = l.svcCtx.{{.Table}}Model.Delete(l.ctx, res.Id)
 	if err != nil {
-		return nil, status.Error(500, err.Error())
-	}
+		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
+"删除 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
+}
 
 	return &{{.Db}}.Delete{{.Table}}Response{}, nil
 }

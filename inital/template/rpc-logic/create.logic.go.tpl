@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 	"{{.ParentPkg}}/model"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
@@ -10,7 +11,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/logx"
 	{{ if .HasTimer }}"{{.PKG}}/common/timex"{{- end }}
-	{{ if .HasCacheKey}}"{{.PKG}}/common/errorx"{{- end }}
+	"{{.PKG}}/common/errx"
 )
 
 type Create{{.Table}}Logic struct {
@@ -36,7 +37,7 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Req
 	// 判断该{{.Field}}记录是否已经存在
 	_, err := l.svcCtx.{{$table}}Model.FindOneBy{{.Field}}(l.ctx,in.{{.Field}})
 	if err == nil {
-	return nil, errorx.NewCodeError(errorx.DbError, "该{{$tableComment}}已存在")
+		return nil, errors.Wrapf(errx.NewErrCode(errx.Duplicate), "该{{$tableComment}}已存在")
 	}
 {{- end}}
 
@@ -58,11 +59,9 @@ new{{.Table}} := model.{{.Table}}{
 
 	res, err := l.svcCtx.{{.Table}}Model.Insert(l.ctx, &new{{.Table}})
 	if err != nil {
-		return nil, status.Error(500, err.Error())
+		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
+		"create {{$tableComment}} db insert fail , err:%v ,data : %+v  ", err, new{{.Table}})
 	}
-
-	
-
 	var rep {{.Db}}.Create{{.Table}}Response
 	_ = copier.Copy(&rep, res)
 	return &rep, nil

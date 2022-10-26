@@ -2,8 +2,9 @@ package logic
 
 import (
 "{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errorx"
+	"{{.PKG}}/common/errx"
 	"context"
+"github.com/pkg/errors"
 	"google.golang.org/grpc/status"
 "github.com/jinzhu/copier"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
@@ -48,10 +49,13 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) 
 	list,count, err := l.svcCtx.{{.Table}}Model.FindAll(l.ctx, &qData)
 	if err != nil {
 		if err == modelx.ErrNotFound {
-			return nil, errorx.NewCodeError(errorx.NoData, "{{.TableComment}}-该查询无数据")
+			return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
+"{{.TableComment}}-该查询无数据，查询条件: %+v", qData)
 		}
-		return nil, status.Error(500, err.Error())
-	}
+		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
+"查询 {{.TableComment}} db fail，查询条件: %v,err:%v", in.Id,err)
+
+}
 	
 	dataList := make([]*{{.Db}}.Get{{.Table}}Response, 0)
 	_ = copier.Copy(&dataList, list)

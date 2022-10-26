@@ -3,8 +3,9 @@ package model
 
 import (
 	"context"
-
+"io"
 "{{.PKG}}/common/modelx"
+"{{.PKG}}/common/toolx"
 	"{{.PKG}}/common/gormx"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -19,7 +20,8 @@ type (
 	// 更多的自定义方法在这里添加，通过接口方法
 	{{.Table}}Model interface {
 		{{.PackageName}}Model
-		FindAll(ctx context.Context, query *List{{.Table}}Req) ([]*{{.Table}},int64, error) 
+		FindAll(ctx context.Context, query *List{{.Table}}Req) ([]*{{.Table}},int64, error)
+		Import(reader io.Reader) error
 	}
 
 	custom{{.Table}}Model struct {
@@ -59,4 +61,46 @@ func (m *custom{{.Table}}Model) FindAll(ctx context.Context, query *List{{.Table
 	default:
 		return nil,0, err
 	}
+}
+
+
+// Import 导入
+func (m *custom{{.Table}}Model) Import(reader io.Reader) error {
+var err error
+tx := m.gormDB
+temp := new({{.Table}})
+ex := new(toolx.ExcelStruct)
+ex.Model = temp
+err = ex.SaveDb(tx, reader)
+if err != nil {
+return err
+}
+//var data []{{.Table}}
+//err = ex.ReadExcelIo(tx, reader)
+//if err != nil {
+//	return err
+//}
+//err = json.Unmarshal(ex.Content, &data)
+//if err != nil {
+//	return err
+//}
+//tx=tx.Clauses(clause.OnConflict{
+//	Columns: []clause.Column{
+//		{Name: "driver"},
+//		{Name: "host"},
+//		{Name: "dbname"},
+//	},
+//	UpdateAll: true,
+//})
+//for i := 0; i < len(data); i += 1000 {
+//	end := i + 1000
+//	if end > len(data) {
+//		end = len(data)
+//	}
+//	err = tx.CreateInBatches(data[i:end], len(data[i:end])).Error
+//	if err != nil {
+//		return err
+//	}
+//}
+return nil
 }

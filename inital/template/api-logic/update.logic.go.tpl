@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-"{{.PKG}}/common/errorx"
+"{{.PKG}}/common/errx"
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
@@ -39,7 +39,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Requ
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
 	return &types.CommonResponse{
-	Code: errorx.Success,
+	Code: errx.Success,
 	Msg: "更新成功",
 	}, nil
 }
