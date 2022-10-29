@@ -7,7 +7,7 @@ import (
 )
 
 // CreateModel 创建 model 代码
-func (acd *AutoCodeService) CreateModel(table *model.Table, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateModel(table *model.Table) (err error) {
 	dataList, err := acd.genBefore(table.Table, modelPath)
 	//log.Printf("dataList is %+v\n", dataList)
 	if err != nil {
@@ -32,7 +32,7 @@ func (acd *AutoCodeService) CreateModel(table *model.Table, ids ...uint) (err er
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, ids...)
+	err = acd.genAfter(dataList)
 	if err != nil {
 		return
 	}

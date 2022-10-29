@@ -8,7 +8,7 @@ import (
 )
 
 // CreateApi 创建 Api
-func (acd *AutoCodeService) CreateApi(db *model.Db, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateApi(db *model.Db) (err error) {
 	dataList, err := acd.genBefore(db.Database, apiPath)
 	if err != nil {
 		return
@@ -33,11 +33,11 @@ func (acd *AutoCodeService) CreateApi(db *model.Db, ids ...uint) (err error) {
 		}
 	}()
 
-	return acd.genAfter(dataList, ids...)
+	return acd.genAfter(dataList)
 }
 
 // CreateApiDesc 创建 Api
-func (acd *AutoCodeService) CreateApiDesc(table *model.Table, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateApiDesc(table *model.Table) (err error) {
 
 	dataList, err := acd.genBefore(table.Table, apiDescPath)
 	if err != nil {
@@ -63,5 +63,5 @@ func (acd *AutoCodeService) CreateApiDesc(table *model.Table, ids ...uint) (err 
 		}
 	}()
 
-	return acd.genAfter(dataList, ids...)
+	return acd.genAfter(dataList)
 }

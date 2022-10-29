@@ -7,7 +7,7 @@ import (
 )
 
 // CreateCommon 创建 Common
-func (acd *AutoCodeService) CreateCommon(db *model.Db, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateCommon(db *model.Db) (err error) {
 	dataList, err := acd.genBefore(db.Database, commonPath)
 	if err != nil {
 		return
@@ -31,5 +31,5 @@ func (acd *AutoCodeService) CreateCommon(db *model.Db, ids ...uint) (err error) 
 		}
 	}()
 
-	return acd.genAfter(dataList, ids...)
+	return acd.genAfter(dataList)
 }

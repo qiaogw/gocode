@@ -14,62 +14,66 @@ info (
 	email: "{{.Email}}"
 )
 
-// 需要登录
-@server(
-//    group : {{.Package}}
-    prefix : /{{.Package}}
-    jwt: Auth
-)
-service {{.Package}} {
 {{- range .Tables }}
+ {{- if .IsAuth }}
+	 //需要登录
+ {{- else}}
+	 //不需要登录
+ {{ end -}}
+@server(
+group : {{.TableUrl}}
+prefix : /{{.TableUrl}}
+{{- if .IsAuth}}
+jwt: Auth
+{{- end }}
+)
+service {{.Db}} {
     @doc(
         summary: "提取-{{.TableComment}}"
     )
-	@handler Get{{.Table}} //  
-	post  /{{.TableUrl}}/get (Get{{.Table}}Request) returns(CommonResponse)
+	@handler Get{{.Table}}
+	post  /get (Get{{.Table}}Request) returns(CommonResponse)
 
     @doc(
         summary: "列表-{{.TableComment}}"
     )
-	@handler List{{.Table}} //  
-	post /{{.TableUrl}}/list (List{{.Table}}Request) returns(CommonResponse)
+	@handler List{{.Table}}
+	post /list (List{{.Table}}Request) returns(CommonResponse)
 
     @doc(
         summary: "创建-{{.TableComment}}"
     )
-	@handler Create{{.Table}} //  
-	post  /{{.TableUrl}}/create (Create{{.Table}}Request) returns(CommonResponse)
+	@handler Create{{.Table}}
+	post  /create (Create{{.Table}}Request) returns(CommonResponse)
 
     @doc(
         summary: "更新-{{.TableComment}}"
     )
-	@handler Update{{.Table}} //  
-	post /{{.TableUrl}}/update (Update{{.Table}}Request) returns(CommonResponse)
+	@handler Update{{.Table}}
+	post /update (Update{{.Table}}Request) returns(CommonResponse)
 
     @doc(
         summary: "删除-{{.TableComment}}"
     )
-	@handler Delete{{.Table}} //  
-	post  /{{.TableUrl}}/delete (Delete{{.Table}}Request) returns(CommonResponse)
+	@handler Delete{{.Table}}
+	post  /delete (Delete{{.Table}}Request) returns(CommonResponse)
         
     @doc(
 		summary: "导出-{{.TableComment}}"
 	)
-	@handler Export{{.Table}} //
-	post /{{.TableUrl}}/export (List{{.Table}}Request) returns (CommonResponse)
+	@handler Export{{.Table}}
+	post /export (List{{.Table}}Request) returns (CommonResponse)
 	
 	@doc(
 		summary: "导出-{{.TableComment}}模板"
 	)
-	@handler Export{{.Table}}Template //
-	post /{{.TableUrl}}/exportTemplate (NullRequest) returns (CommonResponse)
+	@handler ExportTemplate{{.Table}}
+	post /exportTemplate (NullRequest) returns (CommonResponse)
 	
 	@doc(
 		summary: "导入-{{.TableComment}}"
 	)
-	@handler Import{{.Table}} //
-	post /{{.TableUrl}}/import (ImportRequest) returns (CommonResponse)
-	       
-        
-{{- end }}
+	@handler Import{{.Table}}
+	post /import (ImportRequest) returns (CommonResponse)
 }
+{{- end }}

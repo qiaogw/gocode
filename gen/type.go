@@ -32,6 +32,7 @@ type tplData struct {
 	locationPath     string
 	autoCodePath     string
 	autoMoveFilePath string
+	tablePkg         string
 }
 
 type AutoCodeService struct {

@@ -7,7 +7,7 @@ import (
 )
 
 // CreateRpc 创建Rpc 代码
-func (acd *AutoCodeService) CreateRpc(db *model.Db, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateRpc(db *model.Db) (err error) {
 	dataList, err := acd.genBefore(db.Database, rpcPath)
 	if err != nil {
 		return
@@ -31,11 +31,11 @@ func (acd *AutoCodeService) CreateRpc(db *model.Db, ids ...uint) (err error) {
 			return
 		}
 	}()
-	return acd.genAfter(dataList, ids...)
+	return acd.genAfter(dataList)
 }
 
 // CreateRpcLogic 创建Rpc 代码
-func (acd *AutoCodeService) CreateRpcLogic(db *model.Db, ids ...uint) (err error) {
+func (acd *AutoCodeService) CreateRpcLogic(db *model.Db) (err error) {
 	for _, v := range db.Tables {
 		v.ParentPkg = db.ParentPkg
 		v.PKG = db.PKG
@@ -54,7 +54,7 @@ func (acd *AutoCodeService) CreateRpcLogic(db *model.Db, ids ...uint) (err error
 }
 
 // createRpcLogic 创建 model 代码
-func (acd *AutoCodeService) createRpcLogic(table *model.Table, ids ...uint) (err error) {
+func (acd *AutoCodeService) createRpcLogic(table *model.Table) (err error) {
 	dataList, err := acd.genBefore(table.Table, rpcLogicPath)
 	if err != nil {
 		log.Printf("genBefore err is %v\n", err)
@@ -78,7 +78,7 @@ func (acd *AutoCodeService) createRpcLogic(table *model.Table, ids ...uint) (err
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, ids...)
+	err = acd.genAfter(dataList)
 	if err != nil {
 		return
 	}
@@ -86,14 +86,15 @@ func (acd *AutoCodeService) createRpcLogic(table *model.Table, ids ...uint) (err
 }
 
 // createApiLogic 创建 model 代码
-func (acd *AutoCodeService) createApiLogic(table *model.Table, ids ...uint) (err error) {
+func (acd *AutoCodeService) createApiLogic(table *model.Table) (err error) {
 	dataList, err := acd.genBefore(table.Table, apiLogicPath)
 	if err != nil {
 		log.Printf("genBefore err is %v\n", err)
 		return
 	}
 	// 生成文件
-	for _, value := range dataList {
+	for i, value := range dataList {
+		dataList[i].tablePkg = table.TableUrl
 		f, err := os.OpenFile(value.autoCodePath, os.O_CREATE|os.O_WRONLY, 0o755)
 		if err != nil {
 			return err
@@ -110,7 +111,7 @@ func (acd *AutoCodeService) createApiLogic(table *model.Table, ids ...uint) (err
 			return
 		}
 	}()
-	err = acd.genAfter(dataList, ids...)
+	err = acd.genAfter(dataList)
 	if err != nil {
 		return
 	}

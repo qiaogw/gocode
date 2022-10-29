@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"text/template"
 
@@ -123,10 +122,10 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	c := global.GenConfig.AutoCode
 	rPath := c.Root
 	fPath := filepath.Join(rPath)
-	// log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fileSlice[1])
+	//log.Println(util.Red(fmt.Sprintf("data is %+v\n", data)))
 	switch fileSlice[1] {
 	case apiLogicPath:
-		fPath = filepath.Join(fPath, apiPath, internalPath, logicPath)
+		fPath = filepath.Join(fPath, apiPath, internalPath, logicPath, data.tablePkg)
 	case rpcLogicPath:
 		fPath = filepath.Join(fPath, rpcPath, internalPath, logicPath)
 	case apiDescPath:
@@ -173,16 +172,9 @@ func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData
 	return
 }
 
-func (acd *AutoCodeService) genAfter(dataList []tplData, ids ...uint) error {
+func (acd *AutoCodeService) genAfter(dataList []tplData, pkg ...string) error {
 
 	bf := strings.Builder{}
-	idBf := strings.Builder{}
-
-	for _, id := range ids {
-		idBf.WriteString(strconv.Itoa(int(id)))
-		idBf.WriteString(";")
-	}
-
 	for index := range dataList {
 		acd.addAutoMoveFile(&dataList[index])
 
