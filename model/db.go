@@ -68,7 +68,7 @@ type (
 		DataType        string      `json:"dataType" gorm:"column:DATA_TYPE"`
 		DataTypeLong    string      `json:"data_type_long" gorm:"column:data_type_long"`
 		DataTypeProto   string      `json:"dataTypeProto" gorm:"-"`
-		DataTypeApi     string      `json:"dataTypeApi" gorm:"-"`
+		DataTypeApi     string      `json:"dataTypeApi" `
 		Extra           string      `json:"extra" gorm:"column:EXTRA"`
 		ColumnComment   string      `json:"comment" gorm:"column:COLUMN_COMMENT"`
 		ColumnDefault   interface{} `json:"columnDefault" gorm:"column:COLUMN_DEFAULT"`
