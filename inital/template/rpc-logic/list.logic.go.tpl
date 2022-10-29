@@ -5,7 +5,7 @@ import (
 	"{{.PKG}}/common/errx"
 	"context"
 "github.com/pkg/errors"
-	"google.golang.org/grpc/status"
+
 "github.com/jinzhu/copier"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
@@ -53,7 +53,7 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) 
 "{{.TableComment}}-该查询无数据，查询条件: %+v", qData)
 		}
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-"查询 {{.TableComment}} db fail，查询条件: %v,err:%v", in.Id,err)
+"查询 {{.TableComment}} db fail，查询条件: %v,err:%v", in,err)
 
 }
 	

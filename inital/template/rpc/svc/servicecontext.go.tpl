@@ -55,10 +55,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:    c,
-RedisClient: redisX.New(c.Redis.Host, func(r *redisX.Redis) {
-r.Type = c.Redis.Type
-r.Pass = c.Redis.Pass
-}),
+	RedisClient: redisX.New(c.Redis.Host, func(r *redisX.Redis) {
+	r.Type = c.Redis.Type
+	r.Pass = c.Redis.Pass
+	}),
     {{- range .Tables }}
         {{.Table}}Model: model.New{{.Table}}Model(conn, c.Cache, db),
     {{- end }}

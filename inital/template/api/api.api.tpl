@@ -51,5 +51,25 @@ service {{.Package}} {
     )
 	@handler Delete{{.Table}} //  
 	post  /{{.TableUrl}}/delete (Delete{{.Table}}Request) returns(CommonResponse)
+        
+    @doc(
+		summary: "导出-{{.TableComment}}"
+	)
+	@handler Export{{.Table}} //
+	post /{{.TableUrl}}/export (List{{.Table}}Request) returns (CommonResponse)
+	
+	@doc(
+		summary: "导出-{{.TableComment}}模板"
+	)
+	@handler Export{{.Table}}Template //
+	post /{{.TableUrl}}/exportTemplate (NullRequest) returns (CommonResponse)
+	
+	@doc(
+		summary: "导入-{{.TableComment}}"
+	)
+	@handler Import{{.Table}} //
+	post /{{.TableUrl}}/import (ImportRequest) returns (CommonResponse)
+	       
+        
 {{- end }}
 }

@@ -72,6 +72,7 @@ func run() error {
 	dir, _ := os.Getwd()
 	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
+		log.Println(util.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
 		return err
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg

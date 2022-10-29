@@ -16,5 +16,5 @@ type Config struct {
 
     Cache cache.CacheConf
     Redis redis.RedisKeyConf
-    Salt string
+
 }

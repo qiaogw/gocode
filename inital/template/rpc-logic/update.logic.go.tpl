@@ -5,7 +5,7 @@ import (
 	"{{.PKG}}/common/errx"
 	"context"
 "github.com/pkg/errors"
-	"google.golang.org/grpc/status"
+
 "github.com/jinzhu/copier"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"

@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-{{ if .HasTimer }}
-    import "google/protobuf/timestamp.proto";
-{{- end }}
+
 
 
 package {{.Package}};
@@ -125,6 +123,20 @@ message LoginResponse {
 int64 id = 1;
 }
 
+//导出 Export  Request
+message ExportRequest {
+int64 pageIndex = 1;
+int64 pageSize = 2;
+string searchKey = 3;
+string sortBy = 4;
+bool descending = 5;
+}
+
+//导出 Export  Response
+message ExportResponse {
+bytes data=1;
+}
+
 service {{.Package}} {
 rpc Login(LoginRequest) returns(LoginResponse);
 {{range .Tables }}
@@ -134,5 +146,9 @@ rpc Login(LoginRequest) returns(LoginResponse);
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
     rpc Update{{.Table}}(Update{{.Table}}Request) returns(Update{{.Table}}Response);
     rpc Delete{{.Table}}(Delete{{.Table}}Request) returns(Delete{{.Table}}Response);
+
+    rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
+    rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
+    rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
 {{ end}}
 }

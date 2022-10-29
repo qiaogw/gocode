@@ -15,9 +15,4 @@ type Config struct {
     CacheRedis cache.CacheConf
 
     {{.Service}}Rpc zrpc.RpcClientConf
-    Captcha struct {
-        KeyLong   int // 验证码长度
-        ImgWidth  int // 验证码宽度
-        ImgHeight int // 验证码高度
-    }
 }

@@ -3,7 +3,7 @@ type (
     Get{{.Table}}Request {
         {{- range  .Columns}}
             {{- if .IsPk }}
-                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+                {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}"`
             {{- end }}
         {{- end }}
     }
@@ -13,7 +13,7 @@ type (
         {{- range  .Columns }}
             {{- if .IsPage}}
 			{{- else}}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}},omitempty"`
+            {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}},omitempty"`
             {{- end }}
         {{- end }}
     }
@@ -23,7 +23,7 @@ type (
     {{- range  .Columns }}
         {{- if .IsPk }}
         {{else}}
-            {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}},optional"`
+            {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}},optional"`
         {{- end }}
     {{- end }}
     SearchKey string  `json:"searchKey,optional"`
@@ -43,7 +43,7 @@ type (
             {{- if .IsPk }}
             {{else if .IsPage}}
 			{{- else}}
-                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
+                {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
             {{- end }}
         {{- end }}
     }
@@ -52,7 +52,7 @@ type (
     Create{{.Table}}Response {
         {{- range  .Columns }}
             {{- if .IsPk }}
-                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}},omitempty"`
+                {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}},omitempty"`
             {{- end }}
         {{- end }}
     }
@@ -63,7 +63,7 @@ type (
             {{- if .IsPage}}
 			{{- else if .IsPage}}
 			{{- else}}
-           {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
+           {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
             {{- end }}
         {{- end }}
     }
@@ -75,7 +75,7 @@ type (
     Delete{{.Table}}Request {
         {{- range  .Columns }}
             {{- if .IsPk }}
-                {{.FieldName}} {{.DataTypeProto}} `json:"{{.FieldJson}}"`
+                {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}"`
             {{- end }}
         {{- end }}
     }
