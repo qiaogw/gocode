@@ -80,6 +80,8 @@ type (
 		ErrorText       string      `json:"errorText"` // 校验失败文字
 		Tablename       string      `json:"tablename"`
 		IsPage          bool        `json:"isPage" gorm:"-"`
+		IsControl       bool        `json:"isControl" gorm:"-"`
+		IsModelTime     bool        `json:"isModelTime" gorm:"-"`
 		IsNull          bool        `json:"isNull" gorm:"-"`
 		Clearable       bool        `json:"clearable"` // 是否可清空
 		Require         bool        `json:"require"`   // 是否必填
@@ -157,19 +159,19 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			}
 		}
 		if each.Name == "created_at" {
-			continue
+			each.IsModelTime = true
 		}
 		if each.Name == "updated_at" {
-			continue
+			each.IsModelTime = true
 		}
 		if each.Name == "deleted_at" {
-			continue
+			each.IsModelTime = true
 		}
 		if each.Name == "create_by" {
-			continue
+			each.IsControl = true
 		}
 		if each.Name == "update_by" {
-			continue
+			each.IsControl = true
 		}
 		var isDefaultNull bool
 		each.DbType = each.DataType

@@ -57,8 +57,24 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) 
 
 }
 	
-	dataList := make([]*{{.Db}}.Get{{.Table}}Response, 0)
-	_ = copier.Copy(&dataList, list)
+	var dataList[]*{{.Db}}.Get{{.Table}}Response
+
+	for _, v := range list {
+		var dm {{.Db}}.Get{{.Table}}Response
+		_ = copier.Copy(&dm, v)
+		{{- range  .Columns }}
+			{{- if eq .DataType "time.Time"}}
+				{{- if eq .FieldName "DeletedAt"}}
+				{{- else }}
+					if !v.{{.FieldName}}.IsZero() {
+					dm.{{.FieldName}}=timex.TimeToDatetimeStr(v.{{.FieldName}})
+					}
+				{{- end }}
+			{{- end}}
+		{{- end }}
+dataList = append(dataList, &dm)
+	}
+
 
 	return &{{.Db}}.List{{.Table}}Response{
 		List: dataList,

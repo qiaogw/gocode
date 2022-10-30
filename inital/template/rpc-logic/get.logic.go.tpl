@@ -10,7 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
-
+{{ if .HasTimer }}"{{.PKG}}/common/timex"{{ end }}
 )
 
 type Get{{.Table}}Logic struct {
@@ -41,7 +41,15 @@ return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
 	}
 	var rep {{.Db}}.Get{{.Table}}Response
 	_ = copier.Copy(&rep, res)
-
-
+	{{- range  .Columns }}
+		{{- if eq .DataType "time.Time"}}
+			{{- if eq .FieldName "DeletedAt"}}
+				{{- else }}
+			if !res.{{.FieldName}}.IsZero() {
+			rep.{{.FieldName}}=timex.TimeToDatetimeStr(res.{{.FieldName}})
+			}
+				{{- end }}
+		{{- end}}
+	{{- end }}
 	return &rep, nil
 }

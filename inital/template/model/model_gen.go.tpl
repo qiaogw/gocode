@@ -38,6 +38,8 @@ type (
 		modelx.BaseModel
         {{- range .Columns }}
 			{{- if .IsPk -}}
+			{{- else if .IsModelTime }}
+			{{- else if .IsControl }}
 			{{- else}}
 				{{- if .IsPage}}
 				{{- else}}

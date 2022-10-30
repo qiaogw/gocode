@@ -87,6 +87,7 @@ func run() error {
 			log.Println(util.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
 		}
+		fmt.Println(util.Red(fmt.Sprintf("表名：%s,中午：%s,table:%+v", v.Table, v.TableComment, v)))
 		tb, err := columnData.Convert(v.TableComment)
 		if err != nil {
 			fmt.Println(util.Red(fmt.Sprintf("数据生成错误错误: %v", err)))

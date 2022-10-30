@@ -41,7 +41,9 @@ type (
     Create{{.Table}}Request {
         {{- range  .Columns }}
             {{- if .IsPk }}
-            {{else if .IsPage}}
+            {{- else if .IsPage}}
+            {{- else if .IsModelTime}}
+            {{- else if .IsControl}}
 			{{- else}}
                 {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
             {{- end }}
@@ -62,6 +64,8 @@ type (
         {{- range  .Columns }}
             {{- if .IsPage}}
 			{{- else if .IsPage}}
+            {{- else if .IsModelTime}}
+            {{- else if .IsControl}}
 			{{- else}}
            {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}}{{- if .IsNull -}},optional{{- end -}}{{- if .ColumnDefault -}},default={{.ColumnDefault}}{{- end -}}"`
             {{- end }}

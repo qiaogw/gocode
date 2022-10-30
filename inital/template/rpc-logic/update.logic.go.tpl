@@ -48,6 +48,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 			{{- end}}
 		{{- end}}
 	{{- end }}
+	res.UpdateBy = in.UpdateBy
 
 	res,err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)
 	if err != nil {

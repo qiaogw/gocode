@@ -56,12 +56,16 @@ option go_package="./{{.Package}}";
         {{- if .IsPk }}
         {{- else}}
             {{- if .IsPage }}
+            {{- else if .IsModelTime}}
+            {{- else if .IsControl}}
             {{- else}}
                 {{- $x = add $x }}
                 {{.DataTypeProto}} {{.FieldJson}}={{- $x -}};
             {{- end}}
         {{- end}}
     {{- end }}
+    {{- $x = add $x }}
+    int64 createBy={{- $x -}};
     }
 
     //创建 {{.Table}} ({{.TableComment}}) Response
@@ -78,12 +82,17 @@ option go_package="./{{.Package}}";
     {{- $e :=0 -}}
     {{- range  .Columns }}
         {{- if .IsPage }}
+        {{- else if .IsModelTime}}
+        {{- else if .IsControl}}
         {{- else}}
             {{- $e = add $e }}
             {{.DataTypeProto}} {{.FieldJson}}={{- $e -}};
         {{- end}}
     {{- end }}
+    {{- $e = add $e }}
+    int64 updateBy={{- $e -}};
     }
+
     //修改 {{.Table}} ({{.TableComment}}) Response
     message Update{{.Table}}Response {
     {{- range  .Columns }}

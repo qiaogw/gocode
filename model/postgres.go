@@ -70,16 +70,20 @@ func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
 	var tables []tb
 	sql := `
 		SELECT
-			relname AS table_name,
-			cast( obj_description ( relfilenode, 'pg_class' ) AS VARCHAR ) AS table_comment 
-		FROM
-			pg_class c 
-		WHERE
-			relkind = 'r' 
-			AND relname NOT LIKE 'pg_%' 
-			AND relname NOT LIKE 'sql_%' 
-		ORDER BY
-			relname`
+	tb.TABLE_NAME AS table_name,
+	d.description AS table_comment 
+FROM
+	pg_class
+	C JOIN information_schema.tables tb ON C.relname = tb.
+	TABLE_NAME LEFT JOIN pg_description d ON d.objoid = C.oid 
+	AND d.objsubid = '0' 
+WHERE
+	C.relkind = 'r' 
+	AND C.relname NOT LIKE 'pg_%' 
+	AND C.relname NOT LIKE 'sql_%'
+	ORDER BY
+	relname
+`
 	err := global.GenDB.Raw(sql).Scan(&tables).Error
 	for _, v := range tables {
 		entities = append(entities, Table{

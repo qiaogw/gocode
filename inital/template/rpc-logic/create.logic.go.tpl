@@ -56,7 +56,7 @@ new{{.Table}} := model.{{.Table}}{
 		{{- end}}
 		{{- end }}
 	}
-
+	new{{.Table}}.CreateBy = in.CreateBy
 	res, err := l.svcCtx.{{.Table}}Model.Insert(l.ctx, &new{{.Table}})
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
