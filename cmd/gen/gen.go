@@ -119,7 +119,7 @@ func run() error {
 	err = genApp.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)
-		//return err
+		return err
 	}
 	err = genApp.CreateRpcLogic(&db)
 	if err != nil {
