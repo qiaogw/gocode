@@ -60,6 +60,7 @@ func ({{.Table}}) TableName() string {
 {{ end }}
 
 func new{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormx *gorm.DB) *default{{.Table}}Model {
+	gormx.AutoMigrate(&{{.Table}}{})
 	return &default{{.Table}}Model{
 		CachedConn: sqlc.NewConn(conn, c),
 		table:      "{{.Name}}",

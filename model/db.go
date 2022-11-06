@@ -47,6 +47,7 @@ type (
 		Service      string //模块首字母大写驼峰
 		IsCurd       bool
 		IsAuth       bool
+		IsImport     bool
 		IsDataScope  bool
 		Columns      []*Column
 		// Primary key not included

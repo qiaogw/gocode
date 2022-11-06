@@ -57,7 +57,8 @@ service {{.Db}} {
     )
 	@handler Delete{{.Table}}
 	post  /delete (Delete{{.Table}}Request) returns(CommonResponse)
-        
+
+ {{- if .IsImport}}
     @doc(
 		summary: "导出-{{.TableComment}}"
 	)
@@ -75,5 +76,6 @@ service {{.Db}} {
 	)
 	@handler Import{{.Table}}
 	post /import (ImportRequest) returns (CommonResponse)
-}
+ {{- end }}
+ }
 {{- end }}
