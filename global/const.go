@@ -12,8 +12,6 @@ const (
 	OsWindows    = "windows"
 	OsMac        = "darwin"
 	OsLinux      = "linux"
-	OsJs         = "js"
-	OsIOS        = "ios"
 )
 
 const (
