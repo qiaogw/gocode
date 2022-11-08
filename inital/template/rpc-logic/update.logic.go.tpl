@@ -39,13 +39,13 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "查询 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
 	}
 	{{- range  .Columns }}
-		{{- if eq .DataType "time.Time"}}
+		{{-  if .IsModelTime -}}
+		{{- else if .IsControl -}}
+        {{- else if .IsPage}}
+		{{- else if eq .DataType "time.Time"}}
 			res.{{.FieldName}}=timex.DatetimeStrToTime(in.{{.FieldName}})
 		{{- else}}
-			{{- if .IsPage}}
-			{{- else}}
 			res.{{.FieldName}}=in.{{.FieldName}}
-			{{- end}}
 		{{- end}}
 	{{- end }}
 	res.UpdateBy = in.UpdateBy

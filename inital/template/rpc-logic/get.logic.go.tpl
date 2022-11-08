@@ -10,7 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
-{{ if .HasTimer }}"{{.PKG}}/common/timex"{{ end }}
+"{{.PKG}}/common/timex"
 )
 
 type Get{{.Table}}Logic struct {

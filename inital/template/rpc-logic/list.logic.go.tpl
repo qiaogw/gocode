@@ -10,7 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"{{.ParentPkg}}/model"
-{{ if .HasTimer }}"{{.PKG}}/common/timex"{{ end }}
+"{{.PKG}}/common/timex"
 	"github.com/zeromicro/go-zero/core/logx"
 
 )

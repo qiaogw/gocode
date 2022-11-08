@@ -22,7 +22,7 @@ info (
  {{ end -}}
 @server(
 group : {{.TableUrl}}
-prefix : /{{.TableUrl}}
+prefix : /{{.Db}}/{{.TableUrl}}
 {{- if .IsAuth}}
 jwt: Auth
 {{- end }}

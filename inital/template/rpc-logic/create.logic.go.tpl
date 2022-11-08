@@ -44,6 +44,8 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Req
 new{{.Table}} := model.{{.Table}}{
 		{{- range  .Columns }}
 		{{- if .IsPk }}
+		{{- else if .IsModelTime -}}
+		{{- else if .IsControl -}}
 		{{- else}}
 			{{- if eq .DataType "time.Time"}}
 				{{.FieldName}}: timex.DatetimeStrToTime(in.{{.FieldName}}),

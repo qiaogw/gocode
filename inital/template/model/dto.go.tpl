@@ -2,7 +2,7 @@ package model
 
 import (
     "{{.PKG}}/common/modelx"
-{{ if .HasTimer }}"time"{{ end }}
+"time"
 )
 
 type List{{.Table}}Req struct {
