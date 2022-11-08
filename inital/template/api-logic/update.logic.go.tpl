@@ -7,7 +7,7 @@ import (
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-	
+"{{.PKG}}/common/jwtx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -31,6 +31,8 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Requ
 	_, err = l.svcCtx.{{.Service}}Rpc.Update{{.Table}}(l.ctx, &{{.Db}}.Update{{.Table}}Request{
 		{{- range  .Columns }}
 				{{- if .IsPage}}
+				{{- else if .IsModelTime -}}
+				{{- else if .IsControl -}}
 				{{- else}}
 				{{.FieldName}}: req.{{.FieldName}},
 				{{- end}}

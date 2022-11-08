@@ -193,8 +193,10 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		each.Require = !each.IsNull
 		if dt == "time.Time" {
 			each.DataTypeProto = "string"
-			table.HasTimer = true
 			each.DataTypeApi = "string"
+			if !each.IsModelTime {
+				table.HasTimer = true
+			}
 		}
 		if !each.IsPk && !each.IsNull && each.ColumnDefault != nil {
 			each.ColumnDefault = converter.ConvertDefault(each.ColumnDefault)

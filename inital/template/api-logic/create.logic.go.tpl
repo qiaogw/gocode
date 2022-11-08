@@ -8,6 +8,7 @@ import (
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.PKG}}/common/errx"
+"{{.PKG}}/common/jwtx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
