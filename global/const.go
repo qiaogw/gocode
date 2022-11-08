@@ -29,6 +29,7 @@ func GetDefaultConfigFile() string {
 	}
 	return filepath.Join(p, "config.yaml")
 }
+
 func GetConfigFile(f string) string {
 	p, err := os.Getwd()
 	if err != nil {
