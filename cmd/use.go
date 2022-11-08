@@ -30,7 +30,6 @@ func blue(s string) string {
 	//if runtime.GOOS == global.OsWindows {
 	//	return s
 	//}
-
 	return aurora.BrightBlue(s).String()
 }
 
