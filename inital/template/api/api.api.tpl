@@ -17,9 +17,9 @@ info (
 {{- range .Tables }}
  {{- if .IsAuth }}
 	 //需要登录
- {{- else}}
+ {{ else}}
 	 //不需要登录
- {{ end -}}
+ {{ end }}
 @server(
 group : {{.TableUrl}}
 prefix : /{{.Db}}/{{.TableUrl}}

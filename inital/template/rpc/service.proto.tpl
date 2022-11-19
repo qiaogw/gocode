@@ -121,16 +121,7 @@ message NullRequest {
 //NullResponse 空 Response
 message  NullResponse {
 }
-//登录 Login (用户) Request
-message LoginRequest {
-string mobile = 1;
-string password = 2;
-}
 
-//登录 Login (用户) Response
-message LoginResponse {
-int64 id = 1;
-}
 
 //导出 Export  Request
 message ExportRequest {
@@ -147,7 +138,7 @@ bytes data=1;
 }
 
 service {{.Package}} {
-rpc Login(LoginRequest) returns(LoginResponse);
+
 {{range .Tables }}
 
     rpc Get{{.Table}}(Get{{.Table}}Request) returns(Get{{.Table}}Response);
