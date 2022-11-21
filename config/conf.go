@@ -28,7 +28,7 @@ type Autocode struct {
 	CoverFile []string
 }
 
-// GeneralDB 也被 Pgsql 和 Mysql 原样使用
+// GeneralDB  Pgsql 和 Mysql 原样使用
 type GeneralDB struct {
 	DataSource    string
 	DbType        string `mapstructure:"db-type" json:"db-type" yaml:"db-type"`
