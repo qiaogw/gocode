@@ -59,6 +59,6 @@ type Etcd struct {
 
 type Auth struct {
 	AccessSecret string `mapstructure:"AccessSecret" json:"AccessSecret" yaml:"AccessSecret"` // Etcd 集群
-	AccessExpire string `mapstructure:"AccessExpire" json:"AccessExpire" yaml:"AccessExpire"` //rpc注册key
-	RefreshAfter int64  `mapstructure:"RefreshAfter" json:"RefreshAfter" yaml:"RefreshAfter"` //rpc注册key
+	AccessExpire int64  `mapstructure:"AccessExpire" json:"AccessExpire" yaml:"AccessExpire"` //rpc注册key
+	Issuer       string `mapstructure:"Issuer" json:"Issuer" yaml:"Issuer"`                   //rpc注册key
 }

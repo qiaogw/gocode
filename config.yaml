@@ -21,7 +21,7 @@ etcd:
 Auth:
   AccessSecret: zd-AccessSecret
   AccessExpire: 3600
-  RefreshAfter: 3600
+  Issuer: gocode
 
 # mysql connect configuration
 # db-type: 'mysql','postgres'

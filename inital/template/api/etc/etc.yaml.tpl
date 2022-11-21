@@ -15,7 +15,7 @@ CacheRedis:
 Auth:
   AccessSecret: {{.Option.Auth.AccessSecret}}
   AccessExpire: {{.Option.Auth.AccessExpire}}
-  RefreshAfter: {{.Option.Auth.RefreshAfter}}
+  Issuer: {{.Option.Auth.Issuer}}
 
 {{.Service}}Rpc:
   Etcd:
