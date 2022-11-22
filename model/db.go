@@ -15,6 +15,7 @@ type (
 		Tables     []*Table
 		Package    string //首字母小写驼峰
 		Service    string //首字母大写驼峰
+		FileName   string //全小写，web生成
 		HasTimer   bool
 		Author     string
 		Email      string
