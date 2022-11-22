@@ -259,7 +259,5 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	if len(table.CacheKeys) > 0 {
 		table.HasCacheKey = true
 	}
-	//var baseFileds = []string{"CreatedAt", "UpdatedAt", "DeletedAt", "CreateBy", "UpdateBy"}
-
 	return &table, nil
 }
