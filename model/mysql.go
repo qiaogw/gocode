@@ -60,7 +60,6 @@ type MysqlColumn struct {
 
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
 // Author [qiaogw](https://github.com/qiaogw)
-// Author [qiaogw](https://github.com/qiaogw)
 func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
 	var reply []*MysqlColumn
 	sql := `
