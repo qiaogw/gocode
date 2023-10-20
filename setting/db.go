@@ -1,7 +1,6 @@
 package setting
 
 import (
-	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -25,10 +24,6 @@ func GormInit() (*gorm.DB, error) {
 // GormMysql 初始化Mysql数据库
 func GormMysql() (*gorm.DB, error) {
 	dbConf := global.GenConfig.DB
-	// if dbConf.Dbname == "" {
-	// 	return nil, errors.New("数据库不能为空，请修改配置文件")
-	// }
-
 	mysqlConfig := mysql.Config{
 		DSN:                       dbConf.MysqlDsn(), // DSN data source name
 		DefaultStringSize:         191,               // string 类型字段的默认长度
@@ -41,7 +36,6 @@ func GormMysql() (*gorm.DB, error) {
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {
-		fmt.Printf("gorm.Open err is %v", err)
 		return nil, err
 	} else {
 		global.GenConfig.DB.DataSource = dbConf.MysqlDsn()
