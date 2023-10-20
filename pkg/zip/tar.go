@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
-	"github.com/qiaogw/gocode/pkg/utils"
+	"github.com/qiaogw/gocode/utils"
 	"io"
 	"os"
 	"path/filepath"

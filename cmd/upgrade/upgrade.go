@@ -2,7 +2,7 @@ package upgrade
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/pkg/utils"
+	"github.com/qiaogw/gocode/utils"
 	"runtime"
 
 	"github.com/spf13/cobra"

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/pkg/utils"
+	utils2 "github.com/qiaogw/gocode/utils"
 	"log"
 	"os"
 	"path/filepath"
@@ -41,12 +41,12 @@ func BackupDB(backupDir string) error {
 	}
 	wd, _ := os.Getwd()
 	backupDir = filepath.Join(wd, backupDir, dbConf.Dbname)
-	utils.IsNotExistMkDir(backupDir)
+	utils2.IsNotExistMkDir(backupDir)
 	for _, tableName := range tableNames {
 		// 查询表数据filepath.Join(wd, backupDir)
 		data, err := queryTableData(db, tableName)
 		if err != nil {
-			log.Println(utils.Red(fmt.Sprintf("查询表 %s: 数据错误：%v", tableName, err)))
+			log.Println(utils2.Red(fmt.Sprintf("查询表 %s: 数据错误：%v", tableName, err)))
 			continue
 		}
 
@@ -62,7 +62,7 @@ func BackupDB(backupDir string) error {
 		if err := encoder.Encode(data); err != nil {
 			return err
 		}
-		log.Println(utils.Green(fmt.Sprintf("表 %s 的数据存储到 %s", tableName, jsonFileName)))
+		log.Println(utils2.Green(fmt.Sprintf("表 %s 的数据存储到 %s", tableName, jsonFileName)))
 	}
 	return nil
 }
@@ -156,7 +156,7 @@ func RestoreData(backupFolder string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf(utils.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+	fmt.Printf(utils2.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 
 	defer db.Close()
@@ -195,7 +195,7 @@ func RestoreData(backupFolder string) error {
 				}
 			}
 
-			log.Println(utils.Green(fmt.Sprintf("数据从 %s 恢复到表 %s", fileName, tableName)))
+			log.Println(utils2.Green(fmt.Sprintf("数据从 %s 恢复到表 %s", fileName, tableName)))
 			if dbConf.DbType == "postgres" {
 				maxID, err := getMaxID(db, tableName)
 				if err != nil {
@@ -208,7 +208,7 @@ func RestoreData(backupFolder string) error {
 					log.Printf("设置表 %s 的自增主键错误: %v\n", tableName, err)
 					continue
 				}
-				log.Println(utils.Green(fmt.Sprintf("表 %s 自增序列更新：%d", fileName, maxID+1)))
+				log.Println(utils2.Green(fmt.Sprintf("表 %s 自增序列更新：%d", fileName, maxID+1)))
 			}
 		}
 	}

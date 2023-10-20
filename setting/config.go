@@ -6,7 +6,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/pkg/utils"
+	"github.com/qiaogw/gocode/utils"
 	"github.com/spf13/viper"
 	"log"
 	"os"

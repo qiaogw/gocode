@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/model"
-	"github.com/qiaogw/gocode/pkg/utils"
+	"github.com/qiaogw/gocode/utils"
 	"github.com/spf13/cobra"
 	"log"
 	"strings"
