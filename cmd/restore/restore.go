@@ -6,7 +6,7 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/pkg/dbtools"
 	"github.com/qiaogw/gocode/setting"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -51,17 +51,17 @@ func setup() error {
 }
 
 func run() error {
-	fmt.Println(utils.Green(`开始恢复 ` + dst))
+	fmt.Println(util.Green(`开始恢复 ` + dst))
 	wd, _ := os.Getwd()
 	backupDir := filepath.Join(wd, "backup", src)
-	fmt.Println(utils.Green(`开始恢复 ` + global.GenConfig.DB.Dbname + ` 从 ` + backupDir))
+	fmt.Println(util.Green(`开始恢复 ` + global.GenConfig.DB.Dbname + ` 从 ` + backupDir))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
 	//err := dbtools.Backup(global.GenDB, "backup")
 	err := dbtools.RestoreData(filepath.Join("backup", src))
 	if err != nil {
-		log.Println(utils.Red(fmt.Sprintf("恢复失败：%v", err)))
+		log.Println(util.Red(fmt.Sprintf("恢复失败：%v", err)))
 	}
-	fmt.Println(utils.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return err
 }

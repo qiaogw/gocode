@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"io"
 	"os"
 	"path/filepath"
@@ -64,7 +64,7 @@ func DecompressWithPermissions(tarFile, dst string) error {
 
 // CompressDirectoryWithPermissions 压缩目录为 Tar.gz 文件并保留文件权限
 func CompressDirectoryWithPermissions(sourceDir, outputFilePath string) error {
-	err := utils.IsNotExistMkDir(filepath.Dir(outputFilePath))
+	err := util.IsNotExistMkDir(filepath.Dir(outputFilePath))
 	if err != nil {
 		return fmt.Errorf("创建文件目录 %s 错误：%v", outputFilePath, err)
 	}
@@ -88,7 +88,7 @@ func CompressDirectoryWithPermissions(sourceDir, outputFilePath string) error {
 	wd, _ := os.Getwd()
 	tarSrc := filepath.Join(wd, "tarTemp", baseName)
 	os.Mkdir(tarSrc, 0755)
-	utils.CopyDir(sourceDir, filepath.Join(wd, "tarTemp", baseName, baseName))
+	util.CopyDir(sourceDir, filepath.Join(wd, "tarTemp", baseName, baseName))
 	fmt.Printf("sourceDir.Name : %s ->tarSrc.Name %s\n", sourceDir, tarSrc)
 
 	err = filepath.Walk(tarSrc, func(filePath string, info os.FileInfo, err error) error {

@@ -6,7 +6,7 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"os"
@@ -34,7 +34,7 @@ func CompressAndSplitFiles(src, dst, prefix string, maxSize int64) error {
 	destDir := filepath.Dir(dst)
 
 	// 检查目标目录是否存在，如果不存在，则创建
-	err := utils.IsNotExistMkDir(destDir)
+	err := util.IsNotExistMkDir(destDir)
 	if err != nil {
 		return fmt.Errorf("创建文件目录 %s 错误：%v", destDir, err)
 	}
@@ -164,7 +164,7 @@ func createNewSplitFile(src, destDir, prefix string, partNumber int, outputFile 
 // CompressFilesOrFolds 压缩文件和目录
 // src: 要压缩的路径 dst: 压缩文件名称。
 func CompressFilesOrFolds(src, dst string) error {
-	err := utils.IsNotExistMkDir(filepath.Dir(dst))
+	err := util.IsNotExistMkDir(filepath.Dir(dst))
 	if err != nil {
 		return fmt.Errorf("创建文件目录 %s 错误：%v", dst, err)
 	}

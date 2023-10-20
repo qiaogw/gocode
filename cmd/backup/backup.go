@@ -6,7 +6,7 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/pkg/dbtools"
 	"github.com/qiaogw/gocode/setting"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -51,16 +51,16 @@ func setup() error {
 func run() error {
 	wd, _ := os.Getwd()
 	backupDir := filepath.Join(wd, "backup", global.GenDB.Name())
-	fmt.Println(utils.Green(`开始备份数据库 ` + apiPackage + ` 到 ` + backupDir))
+	fmt.Println(util.Green(`开始备份数据库 ` + apiPackage + ` 到 ` + backupDir))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
-	fmt.Printf(utils.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	//err := dbtools.Backup(global.GenDB, "backup")
 	err := dbtools.BackupDB("backup")
 	if err != nil {
-		log.Println(utils.Red(fmt.Sprintf("备份失败：%v", err)))
+		log.Println(util.Red(fmt.Sprintf("备份失败：%v", err)))
 	}
-	fmt.Println(utils.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return err
 }

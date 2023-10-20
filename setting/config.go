@@ -6,7 +6,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/viper"
 	"log"
 	"os"
@@ -51,7 +51,7 @@ func Viper(path string) *viper.Viper {
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {
-		log.Fatal(utils.Red(fmt.Sprintf("未找到配置文件: %s \n", err)))
+		log.Fatal(util.Red(fmt.Sprintf("未找到配置文件: %s \n", err)))
 	}
 	v.WatchConfig()
 

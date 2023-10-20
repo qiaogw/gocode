@@ -6,7 +6,7 @@ import (
 	"fmt"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/qiaogw/gocode/global"
-	utils2 "github.com/qiaogw/gocode/utils"
+	utils2 "github.com/qiaogw/gocode/util"
 	"log"
 	"os"
 	"path/filepath"

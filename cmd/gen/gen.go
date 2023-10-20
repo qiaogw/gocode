@@ -2,7 +2,7 @@ package gen
 
 import (
 	"fmt"
-	utils2 "github.com/qiaogw/gocode/utils"
+	utils2 "github.com/qiaogw/gocode/util"
 	"log"
 	"os"
 	"strings"

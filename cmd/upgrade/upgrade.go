@@ -2,7 +2,7 @@ package upgrade
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"runtime"
 
 	"github.com/spf13/cobra"
@@ -28,6 +28,6 @@ func upgrade(_ *cobra.Command, _ []string) error {
 		return err
 	}
 	fmt.Println(info, "")
-	fmt.Println(utils.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return nil
 }

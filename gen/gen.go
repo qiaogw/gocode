@@ -2,7 +2,7 @@ package gen
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/wxnacy/wgo/arrays"
 	"log"
 	"os"
@@ -161,11 +161,11 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData, err error) {
 	tPath := tempPath + "/" + packPath
 	dataList, _, needMkdir, err := acd.getNeedList(pack, tPath)
-	if err = utils.CreateDir(needMkdir...); err != nil {
+	if err = util.CreateDir(needMkdir...); err != nil {
 		return
 	}
 	// 写入文件前，先创建文件夹
-	if err = utils.CreateDir(needMkdir...); err != nil {
+	if err = util.CreateDir(needMkdir...); err != nil {
 		//log.Printf("err is %+v\n", err)
 		return
 	}
@@ -184,18 +184,18 @@ func (acd *AutoCodeService) genAfter(dataList []tplData, pkg ...string) error {
 		base := filepath.Base(value.autoCodePath)
 		baseOk := arrays.ContainsString(global.GenConfig.AutoCode.CoverFile, base)
 		// 判断目标文件是否都可以移动
-		if utils.FileExist(value.autoMoveFilePath) && baseOk < 0 {
-			fmt.Println(utils.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
+		if util.FileExist(value.autoMoveFilePath) && baseOk < 0 {
+			fmt.Println(util.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
 			continue
 		}
-		if err := utils.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
+		if err := util.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
 			return err
 		}
 		if len(value.autoMoveFilePath) != 0 {
 			bf.WriteString(value.autoMoveFilePath)
 			bf.WriteString(";")
 		}
-		if err := utils.FmtCode(value.autoMoveFilePath); err != nil {
+		if err := util.FmtCode(value.autoMoveFilePath); err != nil {
 			return err
 		}
 	}

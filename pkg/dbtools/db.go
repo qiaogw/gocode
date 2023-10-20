@@ -9,7 +9,7 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/pkg/zip"
 	"github.com/qiaogw/gocode/setting"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -85,7 +85,7 @@ func BackupDBDataToJson(db *gorm.DB, tb interface{}, tableName, backupDir string
 	var ob []map[string]interface{}
 	wd, _ := os.Getwd()
 	backFile := filepath.Join(wd, backupDir, tableName+".json")
-	utils.IsNotExistMkDir(filepath.Join(wd, backupDir))
+	util.IsNotExistMkDir(filepath.Join(wd, backupDir))
 	// 查询表数据并将结果存储在通用切片中
 	var data1 []map[string]interface{}
 	if err := db.Table(tableName).Find(&data1).Error; err != nil {
@@ -140,7 +140,7 @@ func DumpTableToJSON(db *gorm.DB, tb interface{}, tableName string, filePath str
 	}
 	wd, _ := os.Getwd()
 	backFile := filepath.Join(wd, filePath, tableName+".json")
-	utils.IsNotExistMkDir(filepath.Join(wd, filePath))
+	util.IsNotExistMkDir(filepath.Join(wd, filePath))
 	// 写入JSON数据到文件
 	file, err := os.Create(backFile)
 	if err != nil {

@@ -5,7 +5,7 @@ package zip
 import (
 	"archive/zip"
 	"fmt"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"io"
 	"os"
 	"path/filepath"
@@ -13,7 +13,7 @@ import (
 
 // ZipDir 压缩文件夹
 func ZipDir(dir, zipFile string) (err error) {
-	err = utils.IsNotExistMkDir(filepath.Dir(zipFile))
+	err = util.IsNotExistMkDir(filepath.Dir(zipFile))
 	if err != nil {
 		return fmt.Errorf("创建文件目录 %s 错误：%v", zipFile, err)
 	}
@@ -101,7 +101,7 @@ func ZipDirAndSplit(src, dst, prefix string, maxSize int64) (err error) {
 	// 提取dst的目录路径
 	outputDir := filepath.Dir(dst)
 
-	err = utils.IsNotExistMkDir(outputDir)
+	err = util.IsNotExistMkDir(outputDir)
 	if err != nil {
 		return fmt.Errorf("创建目录路径 %s 错误：%v", outputDir, err)
 	}

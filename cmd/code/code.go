@@ -6,7 +6,7 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/pkg/dbtools"
 	"github.com/qiaogw/gocode/setting"
-	"github.com/qiaogw/gocode/utils"
+	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
 	"github.com/zeromicro/go-zero/tools/goctl/rpc/execx"
 	"runtime"
@@ -45,13 +45,13 @@ func setup() error {
 }
 
 func run() error {
-	fmt.Println(utils.Green(`start gen ` + apiPackage))
+	fmt.Println(util.Green(`start gen ` + apiPackage))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
-	fmt.Printf(utils.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	err := dbtools.Backup(global.GenDB, "backup")
-	fmt.Println(utils.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return err
 }
 
@@ -67,6 +67,6 @@ func upgrade(_ *cobra.Command, _ []string) error {
 		return err
 	}
 	fmt.Println(info, "")
-	fmt.Println(utils.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return nil
 }
