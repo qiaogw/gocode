@@ -199,7 +199,6 @@ func RestoreData(backupFolder string) error {
 			if dbConf.DbType == "postgres" {
 				maxID, err := getMaxID(db, tableName)
 				if err != nil {
-					//log.Printf("查询表 %s 的最大主键值错误: %v\n", tableName, err)
 					continue
 				}
 				// 将序列值设置为最大主键值加一
