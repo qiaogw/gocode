@@ -2,7 +2,7 @@ go-zero 代码自动生成辅助工具，支持gorm。
 # 安装
 GOPROXY=https://goproxy.cn/,direct go install github.com/qiaogw/gocode@latest
 # 使用
- 首先 gocode init，在当前目录下生成config.yaml,根据业务自行编辑。
+ 首先 gocode init，在当前目录和dbconf下生成config.yaml,根据业务自行编辑。
 
 ## gocode gen -p 服务名 即可生成遵循go-zero标准的api和rpc服务。
 ## 其他配置参考 go-zero 和 gorm
@@ -35,5 +35,9 @@ DeletedAt gorm.DeletedAt `json:"-" db:"deleted_at" gorm:"index;comment:删除时
 若业务要求更改以上字段，则需要修改生成的 common/golab/model.go文件。
 生成的文件最好在goland中编辑，对rpc和api文件利用goctl插件进行生成，插件有bug，api下的handel有包重复import，
 此时可以利用goland 进行格式化和清理优化.
+
+## 备份业务数据
+### backup
+会在当前backup目录下创建以数据库为名的文件夹，将所有表导出为json文件
 
 ## Good job！

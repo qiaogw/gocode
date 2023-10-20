@@ -4,17 +4,18 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	jsoniter "github.com/json-iterator/go"
+	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/qiaogw/gocode/global"
 	utils2 "github.com/qiaogw/gocode/util"
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
-
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	"time"
 )
 
 func BackupDB(backupDir string) error {
@@ -131,6 +132,13 @@ func queryTableData(db *sql.DB, tableName string) (interface{}, error) {
 				v = string(b)
 			} else {
 				v = val
+				getType := reflect.TypeOf(val)
+				fmt.Println(col)
+				fmt.Println(col, " 类型:", getType)
+
+				if getType != nil && getType.String() == "time.Time" {
+					v = val.(time.Time).Format("2006-01-02 15:04:05")
+				}
 			}
 			entry[col] = v
 		}
@@ -187,7 +195,7 @@ func RestoreData(backupFolder string) error {
 				log.Printf("读取 JSON 文件 %s 错误: %v", fileName, err)
 				continue
 			}
-
+			//insertDatasIntoTable(db, tableName, dbConf.DbType, jsonData)
 			for _, data := range jsonData {
 				if err := insertDataIntoTable(db, tableName, dbConf.DbType, data); err != nil {
 					log.Printf("表  %s 数据导入错误: %v", tableName, err)
@@ -241,10 +249,12 @@ func insertDataIntoTable(db *sql.DB, tableName, dbType string, data map[string]i
 		placeholders = append(placeholders, "?")
 	}
 	columnNames := strings.Join(columns, ",")
+
+	fmtQuery := `INSERT INTO "%s" (%s) VALUES (%s);`
 	// 将占位符替换为数据库特定的占位符
 	switch dbType {
 	case "mysql":
-		// 不需要替换，MySQL 使用 ? 作为占位符
+		fmtQuery = "INSERT INTO `%s` (%s) VALUES (%s);"
 	case "postgres":
 		// 替换占位符为 $1, $2, ...
 		for i := range placeholders {
@@ -254,8 +264,7 @@ func insertDataIntoTable(db *sql.DB, tableName, dbType string, data map[string]i
 		// 不需要替换，SQLite 使用 ? 作为占位符
 	}
 	valuePlaceholders := strings.Join(placeholders, ",")
-
-	query := fmt.Sprintf(`INSERT INTO "%s" (%s) VALUES (%s)`,
+	query := fmt.Sprintf(fmtQuery,
 		tableName, columnNames, valuePlaceholders)
 
 	// 执行插入操作
@@ -287,4 +296,54 @@ func setAutoIncrement(db *sql.DB, tableName string, value int) error {
 	_, err := db.Exec(query)
 
 	return err
+}
+
+func insertDatasIntoTable(db *sql.DB, tableName, dbType string, data []map[string]interface{}) error {
+	// 构建插入语句
+	columns := make([]string, 0)
+	values := make([]interface{}, 0)
+	// 存放values的slice
+	//valueArgs := make([]interface{}, 0)
+
+	if len(data) < 1 {
+		return nil
+	}
+
+	var valuePlaceholders string
+	//var fv string
+	fv := make([]string, 0)
+	// 遍历users准备相关数据
+	for _, u := range data {
+		placeholders := make([]string, 0)
+		columns = columns[:0]
+		for column, value := range u {
+			values = append(values, value)
+			placeholders = append(placeholders, "?")
+			valuePlaceholders = strings.Join(placeholders, ",")
+			columns = append(columns, column)
+		}
+		fmt.Printf("columns :%+v\n", columns)
+		fmt.Printf("values :%+v\n", values)
+		valuePlaceholders = strings.Join(placeholders, ",")
+		fv = append(fv, fmt.Sprintf("(%s)", valuePlaceholders))
+	}
+	columnNames := strings.Join(columns, ",")
+	fmtQuery := "INSERT INTO `%s` (%s) VALUES " + strings.Join(fv, ",") + ";"
+	query := fmt.Sprintf(fmtQuery,
+		tableName, columnNames)
+
+	// 执行插入操作
+	stmt, err := db.Prepare(query)
+
+	if err != nil {
+		log.Printf("sql语句: %s,错误: %v \n", query, err) // 记录 SQL 查询及参数
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(values...)
+	if err != nil {
+		log.Printf("sql语句执行错误: %s, Values: %v,错误: %v\n", query, values, err) // 记录 SQL 查询及参数
+	}
+	return nil
 }

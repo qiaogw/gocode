@@ -38,7 +38,7 @@ func init() {
 }
 
 func setup() error {
-	dst = filepath.Join("dbconf", dst)
+	dst = filepath.Join(dst)
 	configYml := global.GetConfigFile(dst)
 	// 读取配置
 	global.GenViper = setting.Viper(configYml)
