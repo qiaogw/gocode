@@ -66,7 +66,6 @@ func GormPgSql() (*gorm.DB, error) {
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {
-		//log.Println(err)
 		return nil, err
 	} else {
 		global.GenConfig.DB.DataSource = dbConf.PgsqlDsn()
