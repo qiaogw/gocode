@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"log"
 )
 
 // GormInit 初始化数据库并产生数据库全局变量
@@ -56,10 +55,6 @@ func GormMysql() (*gorm.DB, error) {
 // GormPgSql 初始化 Postgresql 数据库
 func GormPgSql() (*gorm.DB, error) {
 	dbConf := global.GenConfig.DB
-	// if dbConf.Dbname == "" {
-	// 	return nil, errors.New("数据库不能为空，请修改配置文件")
-	// }
-
 	pgsqlConfig := postgres.Config{
 		DSN:                  dbConf.PgsqlDsn(), // DSN data source name
 		PreferSimpleProtocol: false,
@@ -71,7 +66,7 @@ func GormPgSql() (*gorm.DB, error) {
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {
-		log.Fatal(err)
+		//log.Println(err)
 		return nil, err
 	} else {
 		global.GenConfig.DB.DataSource = dbConf.PgsqlDsn()

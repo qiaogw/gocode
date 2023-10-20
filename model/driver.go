@@ -14,8 +14,8 @@ type Model interface {
 func NewAutoCode(dt string) {
 	switch dt {
 	case "mysql":
-		ModelApp = ModelMysqlApp
+		ModelApp = MysqlApp
 	case "postgres":
-		ModelApp = ModelPostgresApp
+		ModelApp = PostgresApp
 	}
 }

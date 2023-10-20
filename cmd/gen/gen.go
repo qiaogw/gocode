@@ -2,6 +2,7 @@ package gen
 
 import (
 	"fmt"
+	"github.com/qiaogw/gocode/pkg/utils"
 	"log"
 	"os"
 	"strings"
@@ -10,7 +11,6 @@ import (
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/model"
 	"github.com/qiaogw/gocode/setting"
-	"github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
 	"github.com/zeromicro/go-zero/tools/goctl/pkg/golang"
 )
@@ -20,7 +20,7 @@ var (
 	Cmd        = &cobra.Command{
 		Use:          "gen",
 		Short:        "生成代码",
-		Example:      "gocode gen -p admin -c  config.yaml",
+		Example:      "gocode gen -p admin",
 		SilenceUsage: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return setup()
@@ -52,27 +52,27 @@ func setup() error {
 }
 
 func run() error {
-	fmt.Println(util.Green(`start gen ` + apiPackage))
+	fmt.Println(utils.Green(`start gen ` + apiPackage))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
-	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+	fmt.Printf(utils.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	tables, err := genApp.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
-		log.Println(util.Red(fmt.Sprintf("获取表 err is %v", err)))
+		log.Println(utils.Red(fmt.Sprintf("获取表 err is %v", err)))
 		return err
 	}
 	var db model.Db
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
-	db.Service = util.LeftUpper(db.Database)
+	db.Service = utils.LeftUpper(db.Database)
 
 	db.Option = global.GenConfig
 	db.DriverName = global.GenDB.Name()
 	dir, _ := os.Getwd()
 	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
-		log.Println(util.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
+		log.Println(utils.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
 		return err
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
@@ -84,12 +84,12 @@ func run() error {
 		}
 		columnData, err := genApp.DB.GetColumn(global.GenConfig.DB.Dbname, v.Table)
 		if err != nil {
-			log.Println(util.Red(fmt.Sprintf("获取字段 err is %v", err)))
+			log.Println(utils.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
 		}
 		tb, err := columnData.Convert(v.TableComment)
 		if err != nil {
-			fmt.Println(util.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
+			fmt.Println(utils.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
 			continue
 		}
 		if tb.HasTimer {
@@ -131,6 +131,6 @@ func run() error {
 		log.Printf("CreateCommon err is %v\n", err)
 		return err
 	}
-	fmt.Println(util.Green("Done!"))
+	fmt.Println(utils.Green("Done!"))
 	return err
 }

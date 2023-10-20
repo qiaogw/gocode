@@ -2,7 +2,7 @@ package upgrade
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/util"
+	"github.com/qiaogw/gocode/pkg/utils"
 	"runtime"
 
 	"github.com/spf13/cobra"
@@ -12,7 +12,7 @@ import (
 // Cmd describes a upgrade command.
 var Cmd = &cobra.Command{
 	Use:   "upgrade",
-	Short: "Upgrade goctl to latest version",
+	Short: "升级至gocode最新版本",
 	RunE:  upgrade,
 }
 
@@ -28,6 +28,6 @@ func upgrade(_ *cobra.Command, _ []string) error {
 		return err
 	}
 	fmt.Println(info, "")
-	fmt.Println(util.Green("Done!"))
+	fmt.Println(utils.Green("Done!"))
 	return nil
 }

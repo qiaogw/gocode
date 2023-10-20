@@ -1,4 +1,4 @@
-package util
+package utils
 
 import "strings"
 
@@ -63,7 +63,7 @@ func CamelString(s string) string {
 	return string(data[:])
 }
 
-//LeftUpper 首字母转大写
+// LeftUpper 首字母转大写
 func LeftUpper(s string) string {
 	if len(s) > 0 {
 		return strings.ToUpper(string(s[0])) + s[1:]
@@ -71,7 +71,7 @@ func LeftUpper(s string) string {
 	return s
 }
 
-//LeftLower 首字母转小写
+// LeftLower 首字母转小写
 func LeftLower(s string) string {
 	if len(s) > 0 {
 		return strings.ToLower(string(s[0])) + s[1:]

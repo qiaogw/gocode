@@ -1,6 +1,8 @@
 Name: {{.Package}}-api
 Host: {{.Option.System.ApiHost}}
 Port: {{.Option.System.ApiPort}}
+Timeout: 6000
+Mode: dev
 
 
 Database:
@@ -18,6 +20,8 @@ Auth:
   Issuer: {{.Option.Auth.Issuer}}
 
 {{.Service}}Rpc:
+  App: {{.Package}}                          # App 标识
+  Token: sub-{{.Package}} # Token 值
   Etcd:
     Hosts:
      {{- range  .Option.Etcd.Hosts }}

@@ -3,6 +3,10 @@ ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 
+Auth: true
+App: {{.Package}}                          # App 标识
+Token: sub-{{.Package}} # Token 值
+
 JwtAuth:
   AccessSecret: {{.Option.Auth.AccessSecret}}
   AccessExpire: {{.Option.Auth.AccessExpire}}
@@ -18,7 +22,7 @@ Database:
   DriverName: {{.Option.DB.DbType}}
   DataSource: {{.Option.DB.DataSource}}
 
-Cache:
+CacheRedis:
   - Host: {{.Option.Redis.Addr}}
     Pass: {{.Option.Redis.Password}}
     Type: {{.Option.Redis.DB}}

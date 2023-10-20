@@ -1,22 +1,21 @@
 package svc
 
 import (
-"github.com/qiaogw/gorm-cache/cache"
-cacheConfig "github.com/qiaogw/gorm-cache/config"
+	"github.com/qiaogw/gorm-cache/cache"
+	cacheConfig "github.com/qiaogw/gorm-cache/config"
 	"{{.ParentPkg}}/model"
 	"{{.PKG}}/common/gormx"
 	"{{.ParentPkg}}/rpc/internal/config"
-"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"gorm.io/driver/{{.DriverName}}"
-"github.com/go-redis/redis"
-redisX "github.com/zeromicro/go-zero/core/stores/redis"
+	redisX "github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
 	Config    config.Config
-	RedisClient     *redisX.Redis
+	CacheRedis     *redisX.Redis
 	{{- range .Tables }}
 	{{.Table}}Model model.{{.Table}}Model
 	{{- end }}
@@ -53,14 +52,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 
 
-	return &ServiceContext{
-		Config:    c,
-	RedisClient: redisX.New(c.Redis.Host, func(r *redisX.Redis) {
-	r.Type = c.Redis.Type
-	r.Pass = c.Redis.Pass
-	}),
+redisConf := redisX.RedisConf{
+Host: c.Redis.Host,
+Pass: c.Redis.Pass,
+Type: c.Redis.Type,
+}
+return &ServiceContext{
+Config:         c,
+CacheRedis:     redisX.MustNewRedis(redisConf),
     {{- range .Tables }}
-        {{.Table}}Model: model.New{{.Table}}Model(conn, c.Cache, db),
+        {{.Table}}Model: model.New{{.Table}}Model(conn, c.CacheRedis, db),
     {{- end }}
 	}
 }

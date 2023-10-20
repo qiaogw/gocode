@@ -44,13 +44,13 @@ var AutoCodeServiceApp = new(AutoCodeService)
 func (acd *AutoCodeService) Init() {
 	switch global.GenDB.Name() {
 	case "mysql":
-		acd.DB = model.ModelMysqlApp
+		acd.DB = model.MysqlApp
 		acd.DB.Init()
 	case "postgres":
-		acd.DB = model.ModelPostgresApp
+		acd.DB = model.PostgresApp
 		acd.DB.Init()
 	default:
-		acd.DB = model.ModelMysqlApp
+		acd.DB = model.MysqlApp
 		acd.DB.Init()
 	}
 }

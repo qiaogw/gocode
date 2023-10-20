@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-var ModelPostgresApp = new(ModelPostgres)
+var PostgresApp = new(Postgres)
 
-type ModelPostgres struct {
+type Postgres struct {
 	DB *gorm.DB
 }
 
-func (m *ModelPostgres) Init() {
+func (m *Postgres) Init() {
 	m.DB = global.GenDB
 }
 
@@ -52,7 +52,7 @@ type PostgreIndex struct {
 }
 
 // GetDB 获取数据库的所有数据库名
-func (m *ModelPostgres) GetDB() (data []Db, err error) {
+func (m *Postgres) GetDB() (data []Db, err error) {
 	var entities []Db
 	sql := `SELECT datname as database FROM pg_database WHERE datistemplate = false`
 	err = global.GenDB.Raw(sql).Scan(&entities).Error
@@ -65,7 +65,7 @@ type tb struct {
 }
 
 // GetTables 获取数据库的所有表名
-func (m *ModelPostgres) GetTables(db string) ([]Table, error) {
+func (m *Postgres) GetTables(db string) ([]Table, error) {
 	var entities []Table
 	var tables []tb
 	sql := `
@@ -97,7 +97,7 @@ WHERE
 
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
 // Author [qiaogw](https://github.com/qiaogw)
-func (m *ModelPostgres) GetColumn(db, table string) (*ColumnData, error) {
+func (m *Postgres) GetColumn(db, table string) (*ColumnData, error) {
 	querySql := `
 	select
 	c.relname as "table_name",
@@ -167,7 +167,7 @@ order by
 	return &columnData, nil
 }
 
-func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Column, error) {
+func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Column, error) {
 	index, err := m.getIndex(schema, table)
 	if err != nil {
 		return nil, err
@@ -231,7 +231,7 @@ func (m *ModelPostgres) getColumns(schema, table string, in []*PostgreColumn) ([
 	return list, nil
 }
 
-func (m *ModelPostgres) convertPostgreSqlTypeIntoMysqlType(in string) string {
+func (m *Postgres) convertPostgreSqlTypeIntoMysqlType(in string) string {
 	r, ok := p2m[strings.ToLower(in)]
 	if ok {
 		return r
@@ -240,7 +240,7 @@ func (m *ModelPostgres) convertPostgreSqlTypeIntoMysqlType(in string) string {
 	return in
 }
 
-func (m *ModelPostgres) getIndex(schema, table string) (map[string][]*DbIndex, error) {
+func (m *Postgres) getIndex(schema, table string) (map[string][]*DbIndex, error) {
 	indexes, err := m.FindIndex(schema, table)
 	if err != nil {
 		return nil, err
@@ -276,7 +276,7 @@ func (m *ModelPostgres) getIndex(schema, table string) (map[string][]*DbIndex, e
 }
 
 // FindIndex finds index with given schema, table and column.
-func (m *ModelPostgres) FindIndex(schema, table string) ([]*PostgreIndex, error) {
+func (m *Postgres) FindIndex(schema, table string) ([]*PostgreIndex, error) {
 	querySql := `
 	select A.INDEXNAME AS index_name,
 		   C.INDEXRELID AS index_id,

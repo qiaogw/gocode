@@ -14,7 +14,5 @@ type Config struct {
         DataSource string
     }
 
-    Cache cache.CacheConf
-    Redis redis.RedisKeyConf
-
+    CacheRedis cache.ClusterConf
 }

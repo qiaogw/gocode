@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/model"
-	"github.com/qiaogw/gocode/util"
+	"github.com/qiaogw/gocode/pkg/utils"
 	"github.com/spf13/cobra"
 	"log"
 	"strings"
@@ -50,6 +50,6 @@ func run() {
 	//	log.Fatal(err)
 	//	return
 	//}
-	fmt.Println(util.Green("Done! init " + apiPackage + ".yaml"))
+	fmt.Println(utils.Green("Done! init " + apiPackage + ".yaml"))
 	return
 }

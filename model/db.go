@@ -5,7 +5,7 @@ import (
 	"github.com/qiaogw/gocode/config"
 	"github.com/qiaogw/gocode/converter"
 	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/util"
+	util2 "github.com/qiaogw/gocode/pkg/utils"
 	"strings"
 )
 
@@ -124,12 +124,12 @@ type (
 func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	var table Table
 	table.Name = c.Table
-	table.Table = util.CamelString(strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix))
-	table.PackageName = util.LeftLower(table.Table)
+	table.Table = util2.CamelString(strings.TrimPrefix(c.Table, global.GenConfig.DB.TablePrefix))
+	table.PackageName = util2.LeftLower(table.Table)
 	table.TableUrl = strings.ToLower(table.Table)
 
-	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
-	table.Service = util.LeftUpper(table.Db)
+	table.Db = strings.ToLower(util2.CamelString(global.GenConfig.System.Name))
+	table.Service = util2.LeftUpper(table.Db)
 	table.TableComment = tableComment
 	//table.Columns = c.Columns
 	table.UniqueIndex = map[string][]*Column{}
@@ -205,9 +205,9 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		if each.GormName == "" {
 			each.GormName = each.Name
 		}
-		each.FieldName = util.LeftUpper(util.CamelString(each.Name))
-		each.FieldJson = util.LeftLower(util.CamelString(each.Name))
-		each.ColumnComment = util.TrimNewLine(each.ColumnComment)
+		each.FieldName = util2.LeftUpper(util2.CamelString(each.Name))
+		each.FieldJson = util2.LeftLower(util2.CamelString(each.Name))
+		each.ColumnComment = util2.TrimNewLine(each.ColumnComment)
 		each.Tablename = c.Table
 		if each.Index != nil {
 			//log.Printf("each.Index is %+v\n", each.Index)

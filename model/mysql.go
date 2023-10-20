@@ -9,18 +9,18 @@ import (
 	"sort"
 )
 
-var ModelMysqlApp = new(ModelMysql)
+var MysqlApp = new(Mysql)
 
-type ModelMysql struct {
+type Mysql struct {
 	DB *gorm.DB
 }
 
-func (m *ModelMysql) Init() {
+func (m *Mysql) Init() {
 	m.DB = global.GenDB
 }
 
 // GetDB 获取数据库的所有数据库名
-func (m *ModelMysql) GetDB() (data []Db, err error) {
+func (m *Mysql) GetDB() (data []Db, err error) {
 	var entities []Db
 	sql := "SELECT SCHEMA_NAME AS `database` FROM INFORMATION_SCHEMA.SCHEMATA;"
 	err = global.GenDB.Raw(sql).Scan(&entities).Error
@@ -28,7 +28,7 @@ func (m *ModelMysql) GetDB() (data []Db, err error) {
 }
 
 // GetTables 获取数据库的所有表名
-func (m *ModelMysql) GetTables(db string) ([]Table, error) {
+func (m *Mysql) GetTables(db string) ([]Table, error) {
 	var entities []Table
 	sql := `
 		select table_name as table_name ,
@@ -60,7 +60,7 @@ type MysqlColumn struct {
 
 // GetColumn 获取指定数据库和指定数据表的所有字段名,类型值等
 // Author [qiaogw](https://github.com/qiaogw)
-func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
+func (m *Mysql) GetColumn(db, table string) (*ColumnData, error) {
 	var reply []*MysqlColumn
 	sql := `
 	SELECT c.COLUMN_NAME,
@@ -135,7 +135,7 @@ func (m *ModelMysql) GetColumn(db, table string) (*ColumnData, error) {
 }
 
 // FindIndex 获取索引
-func (m *ModelMysql) FindIndex(db, table, column string) ([]*DbIndex, error) {
+func (m *Mysql) FindIndex(db, table, column string) ([]*DbIndex, error) {
 	querySql := `SELECT 
 		m.INDEX_NAME as index_name,
 		m.NON_UNIQUE as non_unique,

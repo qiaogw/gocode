@@ -3,6 +3,8 @@ package cmd
 import (
 	_ "embed"
 	"fmt"
+	"github.com/qiaogw/gocode/cmd/backup"
+	"github.com/qiaogw/gocode/cmd/restore"
 
 	"github.com/qiaogw/gocode/cmd/gen"
 	"github.com/qiaogw/gocode/cmd/inital"
@@ -112,4 +114,6 @@ func init() {
 	rootCmd.AddCommand(gen.Cmd)
 	rootCmd.AddCommand(inital.Cmd)
 	rootCmd.AddCommand(upgrade.Cmd)
+	rootCmd.AddCommand(backup.Cmd)
+	rootCmd.AddCommand(restore.Cmd)
 }
