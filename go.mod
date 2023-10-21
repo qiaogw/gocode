@@ -22,10 +22,10 @@ require (
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
 	github.com/wxnacy/wgo v1.0.4
-	github.com/xuri/excelize/v2 v2.8.0
+	github.com/xuri/excelize/v2 v2.6.1
 	github.com/zeromicro/ddl-parser v1.0.5
 	github.com/zeromicro/go-zero v1.5.6
-	github.com/zeromicro/go-zero/tools/goctl v1.5.6
+	github.com/zeromicro/go-zero/tools/goctl v1.4.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.14.0
 	google.golang.org/grpc v1.58.3
@@ -64,7 +64,6 @@ require (
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/gookit/color v1.5.4 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -108,7 +107,6 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
-	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca // indirect
 	github.com/xuri/nfp v0.0.0-20230819163627-dc951e3ffe1a // indirect
 	go.opentelemetry.io/otel v1.19.0 // indirect
