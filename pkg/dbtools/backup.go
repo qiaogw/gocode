@@ -206,6 +206,7 @@ func RestoreData(backupFolder string) error {
 			//		continue
 			//	}
 			//}
+
 			log.Println(utils2.Green(fmt.Sprintf("数据从 %s 恢复到表 %s", fileName, tableName)))
 			if dbConf.DbType == "postgres" {
 				maxID, err := getMaxID(db, tableName)
