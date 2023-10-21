@@ -76,7 +76,6 @@ func getTableNames(db *sql.DB, dbType string) ([]string, error) {
 	} else if dbType == "sqlite3" {
 		query = "SELECT name FROM sqlite_master WHERE type='table'" // SQLite
 	}
-
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
