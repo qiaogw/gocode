@@ -337,7 +337,6 @@ func insertDatasIntoTable(db *sql.DB, tableName, dbType string, data []map[strin
 		columnNames := strings.Join(columns, ",")
 		valuePlaceholders := strings.Join(placeholders, ",")
 
-		//query := "INSERT INTO " + tableName + " (" + columnNames + ") VALUES (" + valuePlaceholders + ")"
 		query := fmt.Sprintf(fmtQuery,
 			tableName, columnNames, valuePlaceholders)
 		_, err = tx.Exec(query, values...)
