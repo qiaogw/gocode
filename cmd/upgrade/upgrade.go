@@ -23,11 +23,11 @@ func upgrade(_ *cobra.Command, _ []string) error {
 	if runtime.GOOS == "windows" {
 		cmd = `set GOPROXY=https://goproxy.cn,direct && go install github.com/qiaogw/gocode@latest`
 	}
-	info, err := execx.Run(cmd, "")
+	_, err := execx.Run(cmd, "")
 	if err != nil {
 		return err
 	}
-	fmt.Println(info, "")
+	//fmt.Println(info, "")
 	fmt.Println(util.Green("Done!"))
 	return nil
 }
