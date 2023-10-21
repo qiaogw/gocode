@@ -32,7 +32,6 @@ DeletedAt gorm.DeletedAt `json:"-" db:"deleted_at" gorm:"index;comment:删除时
 }
  ```
 
-
 若业务要求更改以上字段，则需要修改生成的 common/golab/model.go文件。
 生成的文件最好在goland中编辑，对rpc和api文件利用goctl插件进行生成，插件有bug，api下的handel有包重复import，
 此时可以利用goland 进行格式化和清理优化.
