@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/errx"
 )
 
 func LoggerInterceptor(ctx context.Context, req interface{},

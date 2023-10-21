@@ -1,8 +1,8 @@
 package logic
 
 import (
-"{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/modelx"
+	"github.com/qiaogw/gocode/common/errx"
 	"context"
 "github.com/pkg/errors"
 

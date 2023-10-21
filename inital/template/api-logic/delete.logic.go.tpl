@@ -7,7 +7,7 @@ import (
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-	"{{.PKG}}/common/errx"
+	"github.com/qiaogw/gocode/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

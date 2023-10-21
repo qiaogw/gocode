@@ -1,8 +1,8 @@
 package logic
 
 import (
-"{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/modelx"
+	"github.com/qiaogw/gocode/common/errx"
 	"context"
 "github.com/pkg/errors"
 
@@ -10,7 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"{{.ParentPkg}}/model"
-"{{.PKG}}/common/timex"
+"github.com/qiaogw/gocode/common/timex"
 	"github.com/zeromicro/go-zero/core/logx"
 
 )

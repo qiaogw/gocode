@@ -2,12 +2,12 @@ package {{.TableUrl}}
 
 import (
 	"context"
-"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/errx"
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-"{{.PKG}}/common/jwtx"
+"github.com/qiaogw/gocode/common/jwtx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
