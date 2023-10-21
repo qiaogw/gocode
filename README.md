@@ -37,6 +37,7 @@ DeletedAt gorm.DeletedAt `json:"-" db:"deleted_at" gorm:"index;comment:删除时
 此时可以利用goland 进行格式化和清理优化.
 
 ## 备份业务数据
+
 ### backup
 在当前backup目录下创建以数据库为名的文件夹，将所有表导出为json文件.
 
