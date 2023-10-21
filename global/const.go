@@ -13,7 +13,6 @@ const (
 	OsMac        = "darwin"
 	OsLinux      = "linux"
 )
-
 const (
 	ConfigEnv         = "GVA_CONFIG"
 	ConfigDefaultFile = "config.yaml"
