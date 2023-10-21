@@ -51,7 +51,7 @@ func setup() error {
 }
 
 func run() error {
-	fmt.Println(util.Green(`开始恢复 ` + dst))
+	//fmt.Println(util.Green(`开始恢复 ` + dst))
 	wd, _ := os.Getwd()
 	backupDir := filepath.Join(wd, "backup", src)
 	fmt.Println(util.Green(`开始恢复 ` + global.GenConfig.DB.Dbname + ` 从 ` + backupDir))

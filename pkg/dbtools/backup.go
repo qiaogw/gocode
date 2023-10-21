@@ -192,16 +192,20 @@ func RestoreData(backupFolder string) error {
 
 			jsonData, err := readJSONFile(backupFolder + "/" + fileName)
 			if err != nil {
-				log.Printf("读取 JSON 文件 %s 错误: %v", fileName, err)
+				log.Printf("读取 JSON 文件 %s 错误: %v\n", fileName, err)
 				continue
 			}
-			//insertDatasIntoTable(db, tableName, dbConf.DbType, jsonData)
-			for _, data := range jsonData {
-				if err := insertDataIntoTable(db, tableName, dbConf.DbType, data); err != nil {
-					log.Printf("表  %s 数据导入错误: %v", tableName, err)
-					continue
-				}
+			err = insertDatasIntoTable(db, tableName, dbConf.DbType, jsonData)
+			if err != nil {
+				log.Printf("表  %s 数据导入错误: %v\n", tableName, err)
+				continue
 			}
+			//for _, data := range jsonData {
+			//	if err := insertDataIntoTable(db, tableName, dbConf.DbType, data); err != nil {
+			//		log.Printf("表  %s 数据导入错误: %v", tableName, err)
+			//		continue
+			//	}
+			//}
 
 			log.Println(utils2.Green(fmt.Sprintf("数据从 %s 恢复到表 %s", fileName, tableName)))
 			if dbConf.DbType == "postgres" {
@@ -282,6 +286,7 @@ func insertDataIntoTable(db *sql.DB, tableName, dbType string, data map[string]i
 	}
 	return err
 }
+
 func getMaxID(db *sql.DB, tableName string) (int, error) {
 	var maxID int
 	query := fmt.Sprintf("SELECT MAX(id) FROM %s", tableName)
@@ -299,51 +304,50 @@ func setAutoIncrement(db *sql.DB, tableName string, value int) error {
 }
 
 func insertDatasIntoTable(db *sql.DB, tableName, dbType string, data []map[string]interface{}) error {
-	// 构建插入语句
-	columns := make([]string, 0)
-	values := make([]interface{}, 0)
-	// 存放values的slice
-	//valueArgs := make([]interface{}, 0)
-
-	if len(data) < 1 {
-		return nil
-	}
-
-	var valuePlaceholders string
-	//var fv string
-	fv := make([]string, 0)
-	// 遍历users准备相关数据
-	for _, u := range data {
-		placeholders := make([]string, 0)
-		columns = columns[:0]
-		for column, value := range u {
-			values = append(values, value)
-			placeholders = append(placeholders, "?")
-			valuePlaceholders = strings.Join(placeholders, ",")
-			columns = append(columns, column)
-		}
-		fmt.Printf("columns :%+v\n", columns)
-		fmt.Printf("values :%+v\n", values)
-		valuePlaceholders = strings.Join(placeholders, ",")
-		fv = append(fv, fmt.Sprintf("(%s)", valuePlaceholders))
-	}
-	columnNames := strings.Join(columns, ",")
-	fmtQuery := "INSERT INTO `%s` (%s) VALUES " + strings.Join(fv, ",") + ";"
-	query := fmt.Sprintf(fmtQuery,
-		tableName, columnNames)
-
-	// 执行插入操作
-	stmt, err := db.Prepare(query)
-
+	tx, err := db.Begin()
 	if err != nil {
-		log.Printf("sql语句: %s,错误: %v \n", query, err) // 记录 SQL 查询及参数
 		return err
 	}
-	defer stmt.Close()
+	defer tx.Rollback() // 事务出错时回滚
 
-	_, err = stmt.Exec(values...)
-	if err != nil {
-		log.Printf("sql语句执行错误: %s, Values: %v,错误: %v\n", query, values, err) // 记录 SQL 查询及参数
+	for _, rowData := range data {
+		columns := make([]string, 0)
+		placeholders := make([]string, 0)
+		values := make([]interface{}, 0)
+
+		for column, value := range rowData {
+			columns = append(columns, column)
+			placeholders = append(placeholders, "?")
+			values = append(values, value)
+		}
+
+		fmtQuery := `INSERT INTO "%s" (%s) VALUES (%s);`
+		// 将占位符替换为数据库特定的占位符
+		switch dbType {
+		case "mysql":
+			fmtQuery = "INSERT INTO `%s` (%s) VALUES (%s);"
+		case "postgres":
+			// 替换占位符为 $1, $2, ...
+			for i := range placeholders {
+				placeholders[i] = fmt.Sprintf("$%d", i+1)
+			}
+		case "sqlite3":
+			// 不需要替换，SQLite 使用 ? 作为占位符
+		}
+		columnNames := strings.Join(columns, ",")
+		valuePlaceholders := strings.Join(placeholders, ",")
+
+		//query := "INSERT INTO " + tableName + " (" + columnNames + ") VALUES (" + valuePlaceholders + ")"
+		query := fmt.Sprintf(fmtQuery,
+			tableName, columnNames, valuePlaceholders)
+		_, err = tx.Exec(query, values...)
+		if err != nil {
+			return err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
 	}
 	return nil
 }
