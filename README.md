@@ -38,7 +38,7 @@ DeletedAt gorm.DeletedAt `json:"-" db:"deleted_at" gorm:"index;comment:删除时
 
 ## 备份业务数据
 ### backup
-会在当前backup目录下创建以数据库为名的文件夹，将所有表导出为json文件
+会在当前backup目录下创建以数据库为名的文件夹，将所有表导出为json文件.
 
 ### restore
 会将 backup 的对应数据库json文件导入的 -d 数据库（需要建立对应配置文件,参见初始化,文件名为数据库名称）
