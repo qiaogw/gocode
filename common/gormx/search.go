@@ -25,7 +25,7 @@ func SearchKey(db *gorm.DB, table, key string) string {
 	case "mysql":
 		sql = fmt.Sprintf("concat(%v) like '%%%s%%'", field, key)
 	case "postgres":
-		sql = fmt.Sprintf("record_to_text(%s) ~ '%s'", table, key)
+		sql = fmt.Sprintf(`CAST("%s" AS text) ~ '%s'`, table, key)
 	}
 
 	return sql
