@@ -5,6 +5,7 @@ import (
 	utils2 "github.com/qiaogw/gocode/util"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/qiaogw/gocode/gen"
@@ -133,4 +134,23 @@ func run() error {
 	}
 	fmt.Println(utils2.Green("Done!"))
 	return err
+}
+
+func Gen(db model.Db) error {
+	apiPackage = filepath.Join("TempDown", db.Package)
+	genApp := gen.AutoCodeServiceApp
+	db.Package = strings.ToLower(db.Package)
+	err := genApp.CreateConfig(&db)
+	if err != nil {
+		return err
+	}
+	configYml := global.GetConfigFile(apiPackage)
+	// 读取配置
+	global.GenViper = setting.Viper(configYml)
+	ed, err := setting.GormInit()
+	if err != nil {
+		return err
+	}
+	global.GenDB = ed
+	return run()
 }
