@@ -1,6 +1,5 @@
 package global
 
-// Menu 菜单中的类型枚举值
 const (
 	// Directory 目录
 	Directory string = "D"
@@ -8,4 +7,6 @@ const (
 	Menu string = "M"
 	// Button 按钮
 	Button string = "B"
+	// TempDownPath 生成代码路径
+	TempDownPath = "TempDown"
 )

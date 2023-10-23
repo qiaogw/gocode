@@ -136,11 +136,11 @@ func run() error {
 	return err
 }
 
-func Gen(db model.Db) error {
+func Gen(genApp *gen.AutoCodeService, db *model.Db) error {
 	apiPackage = filepath.Join("TempDown", db.Package)
-	genApp := gen.AutoCodeServiceApp
+	//genApp := gen.AutoCodeServiceApp
 	db.Package = strings.ToLower(db.Package)
-	err := genApp.CreateConfig(&db)
+	err := genApp.CreateConfig(db)
 	if err != nil {
 		return err
 	}
