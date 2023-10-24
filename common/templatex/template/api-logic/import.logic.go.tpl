@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
-	"{{.PKG}}/common/errx"
+	"github.com/qiaogw/gocode/common/errx"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.PackageName}}"

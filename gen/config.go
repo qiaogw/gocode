@@ -1,7 +1,7 @@
 package gen
 
 import (
-	"github.com/qiaogw/gocode/inital"
+	"github.com/qiaogw/gocode/common/templatex"
 	"github.com/qiaogw/gocode/model"
 	"os"
 	"path/filepath"
@@ -12,10 +12,11 @@ import (
 func (acd *AutoCodeService) CreateConfig(db *model.Db) (err error) {
 	pack := db.Package
 	pwd, _ := os.Getwd()
+
 	tf := "template/config/config.yaml.tpl"
 	var tpl tplData
 	t1 := template.New(tf)
-	fi, err := inital.TemplateTpl.ReadFile(tf)
+	fi, err := templatex.TemplateTpl.ReadFile(tf)
 	if err != nil {
 		return
 	}

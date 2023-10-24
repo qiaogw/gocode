@@ -4,7 +4,7 @@ import (
 	"github.com/qiaogw/gorm-cache/cache"
 	cacheConfig "github.com/qiaogw/gorm-cache/config"
 	"{{.ParentPkg}}/model"
-	"{{.PKG}}/common/gormx"
+	"github.com/qiaogw/gocode/common/gormx"
 	"{{.ParentPkg}}/rpc/internal/config"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"

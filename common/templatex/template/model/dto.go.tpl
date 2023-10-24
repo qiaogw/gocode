@@ -1,7 +1,7 @@
 package model
 
 import (
-    "{{.PKG}}/common/modelx"
+"github.com/qiaogw/gocode/common/modelx"
 "time"
 )
 

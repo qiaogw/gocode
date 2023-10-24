@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/errx"
 )
 
 type Body struct {

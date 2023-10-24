@@ -10,8 +10,8 @@ import (
 	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
-	{{ if .HasTimer }}"{{.PKG}}/common/timex"{{- end }}
-	"{{.PKG}}/common/errx"
+	{{ if .HasTimer }}"github.com/qiaogw/gocode/common/timex"{{- end }}
+	"github.com/qiaogw/gocode/common/errx"
 )
 
 type Create{{.Table}}Logic struct {

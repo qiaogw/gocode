@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/errx"
-"{{.PKG}}/common/timex"
+	"github.com/qiaogw/gocode/common/modelx"
+	"github.com/qiaogw/gocode/common/errx"
+"github.com/qiaogw/gocode/common/timex"
 	"context"
 "github.com/pkg/errors"
 
@@ -11,7 +11,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.PackageName}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
-{{ if .HasTimer }}"{{.PKG}}/common/timex"{{ end }}
+{{ if .HasTimer }}"github.com/qiaogw/gocode/common/timex"{{ end }}
 )
 
 type Get{{.Table}}Logic struct {

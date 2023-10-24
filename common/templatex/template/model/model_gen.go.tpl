@@ -2,7 +2,7 @@
 package model
 {{$table:=.Table}}
 import (
-"{{.PKG}}/common/modelx"
+"github.com/qiaogw/gocode/common/modelx"
 	"context"
 
     "github.com/zeromicro/go-zero/core/stores/cache"

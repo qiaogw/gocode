@@ -2,8 +2,8 @@ package {{.TableUrl}}
 
 import (
 	"context"
-"{{.PKG}}/common/errx"
-"{{.PKG}}/common/jwtx"
+"github.com/qiaogw/gocode/common/errx"
+"github.com/qiaogw/gocode/common/jwtx"
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"

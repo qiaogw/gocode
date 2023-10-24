@@ -4,9 +4,9 @@ package model
 import (
 	"context"
 "io"
-"{{.PKG}}/common/modelx"
-"{{.PKG}}/common/toolx"
-	"{{.PKG}}/common/gormx"
+"github.com/qiaogw/gocode/common/modelx"
+"github.com/qiaogw/gocode/common/toolx"
+	"github.com/qiaogw/gocode/common/gormx"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"gorm.io/gorm"

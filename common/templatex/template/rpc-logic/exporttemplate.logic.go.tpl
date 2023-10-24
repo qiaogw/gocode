@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	"{{.PKG}}/common/toolx"
+	"github.com/qiaogw/gocode/common/toolx"
 	"{{.ParentPkg}}/model"
 "github.com/pkg/errors"
-"{{.PKG}}/common/errx"
+"github.com/qiaogw/gocode/common/errx"
 	"{{.ParentPkg}}/rpc/{{.PackageName}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 

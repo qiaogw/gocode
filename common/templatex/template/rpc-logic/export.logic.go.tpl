@@ -3,9 +3,9 @@ package logic
 import (
 	"context"
 "github.com/pkg/errors"
-	"{{.PKG}}/common/errx"
-	"{{.PKG}}/common/modelx"
-	"{{.PKG}}/common/toolx"
+	"github.com/qiaogw/gocode/common/errx"
+	"github.com/qiaogw/gocode/common/modelx"
+	"github.com/qiaogw/gocode/common/toolx"
 	"{{.ParentPkg}}/model"
 
 	"{{.ParentPkg}}/rpc/{{.PackageName}}"
