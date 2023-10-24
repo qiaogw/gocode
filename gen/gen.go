@@ -16,7 +16,6 @@ import (
 
 // getNeedList 获取模板文件和构建所需目录
 func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []tplData, fileList []string, needMkdir []string, err error) {
-	// 去除所有空格
 	// 获取 basePath 文件夹下所有tpl文件
 	tplFileList, err := acd.GetAllTplFile(templatePath, nil)
 	//log.Printf("pack is %s ,tplFileList is %v\n", pack, tplFileList)
@@ -57,7 +56,6 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 		if lastSeparator := strings.LastIndex(trimBase, "/"); lastSeparator != -1 {
 			origFileName := strings.TrimSuffix(trimBase[lastSeparator+1:], ".tpl")
 			firstDot := strings.Index(origFileName, ".")
-
 			fileSlice := strings.Split(origFileName, ".")
 			if firstDot != -1 {
 				var fileName string
@@ -141,6 +139,19 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		fPath = filepath.Join(fPath, rpcPath)
 	case modelPath:
 		fPath = filepath.Join(fPath, modelPath)
+	case webPath:
+
+		baseDot := strings.Index(base, ".")
+		baseSlic := strings.Split(base, ".")
+		fmt.Println(fPath)
+		fmt.Println(data.tablePkg)
+		fmt.Println(baseDot)
+		fmt.Println(baseSlic)
+		if baseSlic[1] == "vue" {
+			fPath = filepath.Join(fPath, webPath, "src", "pages", data.tablePkg)
+		} else {
+			fPath = filepath.Join(fPath, webPath, "src", "api", data.tablePkg)
+		}
 	default:
 	}
 

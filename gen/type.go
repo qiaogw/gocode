@@ -24,6 +24,7 @@ const (
 	etcPath         = "etc"
 	logicPath       = "logic"
 	apiResponsePath = "replay"
+	webPath         = "web"
 )
 
 type tplData struct {

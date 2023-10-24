@@ -108,12 +108,17 @@ func (acd *AutoCodeService) Code() error {
 		log.Printf("CreateRpcLogic err is %v\n", err)
 		return err
 	}
+	err = acd.CreateWeb(&db)
+	if err != nil {
+		log.Printf("CreateRpcLogic err is %v\n", err)
+		return err
+	}
 	//err = genApp.CreateCommon(&db)
 	//if err != nil {
 	//	log.Printf("CreateCommon err is %v\n", err)
 	//	return err
 	//}
-	err = acd.CreateConfigFile(&db, filepath.Join(dir, db.Package))
+	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(utils2.Green("Done!"))
 	return err
 }
