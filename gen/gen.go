@@ -140,13 +140,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	case modelPath:
 		fPath = filepath.Join(fPath, modelPath)
 	case webPath:
-
-		baseDot := strings.Index(base, ".")
 		baseSlic := strings.Split(base, ".")
-		fmt.Println(fPath)
-		fmt.Println(data.tablePkg)
-		fmt.Println(baseDot)
-		fmt.Println(baseSlic)
 		if baseSlic[1] == "vue" {
 			fPath = filepath.Join(fPath, webPath, "src", "pages", data.tablePkg)
 		} else {
