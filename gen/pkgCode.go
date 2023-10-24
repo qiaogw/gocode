@@ -11,16 +11,16 @@ import (
 	"strings"
 )
 
-func (acd *AutoCodeService) Code() (*model.Db, *[]model.Table, error) {
+func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error) {
 	acd.Init()
 	fmt.Printf(utils2.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
-	tables, err := acd.DB.GetTables(global.GenConfig.DB.Dbname)
+	tables, err = acd.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("获取表 err is %v", err)))
-		return nil, nil, err
+		return
 	}
-	var db model.Db
+
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
 	db.Service = utils2.LeftUpper(db.Database)
@@ -31,13 +31,13 @@ func (acd *AutoCodeService) Code() (*model.Db, *[]model.Table, error) {
 	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
-		return nil, nil, err
+		return
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
 	db.PKG = pkg
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
-		return nil, nil, err
+		return
 	}
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
@@ -75,22 +75,22 @@ func (acd *AutoCodeService) Code() (*model.Db, *[]model.Table, error) {
 	err = acd.CreateRpc(&db)
 	if err != nil {
 		log.Printf("CreateRpc err is %v\n", err)
-		return nil, nil, err
+		return
 	}
 	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)
-		return nil, nil, err
+		return
 	}
 	err = acd.CreateRpcLogic(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
-		return nil, nil, err
+		return
 	}
 	err = acd.CreateWeb(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
-		return nil, nil, err
+		return
 	}
 	//err = genApp.CreateCommon(&db)
 	//if err != nil {
@@ -99,5 +99,5 @@ func (acd *AutoCodeService) Code() (*model.Db, *[]model.Table, error) {
 	//}
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(utils2.Green("Done!"))
-	return &db, &tables, err
+	return
 }
