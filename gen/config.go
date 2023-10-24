@@ -8,11 +8,9 @@ import (
 	"text/template"
 )
 
-// CreateConfig 创建 config
-func (acd *AutoCodeService) CreateConfig(db *model.Db) (err error) {
+// CreateConfigFile 创建 config
+func (acd *AutoCodeService) CreateConfigFile(db *model.Db, fPath string) (err error) {
 	pack := db.Package
-	pwd, _ := os.Getwd()
-
 	tf := "template/config/config.yaml.tpl"
 	var tpl tplData
 	t1 := template.New(tf)
@@ -25,11 +23,18 @@ func (acd *AutoCodeService) CreateConfig(db *model.Db) (err error) {
 		return
 	}
 	tpl.template = t2
-	mf := filepath.Join(pwd, pack+".yaml")
+	mf := filepath.Join(fPath, pack+".yaml")
 	f, err := os.OpenFile(mf, os.O_CREATE|os.O_WRONLY, 0o755)
 	defer f.Close()
 	if err != nil {
 		return err
 	}
 	return t2.Execute(f, db)
+}
+
+// CreateConfig 创建 config
+func (acd *AutoCodeService) CreateConfig(db *model.Db) (err error) {
+	pwd, _ := os.Getwd()
+
+	return acd.CreateConfigFile(db, pwd)
 }

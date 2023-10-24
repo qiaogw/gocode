@@ -13,11 +13,11 @@ import (
 	"strings"
 )
 
-func Gen(genApp *AutoCodeService, db *model.Db) error {
+func (acd *AutoCodeService) Gen(db *model.Db) error {
 	apiPackage := filepath.Join("TempDown", db.Package)
 	//genApp := gen.AutoCodeServiceApp
 	db.Package = strings.ToLower(db.Package)
-	err := genApp.CreateConfig(db)
+	err := acd.CreateConfig(db)
 	if err != nil {
 		return err
 	}
@@ -29,14 +29,14 @@ func Gen(genApp *AutoCodeService, db *model.Db) error {
 		return err
 	}
 	global.GenDB = ed
-	return Code(genApp)
+	return acd.Code()
 }
 
-func Code(genApp *AutoCodeService) error {
-	genApp.Init()
+func (acd *AutoCodeService) Code() error {
+	acd.Init()
 	fmt.Printf(utils2.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
-	tables, err := genApp.DB.GetTables(global.GenConfig.DB.Dbname)
+	tables, err := acd.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("获取表 err is %v", err)))
 		return err
@@ -56,12 +56,15 @@ func Code(genApp *AutoCodeService) error {
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
 	db.PKG = pkg
-
+	if err != nil {
+		log.Println(utils2.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
+		return err
+	}
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
 			continue
 		}
-		columnData, err := genApp.DB.GetColumn(global.GenConfig.DB.Dbname, v.Table)
+		columnData, err := acd.DB.GetColumn(global.GenConfig.DB.Dbname, v.Table)
 		if err != nil {
 			log.Println(utils2.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
@@ -76,7 +79,7 @@ func Code(genApp *AutoCodeService) error {
 		}
 		tb.ParentPkg = db.ParentPkg
 		tb.PKG = db.PKG
-		err = genApp.CreateModel(tb)
+		err = acd.CreateModel(tb)
 		if err != nil {
 			continue
 		}
@@ -84,23 +87,23 @@ func Code(genApp *AutoCodeService) error {
 		db.Tables = append(db.Tables, tb)
 		db.Email = tb.Email
 		db.Author = tb.Author
-		err = genApp.CreateApiDesc(tb)
+		err = acd.CreateApiDesc(tb)
 		if err != nil {
 			log.Printf("CreateApiDesc err is %v\n", err)
 		}
 	}
 
-	err = genApp.CreateRpc(&db)
+	err = acd.CreateRpc(&db)
 	if err != nil {
 		log.Printf("CreateRpc err is %v\n", err)
 		return err
 	}
-	err = genApp.CreateApi(&db)
+	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)
 		return err
 	}
-	err = genApp.CreateRpcLogic(&db)
+	err = acd.CreateRpcLogic(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
 		return err
@@ -110,6 +113,7 @@ func Code(genApp *AutoCodeService) error {
 	//	log.Printf("CreateCommon err is %v\n", err)
 	//	return err
 	//}
+	err = acd.CreateConfigFile(&db, filepath.Join(dir, db.Package))
 	fmt.Println(utils2.Green("Done!"))
 	return err
 }

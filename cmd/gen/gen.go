@@ -127,5 +127,5 @@ func run() error {
 	//}
 	//fmt.Println(utils2.Green("Done!"))
 	//return err
-	return gen.Code(genApp)
+	return genApp.Code()
 }
