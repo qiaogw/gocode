@@ -4,42 +4,21 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/model"
-	"github.com/qiaogw/gocode/setting"
 	utils2 "github.com/qiaogw/gocode/util"
 	"github.com/zeromicro/go-zero/tools/goctl/pkg/golang"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
-func (acd *AutoCodeService) Gen(db *model.Db) error {
-	apiPackage := filepath.Join("TempDown", db.Package)
-	//genApp := gen.AutoCodeServiceApp
-	db.Package = strings.ToLower(db.Package)
-	err := acd.CreateConfig(db)
-	if err != nil {
-		return err
-	}
-	configYml := global.GetConfigFile(apiPackage)
-	// 读取配置
-	global.GenViper = setting.Viper(configYml)
-	ed, err := setting.GormInit()
-	if err != nil {
-		return err
-	}
-	global.GenDB = ed
-	return acd.Code()
-}
-
-func (acd *AutoCodeService) Code() error {
+func (acd *AutoCodeService) Code() (*model.Db, *[]model.Table, error) {
 	acd.Init()
 	fmt.Printf(utils2.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	tables, err := acd.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("获取表 err is %v", err)))
-		return err
+		return nil, nil, err
 	}
 	var db model.Db
 	db.Database = global.GenConfig.System.Name
@@ -52,13 +31,13 @@ func (acd *AutoCodeService) Code() error {
 	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
-		return err
+		return nil, nil, err
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
 	db.PKG = pkg
 	if err != nil {
 		log.Println(utils2.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
-		return err
+		return nil, nil, err
 	}
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
@@ -96,22 +75,22 @@ func (acd *AutoCodeService) Code() error {
 	err = acd.CreateRpc(&db)
 	if err != nil {
 		log.Printf("CreateRpc err is %v\n", err)
-		return err
+		return nil, nil, err
 	}
 	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)
-		return err
+		return nil, nil, err
 	}
 	err = acd.CreateRpcLogic(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
-		return err
+		return nil, nil, err
 	}
 	err = acd.CreateWeb(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
-		return err
+		return nil, nil, err
 	}
 	//err = genApp.CreateCommon(&db)
 	//if err != nil {
@@ -120,5 +99,5 @@ func (acd *AutoCodeService) Code() error {
 	//}
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(utils2.Green("Done!"))
-	return err
+	return &db, &tables, err
 }
