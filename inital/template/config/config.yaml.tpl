@@ -26,49 +26,47 @@ Auth:
 # db-type: 'mysql','postgres'
 #   mysql config: charset=utf8mb4&parseTime=True&loc=Local
 #   postgres config: "sslmode=disable TimeZone=Asia/Shanghai"
-# Password {{.Option.DB.Password}}
 db:
-  {{ if eq .Option.DB.DbType "" }}
+  {{- if eq .Option.DB.DbType "" }}
   db-type: mysql
-  {{ else }}
+  {{- else }}
   db-type: {{.Option.DB.DbType}}
-  {{ end }}
-{{ if eq .Option.DB.Path "" }}
+  {{- end }}
+{{- if eq .Option.DB.Path "" }}
   path: 127.0.0.1
-{{ else }}
+{{- else }}
   path: {{.Option.DB.Path}}
-{{ end }}
-{{ if eq .Option.DB.Port "" }}
+{{- end }}
+{{- if eq .Option.DB.Port "" }}
   port: 3306
-{{ else }}
+{{- else }}
   port: {{.Option.DB.Port}}
-{{ end }}
-{{ if eq .Option.DB.Config "" }}
+{{- end }}
+{{- if eq .Option.DB.Config "" }}
   config: charset=utf8mb4&parseTime=True&loc=Local
-{{ else }}
+{{- else }}
   config: {{.Option.DB.Config}}
-{{ end }}
-{{ if eq .Option.DB.Dbname "" }}
+{{- end }}
+{{- if eq .Option.DB.Dbname "" }}
   db-name: {{.Package}}
-{{ else }}
+{{- else }}
   db-name: {{.Option.DB.Dbname}}
-{{ end }}
-{{ if eq .Option.DB.Username "" }}
+{{- end }}
+{{- if eq .Option.DB.Username "" }}
   username: root
-{{ else }}
+{{- else }}
   username: {{.Option.DB.Username}}
-{{ end }}
-{{ if eq .Option.DB.Password "" }}
+{{- end }}
+{{- if eq .Option.DB.Password "" }}
   password: "123456"
-{{ else }}
+{{- else }}
   password: {{.Option.DB.Password}}
-{{ end }}
-  password: "123456"
+{{- end }}
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: error
   log-zap: false
-{{ if eq .Option.DB.TablePrefix "" }}
+{{- if eq .Option.DB.TablePrefix "" }}
   TablePrefix: "123456"
 {{- else }}
   TablePrefix: {{.Option.DB.TablePrefix}}
