@@ -62,7 +62,7 @@ new{{.Table}} := model.{{.Table}}{
 	res, err := l.svcCtx.{{.Table}}Model.Insert(l.ctx, &new{{.Table}})
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
-		"create {{$tableComment}} db insert fail , err:%v ,data : %+v  ", err, new{{.Table}})
+		"创建 {{$tableComment}} 数据库失败 , 错误:%v ,数据 : %+v  ", err, new{{.Table}})
 	}
 	var rep {{.Db}}.Create{{.Table}}Response
 	_ = copier.Copy(&rep, res)

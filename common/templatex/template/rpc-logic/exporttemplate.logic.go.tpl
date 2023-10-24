@@ -31,7 +31,7 @@ func (l *ExportTemplate{{.Table}}Logic) ExportTemplate{{.Table}}(in *{{.PackageN
 	resp, err := toolx.ExportToWebTemplate(&m, m.TableName())
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.ServerCommonError),
-			"导出{{.TableComment}}excel导入模板 fail，,err:%v", err)
+			"导出{{.TableComment}}excel导入模板 失败，,err:%v", err)
 	}
 	return &{{.PackageName}}.ExportResponse{
 		Data: resp.Bytes(),

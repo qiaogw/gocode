@@ -38,13 +38,13 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.PackageName}}.Delete{{.T
 			return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "该{{.TableComment}}不存在，id: %v", in.Id)
 		}
 		return nil,  errors.Wrapf(errx.NewErrCode(errx.NoData),
-"查询 {{.TableComment}} db fail，id: %v,err:%v", in.Id)
+"数据库查询 {{.TableComment}} 失败，id: %v,err:%v", in.Id)
 	}
 
 	err = l.svcCtx.{{.Table}}Model.Delete(l.ctx, res.Id)
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-"删除 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
+"数据库删除 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
 }
 
 	return &{{.PackageName}}.Delete{{.Table}}Response{}, nil

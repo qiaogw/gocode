@@ -46,7 +46,7 @@ func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.PackageName}}.ExportRequ
 	resp, err := toolx.ExportToWeb(list[0], list, list[0].TableName())
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.ServerCommonError),
-			"{{.TableComment}}导出excel fail，data: %+v,err:%v", list,err)
+			"{{.TableComment}}导出excel 失败，data: %+v,err:%v", list,err)
 	}
 	return &{{.PackageName}}.ExportResponse{
 		Data: resp.Bytes(),

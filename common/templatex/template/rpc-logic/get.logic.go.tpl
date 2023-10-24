@@ -38,7 +38,7 @@ return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
 "该{{.TableComment}}不存在，id is %v", in.Id)
 		}
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-"提取 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
+"数据库提取 {{.TableComment}} 失败l，id: %v,err:%v", in.Id,err)
 	}
 	var rep {{.PackageName}}.Get{{.Table}}Response
 	_ = copier.Copy(&rep, res)

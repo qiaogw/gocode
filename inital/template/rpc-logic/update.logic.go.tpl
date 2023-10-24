@@ -36,7 +36,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 		if err == modelx.ErrNotFound {
 			return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "该{{.TableComment}}不存在，id: %v", in.Id)
 		}
-		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "查询 {{.TableComment}} db fail，id: %v,err:%v", in.Id,err)
+		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "数据库查询 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
 	}
 	{{- range  .Columns }}
 		{{-  if .IsModelTime -}}
@@ -53,7 +53,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 	res,err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
-"更新 {{.TableComment}} db insert fail , err:%v ,data : %+v  ", err, res)
+"数据库更新 {{.TableComment}} 失败 , err:%v ,data : %+v  ", err, res)
 	}
 	var rep {{.Db}}.Update{{.Table}}Response
 	_ = copier.Copy(&rep, res)
