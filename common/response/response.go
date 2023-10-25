@@ -46,6 +46,9 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 					case errx.Success:
 						errcode = ecode
 						errmsg = gstatus.Message()
+					case errx.ErrReq:
+						errcode = ecode
+						errmsg = gstatus.Message()
 					default:
 						errcode = ecode
 						errmsg = errx.MapErrMsg(ecode)
