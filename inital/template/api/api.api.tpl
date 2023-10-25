@@ -1,7 +1,7 @@
 syntax = "v1"
 
 import (
-    "replay/{{.Package}}.api"
+    "replay/replay.api"
 {{- range .Tables }}
     "api-desc/{{.TableUrl}}.api"
 {{- end}}

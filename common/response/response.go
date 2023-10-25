@@ -87,7 +87,7 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 				if field.Name == "Msg" {
 					data := rv.FieldByName(fieldName)
 					body.Msg = data.String()
-					logx.Errorf("【Msg】data: %v ,body:%v", data, body)
+					logx.Infof("【Msg】data: %v ,body:%v", data, body)
 				}
 			}
 		}

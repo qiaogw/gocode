@@ -65,6 +65,8 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 					fileName = fileSlice[0] + pack + "logic.go"
 				} else if trimBase[0:strings.Index(trimBase, "/")] == "common" {
 					fileName = origFileName
+				} else if origFileName == "replay.api" {
+					fileName = origFileName
 				} else if origFileName[firstDot:] != ".go" {
 					fileName = pack + origFileName[firstDot:]
 				} else {
@@ -72,6 +74,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 				}
 				dataList[index].autoCodePath = filepath.Join(autoPath, trimBase[:lastSeparator],
 					fileName)
+
 			}
 		}
 
