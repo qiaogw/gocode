@@ -36,3 +36,6 @@ func NewErrCode(errCode uint32) *CodeError {
 func NewDefaultError(errMsg string) *CodeError {
 	return &CodeError{errCode: ServerCommonError, errMsg: errMsg}
 }
+func NewErrorf(errCode uint32, format string, args ...interface{}) *CodeError {
+	return &CodeError{errCode: errCode, errMsg: fmt.Sprintf(format, args...)}
+}
