@@ -45,7 +45,7 @@ type (
 		Email        string
 		ParentPkg    string //项目路径
 		PKG          string //根目录
-		Service      string //模块首字母大写驼峰
+		Service      string //服务名，全部小写
 		IsCurd       bool
 		IsAuth       bool
 		IsImport     bool
@@ -129,7 +129,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	table.TableUrl = strings.ToLower(table.Table)
 
 	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
-	table.Service = util.LeftUpper(table.Db)
+	table.Service = strings.ToLower(table.Db)
 	table.TableComment = tableComment
 	//table.Columns = c.Columns
 	table.UniqueIndex = map[string][]*Column{}
