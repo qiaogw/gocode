@@ -61,11 +61,11 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
 		tb.Dir = strings.ToLower(db.Database)
-		println("tb.Dir: ", tb.Dir)
-		println("tb.Service: ", tb.Service)
-		println("tb.Pkg: ", tb.Pkg)
-		println("tb.ParentPkg: ", tb.ParentPkg)
-		println("tb.PackageName: ", tb.PackageName)
+		//println("tb.Dir: ", tb.Dir)
+		//println("tb.Service: ", tb.Service)
+		//println("tb.Pkg: ", tb.Pkg)
+		//println("tb.ParentPkg: ", tb.ParentPkg)
+		//println("tb.PackageName: ", tb.PackageName)
 		err = acd.CreateModel(tb)
 		if err != nil {
 			continue

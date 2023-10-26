@@ -1,4 +1,4 @@
-Name: {{.Package}}-Rpc
+Name: {{.Package}}-rpc
 ListenOn: 0.0.0.0:7200
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 Auth: true

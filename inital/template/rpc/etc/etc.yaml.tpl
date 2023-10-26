@@ -1,4 +1,4 @@
-Name: {{.Package}}-Rpc
+Name: {{.Package}}-rpc
 ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
