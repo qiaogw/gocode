@@ -22,7 +22,7 @@ type (
 		Option     *config.APP
 		DriverName string
 		ParentPkg  string //项目路径
-		PKG        string //根目录
+		Pkg        string //根目录
 	}
 	CacheKey struct {
 		Key       string
@@ -44,7 +44,7 @@ type (
 		Author       string
 		Email        string
 		ParentPkg    string //项目路径
-		PKG          string //根目录
+		Pkg          string //根目录
 		Service      string //服务名，首字母大写驼峰
 		Dir          string //服务目录，全部小写
 		IsCurd       bool
@@ -131,6 +131,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 
 	table.Db = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
 	table.Service = util.LeftUpper(util.CamelString(table.Db))
+	table.Dir = strings.ToLower(util.CamelString(global.GenConfig.System.Name))
 	table.TableComment = tableComment
 	//table.Columns = c.Columns
 	table.UniqueIndex = map[string][]*Column{}

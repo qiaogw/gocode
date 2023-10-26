@@ -34,7 +34,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		return
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
-	db.PKG = pkg
+	db.Pkg = pkg
 	if err != nil {
 		log.Println(util.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
 		return
@@ -57,7 +57,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 			db.HasTimer = true
 		}
 		tb.ParentPkg = db.ParentPkg
-		tb.PKG = db.PKG
+		tb.Pkg = db.Pkg
 		err = acd.CreateModel(tb)
 		if err != nil {
 			continue

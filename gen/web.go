@@ -10,7 +10,7 @@ import (
 func (acd *AutoCodeService) CreateWeb(db *model.Db) (err error) {
 	for _, v := range db.Tables {
 		v.ParentPkg = db.ParentPkg
-		v.PKG = db.PKG
+		v.Pkg = db.Pkg
 		err = acd.createWeb(v)
 		if err != nil {
 			log.Printf("CreateWeb err is %v\n", err)
