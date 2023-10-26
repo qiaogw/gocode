@@ -23,6 +23,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
+
 	db.Service = util.LeftUpper(util.CamelString(db.Database))
 
 	db.Option = global.GenConfig
@@ -58,6 +59,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		}
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
+		tb.Dir = strings.ToLower(db.Database)
 		err = acd.CreateModel(tb)
 		if err != nil {
 			continue
