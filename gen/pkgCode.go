@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/model"
-	utils2 "github.com/qiaogw/gocode/util"
+	"github.com/qiaogw/gocode/util"
 	"github.com/zeromicro/go-zero/tools/goctl/pkg/golang"
 	"log"
 	"os"
@@ -13,30 +13,30 @@ import (
 
 func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error) {
 	acd.Init()
-	fmt.Printf(utils2.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
+	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	tables, err = acd.DB.GetTables(global.GenConfig.DB.Dbname)
 	if err != nil {
-		log.Println(utils2.Red(fmt.Sprintf("获取表 err is %v", err)))
+		log.Println(util.Red(fmt.Sprintf("获取表 err is %v", err)))
 		return
 	}
 
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
-	db.Service = utils2.LeftUpper(db.Database)
+	db.Service = util.LeftUpper(util.CamelString(db.Database))
 
 	db.Option = global.GenConfig
 	db.DriverName = global.GenDB.Name()
 	dir, _ := os.Getwd()
 	pkg, err := golang.GetParentPackage(dir)
 	if err != nil {
-		log.Println(utils2.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
+		log.Println(util.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
 		return
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
 	db.PKG = pkg
 	if err != nil {
-		log.Println(utils2.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
+		log.Println(util.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
 		return
 	}
 	for _, v := range tables {
@@ -45,12 +45,12 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		}
 		columnData, err := acd.DB.GetColumn(global.GenConfig.DB.Dbname, v.Table)
 		if err != nil {
-			log.Println(utils2.Red(fmt.Sprintf("获取字段 err is %v", err)))
+			log.Println(util.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
 		}
 		tb, err := columnData.Convert(v.TableComment)
 		if err != nil {
-			fmt.Println(utils2.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
+			fmt.Println(util.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
 			continue
 		}
 		if tb.HasTimer {
@@ -98,6 +98,6 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 	//	return err
 	//}
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
-	fmt.Println(utils2.Green("Done!"))
+	fmt.Println(util.Green("Done!"))
 	return
 }
