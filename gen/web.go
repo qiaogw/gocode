@@ -22,7 +22,6 @@ func (acd *AutoCodeService) CreateWeb(db *model.Db) (err error) {
 
 func (acd *AutoCodeService) createWeb(table *model.Table) (err error) {
 	dataList, err := acd.genBefore(table.Table, webPath)
-	//log.Printf("dataList is %+v\n", dataList)
 	if err != nil {
 		log.Printf("err is %v\n", err)
 		return
@@ -34,7 +33,7 @@ func (acd *AutoCodeService) createWeb(table *model.Table) (err error) {
 		if err != nil {
 			return err
 		}
-		if err = value.template.Execute(f, table); err != nil {
+		if err = value.template.Execute(f, *table); err != nil {
 			log.Printf("err is %v\n", err)
 			return err
 		}

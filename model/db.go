@@ -216,7 +216,20 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			m[each.Index.IndexName] = append(m[each.Index.IndexName], each)
 		}
 		ct++
+
 		each.Indexs = ct
+		if !each.IsPk {
+			each.IsList = true
+			each.IsEdit = true
+		}
+		if each.IsControl {
+			each.IsList = false
+			each.IsEdit = false
+		}
+		if each.IsModelTime {
+			each.IsList = false
+			each.IsEdit = false
+		}
 		//log.Printf("table is %s,FieldName is %s\n", c.Table, each.FieldName)
 		table.Columns = append(table.Columns, each)
 	}
