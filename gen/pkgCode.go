@@ -40,6 +40,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		log.Println(util.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
 		return
 	}
+	var tbList []model.Table
 	for _, v := range tables {
 		if !strings.HasPrefix(v.Table, global.GenConfig.DB.TablePrefix) {
 			continue
@@ -60,6 +61,11 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
 		tb.Dir = strings.ToLower(db.Database)
+		println("tb.Dir: ", tb.Dir)
+		println("tb.Service: ", tb.Service)
+		println("tb.Pkg: ", tb.Pkg)
+		println("tb.ParentPkg: ", tb.ParentPkg)
+		println("tb.PackageName: ", tb.PackageName)
 		err = acd.CreateModel(tb)
 		if err != nil {
 			continue
@@ -72,6 +78,7 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		if err != nil {
 			log.Printf("CreateApiDesc err is %v\n", err)
 		}
+		tbList = append(tbList, *tb)
 	}
 
 	err = acd.CreateRpc(&db)
@@ -101,5 +108,5 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 	//}
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(util.Green("Done!"))
-	return
+	return db, tbList, nil
 }
