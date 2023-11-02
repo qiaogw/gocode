@@ -89,6 +89,16 @@
               >
                 <q-tooltip>切换全屏</q-tooltip>
               </q-btn>
+              <q-icon name="help_outline" class="text-purple cursor-pointer">
+                <q-popup-proxy :offset="[10, 10]">
+                  <q-banner class="bg-purple text-white">
+                    <template v-slot:avatar>
+                      <q-icon name="help" />
+                    </template>
+                    {{ route.meta.remark }}
+                  </q-banner>
+                </q-popup-proxy>
+              </q-icon>
             </q-btn-group>
           </div>
         </template>
@@ -255,46 +265,48 @@
     reactive,
     watch,
     getCurrentInstance,
-  } from "vue";
+  } from "vue"
   import {
     list{{.Table}},
     create{{.Table}},
     update{{.Table}},
     delete{{.Table}},
-  } from "src/api/{{.TableUrl}}/{{.TableUrl}}";
+  } from "src/api/{{.TableUrl}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
   {{- if  .FkTable}}
   import {
     list{{.FkTableClass}},
-  } from "src/api/{{- $db -}}/{{.FkTable}}";
+  } from "src/api/{{- $db -}}/{{.FkTable}}"
   {{- end }}
   {{- end }}
 
-  import { useQuasar } from "quasar";
-  import { requiredRule } from "src/utils/inputRule";
-  import { DictOptions,getOptionsByList, getDictLabel,getDict } from "src/utils/dict";
-  import { downloadAction } from 'src/api/manage';
+  import { useQuasar } from "quasar"
+  import { requiredRule } from "src/utils/inputRule"
+  import { DictOptions,getOptionsByList, getDictLabel,getDict } from "src/utils/dict"
+  import { downloadAction } from 'src/api/manage'
+  import { useRoute } from 'vue-router'
+  const route = useRoute()
 
-  const $q = useQuasar();
-  let { proxy } = getCurrentInstance();
-  const dialogVisible = ref(false);
-  const dataList = ref([]);
-  const formType = ref("");
-  const dictId = ref(0);
-  const form = ref({});
-  const dictOptions = ref({});
+  const $q = useQuasar()
+  let { proxy } = getCurrentInstance()
+  const dialogVisible = ref(false)
+  const dataList = ref([])
+  const formType = ref("")
+  const dictId = ref(0)
+  const form = ref({})
+  const dictOptions = ref({})
   {{- range  .Columns }}
   {{- if .DictType }}
-  const {{.DictType}}Options = ref([]);
+  const {{.DictType}}Options = ref([])
   const format{{.DictType}} = (prop) => {
     if (!prop) {
-      prop = false;
+      prop = false
     }
-    return getDictLabel(dictOptions.value.{{.DictType}}, prop);
-  };
+    return getDictLabel(dictOptions.value.{{.DictType}}, prop)
+  }
   {{- else if .FkTable}}
-  const {{.FkTablePackage}}Options = ref([]);
+  const {{.FkTablePackage}}Options = ref([])
   const format{{.FkTableClass}}= (prop) => {
     return getDictLabel({{.FkTablePackage}}Options.value, prop)
   }
@@ -310,7 +322,7 @@
     page: 1,
     rowsPerPage: 10,
     rowsNumber: 0,
-  });
+  })
   const columns = computed(() => {
     return [
       {{- range  .Columns -}}
@@ -328,26 +340,26 @@
       {{- end -}}
       {{- end -}}
       { name: 'actions', align: 'center', label: '操作', field: 'actions' },
-    ];
-  });
+    ]
+  })
 
 
   onMounted(async () => {
-    dictOptions.value = await DictOptions();
+    dictOptions.value = await DictOptions()
     {{- range  .Columns }}
     {{- if .DictType }}
-    {{.DictType}}Options.value = await getDict('{{.DictType}}');
+    {{.DictType}}Options.value = await getDict('{{.DictType}}')
     {{- else if .FkTable}}
     const queryReq{{.FkTableClass}} = {
       pageIndex: 0,
       pageSize: 9999,
-    };
-    let res{{.FkTableClass}} = await list{{.FkTableClass}}(queryReq{{.FkTableClass}});
-    {{.FkTablePackage}}Options.value = getOptionsByList(res{{.FkTableClass}}.list, "{{.FkLabelName}}", "{{.FkLabelId}}");
+    }
+    let res{{.FkTableClass}} = await list{{.FkTableClass}}(queryReq{{.FkTableClass}})
+    {{.FkTablePackage}}Options.value = getOptionsByList(res{{.FkTableClass}}.list, "{{.FkLabelId}}", "{{.FkLabelName}}")
     {{- end }}
     {{- end }}
-    onRequest();
-  });
+    onRequest()
+  })
 
   const reset = () => {
     pagination.value = {
@@ -356,12 +368,12 @@
       page: 1,
       rowsPerPage: 10,
       rowsNumber: 0,
-    };
+    }
     form.value = {
       enabled: true,
-    };
-    dictId.value = 0;
-  };
+    }
+    dictId.value = 0
+  }
 
   const onRequest = async (val) => {
     if (!val) {
@@ -381,15 +393,15 @@
     queryReq.descending = descending
     queryReq.searchKey = val.filter
 
-    let table = await list{{.Table}}(queryReq);
+    let table = await list{{.Table}}(queryReq)
 
-    pagination.value = val.pagination;
+    pagination.value = val.pagination
 
-    pagination.value.rowsNumber = table.count;
+    pagination.value.rowsNumber = table.count
     if (table.list) {
       dataList.value = table.list
     }
-  };
+  }
   const getSelectedString = () => {
     return selected.value.length === 0
             ? ''
@@ -399,23 +411,23 @@
   }
 
   const create = () => {
-    reset();
-    formType.value = "新建";
-    dialogVisible.value = true;
-  };
+    reset()
+    formType.value = "新建"
+    dialogVisible.value = true
+  }
   const edit = (p) => {
-    reset();
+    reset()
     form.value = {
       ...p,
-    };
-    formType.value = "编辑";
-    dialogVisible.value = true;
-  };
+    }
+    formType.value = "编辑"
+    dialogVisible.value = true
+  }
 
   const del = async (p) => {
-    let res = await delete{{.Table}}(p);
-    onRequest();
-  };
+    let res = await delete{{.Table}}(p)
+    onRequest()
+  }
 
   const delList = async () => {
     // let res = await deleteDatasource()
@@ -423,22 +435,22 @@
     let req = {
       ids: getIds(selected.value),
     }
-    let res = await delete{{.Table}}(req);
+    let res = await delete{{.Table}}(req)
     onRequest()
   }
   const submit = async () => {
-    // const res = undefined;
+    // const res = undefined
     if (formType.value === "编辑") {
-      let res = await update{{.Table}}(form.value);
+      let res = await update{{.Table}}(form.value)
     } else if (formType.value === "新建") {
-      let res = await create{{.Table}}(form.value);
+      let res = await create{{.Table}}(form.value)
     } else {
-      proxy.$error("请求错误");
+      proxy.$error("请求错误")
     }
-    dialogVisible.value = false;
-    reset();
-    onRequest();
-  };
+    dialogVisible.value = false
+    reset()
+    onRequest()
+  }
   {{- if .IsImport }}
   const uploadUrl = process.env.BASE_URL + '/{{.Db}}/{{.TableUrl}}/import'
   const exportUrl = '/{{.Db}}/{{.TableUrl}}/export'
