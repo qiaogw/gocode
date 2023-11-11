@@ -6,7 +6,6 @@ import (
 	"github.com/qiaogw/gocode/converter"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/util"
-	"log"
 	"strings"
 )
 
@@ -266,7 +265,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 					ck.Field = one.FieldName
 					ck.FieldJson = one.FieldJson
 					ck.DataType = one.DataType
-					log.Printf("%+v = %+v\n", ck, one.DbColumn)
+					//log.Printf("%+v = %+v\n", ck, one.DbColumn)
 					table.CacheKeys = append(table.CacheKeys, ck)
 				} else {
 					table.NormalIndex[indexName] = columns

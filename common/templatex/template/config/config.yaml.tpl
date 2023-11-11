@@ -9,12 +9,12 @@ system:
 # redis configuration
 redis:
   db: node
-  addr: '127.0.0.1:6379'
+  addr: 'redis:6379'
   password: ''
 
 etcd:
   hosts:
-    - 127.0.0.1:2379
+    - etcd:2379
   key: {{.Package}}.rpc
 
 Auth:
