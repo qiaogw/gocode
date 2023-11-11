@@ -40,16 +40,6 @@ func run() {
 		log.Printf("CreateApi err is %v\n", err)
 		//return
 	}
-	//configYml := inital.ConfTpl
-	//if util.FileExist(name) {
-	//	fmt.Println(util.Red("配置文件" + name + "已存在，请删除后重新初始化."))
-	//	return
-	//}
-	//err := pathx.CreateFile(name, configYml, true)
-	//if err != nil {
-	//	log.Fatal(err)
-	//	return
-	//}
 	fmt.Println(util.Green("Done! init " + apiPackage + ".yaml"))
 	return
 }
