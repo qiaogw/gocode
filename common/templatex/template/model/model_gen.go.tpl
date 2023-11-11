@@ -24,7 +24,7 @@ type (
 		Update(ctx context.Context, newData *{{.Table}}) (*{{.Table}}, error)
 		Delete(ctx context.Context, id interface{}) error
 	{{- range  .CacheKeys}}
-		FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} string) (*{{$table}}, error)
+		FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error)
 	{{- end }}
 	}
 

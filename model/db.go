@@ -6,6 +6,7 @@ import (
 	"github.com/qiaogw/gocode/converter"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/util"
+	"log"
 	"strings"
 )
 
@@ -29,6 +30,7 @@ type (
 		Value     string
 		Field     string
 		FieldJson string
+		DataType  string
 	}
 	Table struct {
 		Db           string //小写服务名称
@@ -263,7 +265,8 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 					ck.Value = "cache:" + table.Service + ":" + table.PackageName + ":" + one.FieldJson + ":"
 					ck.Field = one.FieldName
 					ck.FieldJson = one.FieldJson
-					//log.Printf("%s = %s\n", k, v)
+					ck.DataType = one.DataType
+					log.Printf("%+v = %+v\n", ck, one.DbColumn)
 					table.CacheKeys = append(table.CacheKeys, ck)
 				} else {
 					table.NormalIndex[indexName] = columns
