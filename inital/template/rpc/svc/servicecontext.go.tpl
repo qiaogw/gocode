@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"github.com/go-redis/redis"
 	"github.com/qiaogw/gorm-cache/cache"
 	cacheConfig "github.com/qiaogw/gorm-cache/config"
 	"{{.ParentPkg}}/model"

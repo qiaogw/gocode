@@ -43,7 +43,7 @@ Prometheus:
   Path: /metrics
 
 Telemetry:
-  Name: {{.Package}}.api
+  Name: {{.Package}}.rpc
   Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
