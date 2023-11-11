@@ -83,7 +83,7 @@ func (m *default{{.Table}}Model) FindOne(ctx context.Context, id interface{}) (*
 }
 
 {{- range  .CacheKeys}}
-func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} string) (*{{$table}}, error) {
+func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error) {
 	var resp {{$table}}
 	err := m.gormDB.Where("{{.FieldJson}} = ?",{{.FieldJson}}).First(&resp).Error
 	switch err {
