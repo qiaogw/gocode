@@ -54,8 +54,8 @@ type PostgreIndex struct {
 // GetDB 获取数据库的所有数据库名
 func (m *Postgres) GetDB() (data []Db, err error) {
 	var entities []Db
-	sql := `SELECT datname as database FROM pg_database WHERE datistemplate = false`
-	err = global.GenDB.Raw(sql).Scan(&entities).Error
+	sqls := `SELECT datname as database FROM pg_database WHERE datistemplate = false`
+	err = global.GenDB.Raw(sqls).Scan(&entities).Error
 	return entities, err
 }
 
@@ -68,7 +68,7 @@ type tb struct {
 func (m *Postgres) GetTables(db string) ([]Table, error) {
 	var entities []Table
 	var tables []tb
-	sql := `
+	sqls := `
 		SELECT
 	tb.TABLE_NAME AS table_name,
 	d.description AS table_comment 
@@ -84,7 +84,7 @@ WHERE
 	ORDER BY
 	relname
 `
-	err := global.GenDB.Raw(sql).Scan(&tables).Error
+	err := global.GenDB.Raw(sqls).Scan(&tables).Error
 	for _, v := range tables {
 		entities = append(entities, Table{
 			TableComment: v.TableComment,
@@ -154,7 +154,7 @@ order by
 		return nil, err
 	}
 	schame := "public"
-
+	//log.Printf("%s columnData is %+v\n", table, len(reply))
 	list, err := m.getColumns(schame, table, reply)
 	if err != nil {
 		return nil, err
@@ -174,6 +174,7 @@ func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Col
 	}
 	var list []*Column
 	for _, e := range in {
+
 		var dft interface{}
 		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
@@ -192,9 +193,10 @@ func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Col
 		if strings.Contains(e.ColumnDefault, table+"_"+e.Field+"_seq") {
 			extra = "auto_increment"
 		}
-
+		//log.Printf("%s index[e.Field] is: %+v,len: %d\n", table, index[e.Field], len(list))
 		if len(index[e.Field]) > 0 {
 			for _, i := range index[e.Field] {
+				//log.Printf("%s begin columnDatalist is: %+v,len: %d\n", table, e, len(list))
 				list = append(list, &Column{
 					DbColumn: &DbColumn{
 						Name:            e.Field,
@@ -227,6 +229,7 @@ func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Col
 				IsPk: e.IsPk,
 			})
 		}
+		//log.Printf("%s columnDatalist is: %+v,len: %d\n", table, e, len(list))
 	}
 	return list, nil
 }

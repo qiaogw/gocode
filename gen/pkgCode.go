@@ -50,11 +50,14 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 			log.Println(util.Red(fmt.Sprintf("获取字段 err is %v", err)))
 			continue
 		}
+
 		tb, err := columnData.Convert(v.TableComment)
+
 		if err != nil {
 			fmt.Println(util.Red(fmt.Sprintf("数据生成错误错误: %v", err)))
 			continue
 		}
+
 		if tb.HasTimer {
 			db.HasTimer = true
 		}

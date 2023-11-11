@@ -22,20 +22,20 @@ func (m *Mysql) Init() {
 // GetDB 获取数据库的所有数据库名
 func (m *Mysql) GetDB() (data []Db, err error) {
 	var entities []Db
-	sql := "SELECT SCHEMA_NAME AS `database` FROM INFORMATION_SCHEMA.SCHEMATA;"
-	err = global.GenDB.Raw(sql).Scan(&entities).Error
+	sqls := "SELECT SCHEMA_NAME AS `database` FROM INFORMATION_SCHEMA.SCHEMATA;"
+	err = global.GenDB.Raw(sqls).Scan(&entities).Error
 	return entities, err
 }
 
 // GetTables 获取数据库的所有表名
 func (m *Mysql) GetTables(db string) ([]Table, error) {
 	var entities []Table
-	sql := `
+	sqls := `
 		select table_name as table_name ,
 		table_comment
 		from information_schema.tables 
 		where table_schema = ?`
-	err := global.GenDB.Raw(sql, db).Scan(&entities).Error
+	err := global.GenDB.Raw(sqls, db).Scan(&entities).Error
 	return entities, err
 }
 
@@ -62,7 +62,7 @@ type MysqlColumn struct {
 // Author [qiaogw](https://github.com/qiaogw)
 func (m *Mysql) GetColumn(db, table string) (*ColumnData, error) {
 	var reply []*MysqlColumn
-	sql := `
+	sqls := `
 	SELECT c.COLUMN_NAME,
 		c.DATA_TYPE,
 		c.EXTRA,
@@ -81,7 +81,7 @@ func (m *Mysql) GetColumn(db, table string) (*ColumnData, error) {
 		from INFORMATION_SCHEMA.COLUMNS c 
 		WHERE c.TABLE_SCHEMA = ? 
 		and c.TABLE_NAME = ? `
-	err := m.DB.Raw(sql, db, table).Scan(&reply).Error
+	err := m.DB.Raw(sqls, db, table).Scan(&reply).Error
 	if err != nil {
 		log.Printf("getclumn err is %v\n", err)
 		return nil, err

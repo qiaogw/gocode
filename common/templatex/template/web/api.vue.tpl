@@ -95,7 +95,7 @@
                     <template v-slot:avatar>
                       <q-icon name="help" />
                     </template>
-                    {{ route.meta.remark }}
+                    {{`{{ route.meta.remark }}`}}
                   </q-banner>
                 </q-popup-proxy>
               </q-icon>
