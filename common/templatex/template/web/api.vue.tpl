@@ -271,7 +271,7 @@
     create{{.Table}},
     update{{.Table}},
     delete{{.Table}},
-  } from "src/api/{{.TableUrl}}/{{.TableUrl}}"
+  } from "src/api/{{- $db -}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
   {{- if  .FkTable}}
