@@ -147,7 +147,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 		if baseSlic[1] == "vue" {
 			fPath = filepath.Join(fPath, webPath, "src", "pages", data.tablePkg)
 		} else {
-			fPath = filepath.Join(fPath, webPath, "src", "api", data.tablePkg)
+			fPath = filepath.Join(fPath, webPath, "src", "api", global.GenConfig.System.Name)
 		}
 	default:
 	}
