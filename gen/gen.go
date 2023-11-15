@@ -68,7 +68,10 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 				} else if origFileName == "replay.api" {
 					fileName = origFileName
 				} else if origFileName[firstDot:] != ".go" {
-					fileName = pack + origFileName[firstDot:]
+
+					fileName = "index" + origFileName[firstDot:]
+					log.Printf(" pack:%s + origFileName:%s + fileName:%s\n",
+						pack, origFileName, fileName)
 				} else {
 					fileName = pack + origFileName
 				}
@@ -145,9 +148,9 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	case webPath:
 		baseSlic := strings.Split(base, ".")
 		if baseSlic[1] == "vue" {
-			fPath = filepath.Join(fPath, webPath, "src", "pages", data.tablePkg)
+			fPath = filepath.Join(fPath, webPath, "src", "pages", global.GenConfig.System.Name, data.tablePkg)
 		} else {
-			fPath = filepath.Join(fPath, webPath, "src", "api", global.GenConfig.System.Name)
+			fPath = filepath.Join(fPath, webPath, "src", "api", global.GenConfig.System.Name, data.tablePkg)
 		}
 	default:
 	}
