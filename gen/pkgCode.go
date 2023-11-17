@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error) {
+func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Table, err error) {
 	acd.Init()
 	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
@@ -64,14 +64,16 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
 		tb.Dir = strings.ToLower(db.Database)
-		//println("tb.Dir: ", tb.Dir)
-		//println("tb.Service: ", tb.Service)
-		//println("tb.Pkg: ", tb.Pkg)
-		//println("tb.ParentPkg: ", tb.ParentPkg)
-		//println("tb.PackageName: ", tb.PackageName)
-		err = acd.CreateModel(tb)
-		if err != nil {
-			continue
+		if modeGen {
+			err = acd.CreateModel(tb)
+			if err != nil {
+				continue
+			}
+		} else {
+			err = acd.CreateModelZero(tb)
+			if err != nil {
+				continue
+			}
 		}
 
 		db.Tables = append(db.Tables, tb)
@@ -104,11 +106,6 @@ func (acd *AutoCodeService) Code() (db model.Db, tables []model.Table, err error
 		log.Printf("CreateRpcLogic err is %v\n", err)
 		return
 	}
-	//err = genApp.CreateCommon(&db)
-	//if err != nil {
-	//	log.Printf("CreateCommon err is %v\n", err)
-	//	return err
-	//}
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(util.Green("Done!"))
 	return db, tbList, nil

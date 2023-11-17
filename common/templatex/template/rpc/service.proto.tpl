@@ -3,7 +3,7 @@ syntax = "proto3";
 
 
 
-package {{.FileName}};
+package {{.Package}};
 option go_package="./{{.Package}}";
 
 {{- range .Tables }}
@@ -122,6 +122,7 @@ message NullRequest {
 message  NullResponse {
 }
 
+
 //导出 Export  Request
 message ExportRequest {
 int64 pageIndex = 1;
@@ -137,6 +138,7 @@ bytes data=1;
 }
 
 service {{.Package}} {
+
 {{range .Tables }}
 
     rpc Get{{.Table}}(Get{{.Table}}Request) returns(Get{{.Table}}Response);
@@ -144,10 +146,10 @@ service {{.Package}} {
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
     rpc Update{{.Table}}(Update{{.Table}}Request) returns(Update{{.Table}}Response);
     rpc Delete{{.Table}}(Delete{{.Table}}Request) returns(Delete{{.Table}}Response);
-{{- if .IsImport}}
-    rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
-    rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
-    rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
-{{ end}}
+    {{- if .IsImport}}
+        rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
+        rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
+        rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
+    {{ end}}
 {{ end}}
 }

@@ -6,6 +6,8 @@ import (
 	"github.com/qiaogw/gocode/converter"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/util"
+	"github.com/zeromicro/go-zero/core/collection"
+	"sort"
 	"strings"
 )
 
@@ -54,16 +56,26 @@ type (
 		IsDataScope  bool
 		Columns      []*Column
 		// Primary key not included
-		UniqueIndex map[string][]*Column
-		PrimaryKey  *Column
-		CacheKeys   []*CacheKey
-		NormalIndex map[string][]*Column
+		UniqueIndex   map[string][]*Column
+		PrimaryKey    Primary
+		CacheKeys     []*CacheKey
+		NormalIndex   map[string][]*Column
+		IgnoreColumns string
+		WithCache     bool
+		UniqueKeys    string
+		UniqueKeyLet  string
+		UniqueKeyIn   string
 	}
 	Column struct {
 		IsPk   bool
 		Indexs int
 		*DbColumn
 		Index *DbIndex
+	}
+	// Primary describes a primary key
+	Primary struct {
+		*Column
+		AutoIncrement bool
 	}
 	DbColumn struct {
 		Name            string      `json:"name" gorm:"column:COLUMN_NAME"`
@@ -247,7 +259,11 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		return nil, fmt.Errorf("gocode 要求表主键唯一，且主键名称为\"id\",表%s 主键为%s,请更新表！", c.Table, primaryColumns[0].Name)
 	}
 
-	table.PrimaryKey = primaryColumns[0]
+	table.PrimaryKey.Column = primaryColumns[0]
+	if table.PrimaryKey.Column.Index.SeqInIndex > 0 {
+		table.PrimaryKey.AutoIncrement = true
+	}
+	var uniqueKeyIn, uniqueKeysLet []string
 	for indexName, columns := range m {
 
 		if indexName == indexPri {
@@ -267,6 +283,9 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 					ck.DataType = one.DataType
 					//log.Printf("%+v = %+v\n", ck, one.DbColumn)
 					table.CacheKeys = append(table.CacheKeys, ck)
+					table.UniqueKeys = table.UniqueKeys + ck.Field
+					uniqueKeysLet = append(uniqueKeysLet, "data."+ck.FieldJson)
+					uniqueKeyIn = append(uniqueKeyIn, ck.FieldJson)
 				} else {
 					table.NormalIndex[indexName] = columns
 				}
@@ -276,5 +295,47 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	if len(table.CacheKeys) > 0 {
 		table.HasCacheKey = true
 	}
+	table.IgnoreColumns = func() string {
+		var set = collection.NewSet()
+		for _, c := range table.Columns {
+			if table.PostgreSql {
+				set.AddStr(fmt.Sprintf(`"%s"`, c.Name))
+			} else {
+				set.AddStr(fmt.Sprintf("\"`%s`\"", c.Name))
+			}
+		}
+		list := set.KeysStr()
+		sort.Strings(list)
+		return strings.Join(list, ", ")
+	}()
+	table.UniqueKeyLet = strings.Join(uniqueKeysLet, ", ")
+	table.UniqueKeyIn = strings.Join(uniqueKeyIn, ", ")
+	if global.GenConfig.AutoCode.WithCache {
+		table.WithCache = true
+	}
+	table.WithCache = true
+	//log.Printf("【主键】%+v", table.PrimaryKey.Column.DbColumn)
+
 	return &table, nil
+}
+func wrapWithRawString(v string, postgreSql bool) string {
+	if postgreSql {
+		return v
+	}
+
+	if v == "`" {
+		return v
+	}
+
+	if !strings.HasPrefix(v, "`") {
+		v = "`" + v
+	}
+
+	if !strings.HasSuffix(v, "`") {
+		v = v + "`"
+	} else if len(v) == 1 {
+		v = v + "`"
+	}
+
+	return v
 }

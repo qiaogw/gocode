@@ -1,12 +1,16 @@
 package gen
 
 import (
+	"fmt"
+	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/model"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 )
 
-// CreateModel 创建 model 代码
+// CreateModel 创建 gorm model 代码
 func (acd *AutoCodeService) CreateModel(table *model.Table) (err error) {
 	dataList, err := acd.genBefore(table.Table, modelPath)
 	//log.Printf("dataList is %+v\n", dataList)
@@ -37,4 +41,33 @@ func (acd *AutoCodeService) CreateModel(table *model.Table) (err error) {
 		return
 	}
 	return err
+}
+
+// CreateModelZero 创建 zero model 代码
+func (acd *AutoCodeService) CreateModelZero(table *model.Table) (err error) {
+	dsn := global.GenConfig.DB.MysqlDsn()
+
+	dir := filepath.Join(global.GenConfig.AutoCode.Root, "model")
+	drivers := "mysql"
+	if table.PostgreSql {
+		df := global.GenConfig.DB
+		dsn = fmt.Sprintf(`postgres://%s:%s@%s:%s/%s?sslmode=disable`,
+			df.Username, df.Password, df.Path, df.Port, df.Dbname)
+		drivers = "pg"
+	}
+
+	cmd := exec.Command("goctl", "model", drivers, "datasource",
+		fmt.Sprintf("--url=%s", dsn),
+		fmt.Sprintf("--table=%s", table.Name),
+		fmt.Sprintf("--dir=%s", dir),
+		"-c")
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		fmt.Errorf("error running command: %v", err)
+	}
+	return nil
 }

@@ -11,10 +11,11 @@ import (
 
 var (
 	apiPackage string
+	modeGen    string
 	Cmd        = &cobra.Command{
 		Use:          "gen",
 		Short:        "生成代码",
-		Example:      "gocode gen -p admin",
+		Example:      "gocode gen -p admin -m zero",
 		SilenceUsage: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return setup()
@@ -26,11 +27,13 @@ var (
 )
 
 func init() {
-	//configFile := global.GetDefaultConfigFile()
-	//Cmd.PersistentFlags().StringVarP(&configYml, "config", "c", configFile, "配置文件 ( default is ./config.yaml )")
 	pack := "config"
 	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "包名")
 	_ = Cmd.MarkPersistentFlagRequired("package")
+	mode := "gorm"
+	Cmd.PersistentFlags().StringVarP(&modeGen, "mode", "m", mode, "模式(zero、gorm)")
+	_ = Cmd.MarkPersistentFlagRequired("mode")
+
 }
 
 func setup() error {
@@ -49,6 +52,10 @@ func run() error {
 	fmt.Println(utils2.Green(`start gen ` + apiPackage))
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
-	_, _, err := genApp.Code()
+	m := true
+	if modeGen == "zero" {
+		m = false
+	}
+	_, _, err := genApp.Code(m)
 	return err
 }

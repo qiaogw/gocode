@@ -26,6 +26,7 @@ type Autocode struct {
 	Root      string
 	Pkg       string
 	CoverFile []string
+	WithCache bool
 }
 
 // GeneralDB  Pgsql 和 Mysql 原样使用
