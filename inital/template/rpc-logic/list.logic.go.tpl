@@ -1,4 +1,4 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 "github.com/qiaogw/gocode/common/modelx"

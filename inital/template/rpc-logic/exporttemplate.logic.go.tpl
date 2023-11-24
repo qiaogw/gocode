@@ -1,4 +1,4 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 	"context"
