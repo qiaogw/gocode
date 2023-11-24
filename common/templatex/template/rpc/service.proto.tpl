@@ -125,22 +125,21 @@ message  NullResponse {
 
 //导出 Export  Request
 message ExportRequest {
-int64 pageIndex = 1;
-int64 pageSize = 2;
-string searchKey = 3;
-string sortBy = 4;
-bool descending = 5;
+    int64 pageIndex = 1;
+    int64 pageSize = 2;
+    string searchKey = 3;
+    string sortBy = 4;
+    bool descending = 5;
 }
 
 //导出 Export  Response
 message ExportResponse {
-bytes data=1;
+    bytes data=1;
 }
-
-service {{.Package}} {
 
 {{range .Tables }}
 
+service {{.Table}} {
     rpc Get{{.Table}}(Get{{.Table}}Request) returns(Get{{.Table}}Response);
     rpc List{{.Table}}(List{{.Table}}Request) returns(List{{.Table}}Response);
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
@@ -151,5 +150,5 @@ service {{.Package}} {
         rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
         rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
     {{ end}}
-{{ end}}
 }
+{{ end}}

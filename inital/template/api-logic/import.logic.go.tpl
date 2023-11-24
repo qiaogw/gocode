@@ -33,7 +33,7 @@ func (l *Import{{.Table}}Logic) Import{{.Table}}(req *types.ImportRequest) (resp
 
 	// retrieve a byte slice from bytes.Buffer
 	data := buf.Bytes()
-	_, err = l.svcCtx.{{.Service}}Rpc.Import{{.Table}}(l.ctx, &{{.Db}}.ExportResponse{
+	_, err = l.svcCtx.{{.Table}}Rpc.Import{{.Table}}(l.ctx, &{{.Db}}.ExportResponse{
 		Data: data,
 	})
 	if err != nil {

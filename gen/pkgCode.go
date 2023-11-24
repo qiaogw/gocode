@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// Code 生成代码
 func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Table, err error) {
 	acd.Init()
 	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",

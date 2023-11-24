@@ -26,8 +26,8 @@ func NewGet{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *Get{{.Table}}Logic) Get{{.Table}}(req *types.Get{{.Table}}Request) (resp *types.CommonResponse, err error) {
-	l.Logger.Infof("l.svcCtx.{{.Service}}Rpc is %v\n", l.svcCtx.{{.Service}}Rpc)
-	res, err := l.svcCtx.{{.Service}}Rpc.Get{{.Table}}(l.ctx, &{{.Db}}.Get{{.Table}}Request{
+
+	res, err := l.svcCtx.{{.Table}}Rpc.Get{{.Table}}(l.ctx, &{{.Db}}.Get{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 				{{.FieldName}}: req.{{.FieldName}},

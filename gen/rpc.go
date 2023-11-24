@@ -42,6 +42,7 @@ func (acd *AutoCodeService) CreateRpcLogic(db *model.Db) (err error) {
 	for _, v := range db.Tables {
 		v.ParentPkg = db.ParentPkg
 		v.Pkg = db.Pkg
+		v.PackageName = db.Database
 		err = acd.createRpcLogic(v)
 		if err != nil {
 			log.Printf("createRpcLogic err is %v\n", err)
@@ -77,7 +78,8 @@ func (acd *AutoCodeService) createRpcLogic(table *model.Table) (err error) {
 		dataList = dataList[:i]
 	}
 	// 生成文件
-	for _, value := range dataList {
+	for i, value := range dataList {
+		dataList[i].tablePkg = table.TableUrl
 		f, err := os.OpenFile(value.autoCodePath, os.O_CREATE|os.O_WRONLY, 0o755)
 		if err != nil {
 			return err

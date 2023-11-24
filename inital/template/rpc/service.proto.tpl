@@ -137,19 +137,18 @@ message ExportResponse {
 bytes data=1;
 }
 
-service {{.Package}} {
-
 {{range .Tables }}
 
+    service {{.Table}} {
     rpc Get{{.Table}}(Get{{.Table}}Request) returns(Get{{.Table}}Response);
     rpc List{{.Table}}(List{{.Table}}Request) returns(List{{.Table}}Response);
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
     rpc Update{{.Table}}(Update{{.Table}}Request) returns(Update{{.Table}}Response);
     rpc Delete{{.Table}}(Delete{{.Table}}Request) returns(Delete{{.Table}}Response);
-{{- if .IsImport}}
-    rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
-    rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
-    rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
+    {{- if .IsImport}}
+        rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
+        rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
+        rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
+    {{ end}}
+    }
 {{ end}}
-{{ end}}
-}

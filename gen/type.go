@@ -16,6 +16,7 @@ const (
 	apiLogicPath    = "api-logic"
 	rpcPath         = "rpc"
 	initPath        = "init"
+	rpcDescPath     = "rpc-desc"
 	rpcLogicPath    = "rpc-logic"
 	commonPath      = "common"
 	internalPath    = "internal"

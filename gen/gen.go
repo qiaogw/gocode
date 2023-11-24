@@ -2,7 +2,7 @@ package gen
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/common/templatex"
+	"github.com/qiaogw/gocode/inital"
 	"github.com/qiaogw/gocode/util"
 	"github.com/wxnacy/wgo/arrays"
 	"log"
@@ -38,7 +38,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 		}
 		t1 := template.New(value.locationPath)
 		t1 = t1.Funcs(funcMap)
-		mi, _ := templatex.TemplateTpl.ReadFile(value.locationPath)
+		mi, _ := inital.TemplateTpl.ReadFile(value.locationPath)
 		t2, err := t1.Parse(string(mi))
 		if err != nil {
 			log.Printf("templatePath is %s ,err is %v\n", templatePath, err)
@@ -67,11 +67,12 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 					fileName = origFileName
 				} else if origFileName == "replay.api" {
 					fileName = origFileName
-				} else if origFileName[firstDot:] == ".api" {
-					fileName = pack + origFileName[firstDot:]
-				} else if origFileName[firstDot:] != ".api" && origFileName[firstDot:] != ".go" {
+				} else if origFileName[firstDot:] == ".js" || origFileName[firstDot:] == ".vue" {
 					fileName = "index" + origFileName[firstDot:]
+				} else if origFileName[firstDot:] != ".go" {
+					fileName = pack + origFileName[firstDot:]
 				} else {
+					//log.Printf("【pack】%+v,origFileName:%+v", pack, origFileName)
 					fileName = pack + origFileName
 				}
 				dataList[index].autoCodePath = filepath.Join(autoPath, trimBase[:lastSeparator],
@@ -95,7 +96,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 // @return: []string, error
 func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([]string, error) {
 	//files, err := ioutil.ReadDir(pathName)
-	files, err := templatex.TemplateTpl.ReadDir(pathName)
+	files, err := inital.TemplateTpl.ReadDir(pathName)
 	for _, fi := range files {
 		if fi.IsDir() {
 			fileList, err = acd.GetAllTplFile(pathName+"/"+fi.Name(), fileList)
@@ -130,7 +131,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 	case apiLogicPath:
 		fPath = filepath.Join(fPath, apiPath, internalPath, logicPath, data.tablePkg)
 	case rpcLogicPath:
-		fPath = filepath.Join(fPath, rpcPath, internalPath, logicPath)
+		fPath = filepath.Join(fPath, rpcPath, internalPath, logicPath, data.tablePkg)
 	case apiDescPath:
 		//log.Printf("data.autoCodePath is %s,fPath is %s\n", data.autoCodePath, fPath)
 		fPath = filepath.Join(fPath, apiPath, apiDescPath)

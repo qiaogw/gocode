@@ -26,8 +26,8 @@ func NewList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 }
 
 func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (resp *types.CommonResponse, err error) {
-	l.Logger.Infof("l.svcCtx.{{.Service}}Rpc is %v\n", l.svcCtx.{{.Service}}Rpc)
-	res, err := l.svcCtx.{{.Service}}Rpc.List{{.Table}}(l.ctx, &{{.Db}}.List{{.Table}}Request{
+
+	res, err := l.svcCtx.{{.Table}}Rpc.List{{.Table}}(l.ctx, &{{.Db}}.List{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 			{{- else}}

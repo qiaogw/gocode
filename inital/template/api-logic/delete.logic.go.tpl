@@ -26,8 +26,8 @@ func NewDelete{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *Delete{{.Table}}Logic) Delete{{.Table}}(req *types.Delete{{.Table}}Request) (resp *types.CommonResponse, err error) {
-	l.Logger.Infof("l.svcCtx.{{.Service}}Rpc is %v\n", l.svcCtx.{{.Service}}Rpc)
-	_, err = l.svcCtx.{{.Service}}Rpc.Delete{{.Table}}(l.ctx, &{{.Db}}.Delete{{.Table}}Request{
+
+	_, err = l.svcCtx.{{.Table}}Rpc.Delete{{.Table}}(l.ctx, &{{.Db}}.Delete{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 				{{.FieldName}}: req.{{.FieldName}},

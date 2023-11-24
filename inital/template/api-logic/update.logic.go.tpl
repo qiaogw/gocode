@@ -26,9 +26,8 @@ func NewUpdate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Request) (resp *types.CommonResponse, err error) {
-	l.Logger.Infof("l.svcCtx.{{.Service}}Rpc is %v\n", l.svcCtx.{{.Service}}Rpc)
 	userId := jwtx.GetUserIdFromCtx(l.ctx)
-	_, err = l.svcCtx.{{.Service}}Rpc.Update{{.Table}}(l.ctx, &{{.Db}}.Update{{.Table}}Request{
+	_, err = l.svcCtx.{{.Table}}Rpc.Update{{.Table}}(l.ctx, &{{.Db}}.Update{{.Table}}Request{
 		{{- range  .Columns }}
 				{{- if .IsPage}}
 				{{- else if .IsModelTime -}}
