@@ -3,7 +3,7 @@ ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 
-Auth: true
+Auth: false    //rpc认证
 App: {{.Package}}                          # App 标识
 Token: sub-{{.Package}} # Token 值
 
@@ -18,9 +18,19 @@ Redis:                   # 指定 Redis 服务
   Pass: {{.Option.Redis.Password}}
   Type: {{.Option.Redis.DB}}
 
-Database:
-  DriverName: {{.Option.DB.DbType}}
-  DataSource: {{.Option.DB.DataSource}}
+#Database:
+#  DriverName: {{.Option.DB.DbType}}
+#  DataSource: {{.Option.DB.DataSource}}
+
+DbConf:
+  Driver: {{.Option.DB.DbType}}
+  Host: {{.Option.DB.Path}}
+  Port: {{.Option.DB.Port}}
+  User: {{.Option.DB.Username}}
+  Password: {{.Option.DB.Password}}
+  Db: {{.Option.DB.Dbname}}
+  Schema:
+  Config: {{.Option.DB.Config}}
 
 CacheRedis:
   - Host: {{.Option.Redis.Addr}}

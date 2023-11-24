@@ -34,7 +34,7 @@ type GeneralDB struct {
 	DataSource    string
 	DbType        string `mapstructure:"db-type" json:"db-type" yaml:"db-type"`
 	Path          string `mapstructure:"path" json:"path" yaml:"path"`                               // 服务器地址:端口
-	Port          string `mapstructure:"port" json:"port" yaml:"port"`                               //:端口
+	Port          int64  `mapstructure:"port" json:"port" yaml:"port"`                               //:端口
 	Config        string `mapstructure:"config" json:"config" yaml:"config"`                         // 高级配置
 	Dbname        string `mapstructure:"db-name" json:"db-name" yaml:"db-name"`                      // 数据库名
 	Username      string `mapstructure:"username" json:"username" yaml:"username"`                   // 数据库用户名

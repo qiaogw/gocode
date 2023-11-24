@@ -23,9 +23,10 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	conn := sqlx.NewSqlConn(c.Database.DriverName, c.Database.DataSource) //.NewMysql(c.Mysql.DataSource)
-	dsn := c.Database.DataSource
-	db, _ := gorm.Open({{.DriverName}}.Open(dsn), &gorm.Config{})
+	dsn := gormx.GetDsn(c.DbConf.Driver, c.DbConf.Host, c.DbConf.Port,
+		c.DbConf.User, c.DbConf.Password, c.DbConf.Db, c.DbConf.Schema)
+	conn := sqlx.NewSqlConn(c.DbConf.Driver, dsn)
+	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: c.Redis.Host,

@@ -8,10 +8,16 @@ import (
 type Config struct {
 	zrpc.RpcServerConf
 
-    Database struct {
-        DriverName string
-        DataSource string
-    }
+    DbConf struct {
+		Driver   string
+		Host     string
+		Port     int64
+		User     string
+		Password string
+		Db       string
+		Schema   string `json:"schema,optional"`
+		Config   string `json:"config,optional"`
+	}
 
     CacheRedis cache.ClusterConf
 
