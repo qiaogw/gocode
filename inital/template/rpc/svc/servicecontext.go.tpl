@@ -23,8 +23,15 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	dsn := gormx.GetDsn(c.DbConf.Driver, c.DbConf.Host, c.DbConf.Port,
-		c.DbConf.User, c.DbConf.Password, c.DbConf.Db, c.DbConf.Schema)
+	dsn := gormx.GetDsn(c.DbConf.Driver,
+		c.DbConf.Host,
+		c.DbConf.Port,
+		c.DbConf.User,
+		c.DbConf.Password,
+		c.DbConf.Db,
+		c.DbConf.Schema,
+		c.DbConf.Config)
+
 	conn := sqlx.NewSqlConn(c.DbConf.Driver, dsn)
 	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 

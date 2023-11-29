@@ -35,11 +35,10 @@ type (
 	}
 
 	{{.Table}} struct {
-		modelx.BaseModel
         {{- range .Columns }}
 			{{- if .IsPk -}}
+				{{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" comment:"{{.ColumnComment}}" {{- if ne .GormName "-" }} gorm:"primaryKey;column:{{.GormName}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.ColumnComment}};"{{- end -}}`
 			{{- else if .IsModelTime }}
-			{{- else if .IsControl }}
 			{{- else}}
 				{{- if .IsPage}}
 				{{- else}}
@@ -47,7 +46,6 @@ type (
 				{{- end -}}
 			{{- end -}}
         {{- end }}
-		modelx.ControlBy
         modelx.ModelTime
 	}
 )
@@ -70,7 +68,7 @@ func new{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormx *gorm.DB) *d
 
 func (m *default{{.Table}}Model) FindOne(ctx context.Context, id interface{}) (*{{.Table}}, error) {
 	var resp {{.Table}}
-	err := m.gormDB.First(&resp, id).Error
+	err := m.gormDB.First(&resp, "id = ?", id).Error
 	switch err {
 	case nil:
 	return &resp, nil
@@ -121,7 +119,7 @@ func (m *default{{.Table}}Model) Delete(ctx context.Context, id interface{}) err
 	return err
 	}
 
-	err = m.gormDB.Delete(&{{.Table}}{}, id).Error
+	err = m.gormDB.Delete(&{{.Table}}{}, "id = ?", id).Error
 	return err
 }
 

@@ -5,9 +5,15 @@ Timeout: 6000
 Mode: dev
 
 
-Database:
-  DriverName: {{.Option.DB.DbType}}
-  DataSource: {{.Option.DB.DataSource}}
+DbConf:
+  Driver: {{.Option.DB.DbType}}
+  Host: {{.Option.DB.Path}}
+  Port: {{.Option.DB.Port}}
+  User: {{.Option.DB.Username}}
+  Password: {{.Option.DB.Password}}
+  Db: {{.Option.DB.Dbname}}
+  Schema:
+  Config: {{.Option.DB.Config}}
 
 CacheRedis:
   - Host: {{.Option.Redis.Addr}}

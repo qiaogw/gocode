@@ -18,9 +18,6 @@ Redis:                   # 指定 Redis 服务
   Pass: {{.Option.Redis.Password}}
   Type: {{.Option.Redis.DB}}
 
-#Database:
-#  DriverName: {{.Option.DB.DbType}}
-#  DataSource: {{.Option.DB.DataSource}}
 
 DbConf:
   Driver: {{.Option.DB.DbType}}

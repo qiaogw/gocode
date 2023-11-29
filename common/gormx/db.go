@@ -29,6 +29,9 @@ func pgsqlDsn(host string, port int64, user, password, db, schema, config string
 	if len(config) < 1 {
 		config = "sslmode=disable TimeZone=Asia/Shanghai"
 	}
+	if len(schema) < 1 {
+		schema = "public"
+	}
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname='%s' search_path=%s port=%d %s",
 		host, user, password, db, schema, port, config)
 	return dsn

@@ -14,5 +14,16 @@ type Config struct {
     }
     CacheRedis cache.CacheConf
 
+    DbConf struct {
+		Driver   string
+		Host     string
+		Port     int64
+		User     string
+		Password string
+		Db       string
+		Schema   string `json:"schema,optional"`
+		Config   string `json:"config,optional"`
+	}
+
     {{.Service}}Rpc zrpc.RpcClientConf
 }
