@@ -17,6 +17,7 @@ import (
 // getNeedList 获取模板文件和构建所需目录
 func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []tplData, fileList []string, needMkdir []string, err error) {
 	// 获取 basePath 文件夹下所有tpl文件
+
 	tplFileList, err := acd.GetAllTplFile(templatePath, nil)
 	//log.Printf("pack is %s ,tplFileList is %v\n", pack, tplFileList)
 	if err != nil {

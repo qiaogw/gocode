@@ -35,11 +35,10 @@ type (
 	}
 
 	{{.Table}} struct {
-		modelx.BaseModel
         {{- range .Columns }}
 			{{- if .IsPk -}}
+				{{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" comment:"{{.ColumnComment}}" {{- if ne .GormName "-" }} gorm:"primaryKey;column:{{.GormName}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.ColumnComment}};"{{- end -}}`
 			{{- else if .IsModelTime }}
-			{{- else if .IsControl }}
 			{{- else}}
 				{{- if .IsPage}}
 				{{- else}}
@@ -47,7 +46,6 @@ type (
 				{{- end -}}
 			{{- end -}}
         {{- end }}
-		modelx.ControlBy
         modelx.ModelTime
 	}
 )

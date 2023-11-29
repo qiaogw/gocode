@@ -65,7 +65,7 @@ option go_package="./{{.Package}}";
         {{- end}}
     {{- end }}
     {{- $x = add $x }}
-    int64 createBy={{- $x -}};
+    string createBy={{- $x -}};
     }
 
     //创建 {{.Table}} ({{.TableComment}}) Response
@@ -90,7 +90,7 @@ option go_package="./{{.Package}}";
         {{- end}}
     {{- end }}
     {{- $e = add $e }}
-    int64 updateBy={{- $e -}};
+    string updateBy={{- $e -}};
     }
 
     //修改 {{.Table}} ({{.TableComment}}) Response
