@@ -25,6 +25,10 @@ type (
 		DriverName string
 		ParentPkg  string //项目路径
 		Pkg        string //根目录
+		ApiHost    string //
+		ApiPort    int
+		RpcHost    string
+		RpcPort    int
 	}
 	CacheKey struct {
 		Key       string

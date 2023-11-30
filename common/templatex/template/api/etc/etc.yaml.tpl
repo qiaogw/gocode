@@ -1,7 +1,6 @@
 Name: {{.Package}}-api
-Host: 0.0.0.0
-Port: 7000
-
+Host: {{.Option.System.ApiHost}}
+Port: {{.Option.System.ApiPort}}
 
 Database:
   DriverName: {{.Option.DB.DbType}}

@@ -14,6 +14,7 @@ import (
 // Code 生成代码
 func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Table, err error) {
 	acd.Init()
+	Check()
 	fmt.Printf(util.Green(fmt.Sprintf("数据库连接成功，类型为：%s,地址为：%s:%v,数据库为：%s\n",
 		global.GenDB.Name(), global.GenConfig.DB.Path, global.GenConfig.DB.Port, global.GenConfig.DB.Dbname)))
 	tables, err = acd.DB.GetTables(global.GenConfig.DB.Dbname)
@@ -37,6 +38,12 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 	}
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
 	db.Pkg = pkg
+
+	db.RpcHost = global.GenConfig.System.RpcHost
+	db.RpcPort = global.GenConfig.System.RpcPort
+	db.ApiHost = global.GenConfig.System.ApiHost
+	db.ApiPort = global.GenConfig.System.ApiPort
+
 	if err != nil {
 		log.Println(util.Red(fmt.Sprintf("CreateConfigFile err is %v", err)))
 		return
@@ -110,4 +117,19 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
 	fmt.Println(util.Green("Done!"))
 	return db, tbList, nil
+}
+
+func Check() {
+	if len(global.GenConfig.System.RpcHost) < 1 {
+		global.GenConfig.System.RpcHost = "0.0.0.0"
+	}
+	if global.GenConfig.System.RpcPort < 1 {
+		global.GenConfig.System.RpcPort = 7000
+	}
+	if len(global.GenConfig.System.ApiHost) < 1 {
+		global.GenConfig.System.RpcHost = "0.0.0.0"
+	}
+	if global.GenConfig.System.ApiPort < 1 {
+		global.GenConfig.System.RpcPort = 7001
+	}
 }
