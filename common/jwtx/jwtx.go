@@ -20,8 +20,8 @@ type Jwt struct {
 	SigningKey []byte
 }
 type SysJwtClaims struct {
-	UserId    int64  `json:"userId"`
-	RoleId    int64  `json:"roleId"`
+	UserId    string `json:"userId"`
+	RoleId    string `json:"roleId"`
 	UserName  string `json:"userName"`
 	NickName  string `json:"nickName"`
 	RefreshAt int64  `json:"refreshAt"`
@@ -45,7 +45,7 @@ func GetToken(secretKey, username, nickName, issuer string, iat, seconds, uid, r
 	return token.SignedString([]byte(secretKey))
 }
 
-func GetTokenClaims(secretKey, username, nickName, issuer string, iat, seconds, uid, roleId int64) (string, error) {
+func GetTokenClaims(secretKey, username, nickName, issuer string, iat, seconds int64, uid, roleId string) (string, error) {
 	var claims SysJwtClaims
 	claims.ExpiresAt = iat + seconds
 	claims.IssuedAt = iat

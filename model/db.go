@@ -65,6 +65,7 @@ type (
 		UniqueKeys    string
 		UniqueKeyLet  string
 		UniqueKeyIn   string
+		PkIsChar      bool
 	}
 	Column struct {
 		IsPk   bool
@@ -170,11 +171,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	ct := 0
 	for _, each := range c.Columns {
 		//log.Printf("each.name is %s,is pk is %+v\n", each.Name, each.IsPk)
-		if each.Index != nil {
-			if each.Index.IndexName == "PRIMARY" {
-				each.IsPk = true
-			}
-		}
+
 		if each.Name == "created_at" {
 			each.IsModelTime = true
 		}
@@ -199,6 +196,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		if dt == "int64" || dt == "float64" {
 			each.HtmlType = "number"
 		}
+
 		each.DataType = dt
 		each.DataTypeProto = dt
 		each.DataTypeApi = dt
@@ -212,6 +210,14 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			each.DataTypeApi = "string"
 			if !each.IsModelTime {
 				table.HasTimer = true
+			}
+		}
+		if each.Index != nil {
+			if each.Index.IndexName == "PRIMARY" {
+				each.IsPk = true
+				if each.DataType == "string" {
+					table.PkIsChar = true
+				}
 			}
 		}
 		if !each.IsPk && !each.IsNull && each.ColumnDefault != nil {
@@ -314,7 +320,6 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		table.WithCache = true
 	}
 	table.WithCache = true
-	//log.Printf("【主键】%+v", table.PrimaryKey.Column.DbColumn)
 
 	return &table, nil
 }

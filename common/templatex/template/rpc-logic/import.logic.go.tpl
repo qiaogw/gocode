@@ -1,9 +1,9 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 	"bytes"
 	"context"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -23,9 +23,9 @@ func NewImport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *Import{{.Table}}Logic) Import{{.Table}}(in *{{.PackageName}}.ExportResponse) (*{{.PackageName}}.Delete{{.Table}}Response, error) {
+func (l *Import{{.Table}}Logic) Import{{.Table}}(in *{{.Db}}.ExportResponse) (*{{.Db}}.Delete{{.Table}}Response, error) {
 	reader := bytes.NewReader(in.Data)
 	err := l.svcCtx.{{.Table}}Model.Import(reader)
 
-	return &{{.PackageName}}.Delete{{.Table}}Response{}, err
+	return &{{.Db}}.Delete{{.Table}}Response{}, err
 }

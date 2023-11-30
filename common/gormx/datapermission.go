@@ -7,13 +7,13 @@ import (
 
 type DataPermission struct {
 	DataScope  string
-	UserId     int
-	DeptId     int
-	RoleId     int
+	UserId     interface{}
+	DeptId     interface{}
+	RoleId     interface{}
 	DataFilter string //自定义条件create_by in 用户id范围
 }
 
-//PermissionData 数据权限
+// PermissionData 数据权限
 func PermissionData(tableName string, p *DataPermission) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		// if !config.ApplicationConfig.EnableDP {

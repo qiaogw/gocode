@@ -1,4 +1,4 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 "github.com/qiaogw/gocode/common/modelx"
@@ -7,7 +7,7 @@ import (
 "github.com/pkg/errors"
 
 "github.com/jinzhu/copier"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,7 +29,7 @@ func NewUpdate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 // Update{{.Table}} 更新{{.TableComment}}
-func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.PackageName}}.Update{{.Table}}Request) (*{{.PackageName}}.Update{{.Table}}Response, error) {
+func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Request) (*{{.Db}}.Update{{.Table}}Response, error) {
 	// 查询{{.TableComment}}是否存在
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
@@ -39,15 +39,14 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.PackageName}}.Update{{.T
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "数据库查询 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
 	}
 	{{- range  .Columns }}
-		{{- if .IsPage}}
-			{{- else if .IsModelTime -}}
-			{{- else if .IsControl -}}
-			{{- else}}
-				{{- if eq .DataType "time.Time"}}
-					res.{{.FieldName}}=timex.DatetimeStrToTime(in.{{.FieldName}})
-				{{- else}}
+		{{-  if .IsModelTime -}}
+		{{- else if .IsControl -}}
+        {{- else if .IsPage}}
+		{{- else if .IsPk }}
+		{{- else if eq .DataType "time.Time"}}
+			res.{{.FieldName}}=timex.DatetimeStrToTime(in.{{.FieldName}})
+		{{- else}}
 			res.{{.FieldName}}=in.{{.FieldName}}
-			{{- end}}
 		{{- end}}
 	{{- end }}
 	res.UpdateBy = in.UpdateBy
@@ -57,7 +56,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.PackageName}}.Update{{.T
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
 "数据库更新 {{.TableComment}} 失败 , err:%v ,data : %+v  ", err, res)
 	}
-	var rep {{.PackageName}}.Update{{.Table}}Response
+	var rep {{.Db}}.Update{{.Table}}Response
 	_ = copier.Copy(&rep, res)
 	return &rep, nil
 }

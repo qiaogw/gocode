@@ -6,7 +6,7 @@ import (
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"github.com/qiaogw/gocode/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,8 @@ func NewDelete{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *Delete{{.Table}}Logic) Delete{{.Table}}(req *types.Delete{{.Table}}Request) (resp *types.CommonResponse, err error) {
-	_, err = l.svcCtx.{{.Service}}Rpc.Delete{{.Table}}(l.ctx, &{{.PackageName}}.Delete{{.Table}}Request{
+
+	_, err = l.svcCtx.{{.Table}}Rpc.Delete{{.Table}}(l.ctx, &{{.Db}}.Delete{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 				{{.FieldName}}: req.{{.FieldName}},

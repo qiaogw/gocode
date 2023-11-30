@@ -6,7 +6,7 @@ import (
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"github.com/qiaogw/gocode/common/errx"
 "github.com/qiaogw/gocode/common/jwtx"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,7 +28,7 @@ func NewCreate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *Create{{.Table}}Logic) Create{{.Table}}(req *types.Create{{.Table}}Request) (resp *types.CommonResponse, err error) {
 	userId := jwtx.GetUserIdFromCtx(l.ctx)
-	_, err = l.svcCtx.{{.Service}}Rpc.Create{{.Table}}(l.ctx, &{{.PackageName}}.Create{{.Table}}Request{
+	_, err = l.svcCtx.{{.Table}}Rpc.Create{{.Table}}(l.ctx, &{{.Db}}.Create{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 			{{- else if .IsModelTime -}}

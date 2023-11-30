@@ -65,7 +65,7 @@ option go_package="./{{.Package}}";
         {{- end}}
     {{- end }}
     {{- $x = add $x }}
-    int64 createBy={{- $x -}};
+    string createBy={{- $x -}};
     }
 
     //创建 {{.Table}} ({{.TableComment}}) Response
@@ -90,7 +90,7 @@ option go_package="./{{.Package}}";
         {{- end}}
     {{- end }}
     {{- $e = add $e }}
-    int64 updateBy={{- $e -}};
+    string updateBy={{- $e -}};
     }
 
     //修改 {{.Table}} ({{.TableComment}}) Response
@@ -109,6 +109,7 @@ option go_package="./{{.Package}}";
             {{.DataTypeProto}} {{.FieldJson}}=1;
         {{- end }}
     {{- end }}
+        string updateBy=2;
     }
 
     //删除 {{.Table}} ({{.TableComment}}) Response
@@ -125,21 +126,21 @@ message  NullResponse {
 
 //导出 Export  Request
 message ExportRequest {
-    int64 pageIndex = 1;
-    int64 pageSize = 2;
-    string searchKey = 3;
-    string sortBy = 4;
-    bool descending = 5;
+int64 pageIndex = 1;
+int64 pageSize = 2;
+string searchKey = 3;
+string sortBy = 4;
+bool descending = 5;
 }
 
 //导出 Export  Response
 message ExportResponse {
-    bytes data=1;
+bytes data=1;
 }
 
 {{range .Tables }}
 
-service {{.Table}} {
+    service {{.Table}} {
     rpc Get{{.Table}}(Get{{.Table}}Request) returns(Get{{.Table}}Response);
     rpc List{{.Table}}(List{{.Table}}Request) returns(List{{.Table}}Response);
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
@@ -150,5 +151,5 @@ service {{.Table}} {
         rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
         rpc Import{{.Table}}(ExportResponse) returns(Delete{{.Table}}Response);
     {{ end}}
-}
+    }
 {{ end}}

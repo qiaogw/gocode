@@ -3,7 +3,7 @@ package {{.TableUrl}}
 import (
 	"context"
 	"github.com/pkg/errors"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
@@ -26,7 +26,7 @@ func NewExport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *Export{{.Table}}Logic) Export{{.Table}}(req *types.List{{.Table}}Request) (resp []byte, err error) {
-	res, err := l.svcCtx.{{.Service}}Rpc.Export{{.Table}}(l.ctx, &{{.PackageName}}.ExportRequest{
+	res, err := l.svcCtx.{{.Table}}Rpc.Export{{.Table}}(l.ctx, &{{.Db}}.ExportRequest{
 		PageIndex:  req.PageIndex,
 		PageSize:   req.PageSize,
 		SearchKey:  req.SearchKey,

@@ -2,7 +2,7 @@ package gen
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/inital"
+	"github.com/qiaogw/gocode/common/templatex"
 	"github.com/qiaogw/gocode/util"
 	"github.com/wxnacy/wgo/arrays"
 	"log"
@@ -39,7 +39,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 		}
 		t1 := template.New(value.locationPath)
 		t1 = t1.Funcs(funcMap)
-		mi, _ := inital.TemplateTpl.ReadFile(value.locationPath)
+		mi, _ := templatex.TemplateTpl.ReadFile(value.locationPath)
 		t2, err := t1.Parse(string(mi))
 		if err != nil {
 			log.Printf("templatePath is %s ,err is %v\n", templatePath, err)
@@ -97,7 +97,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 // @return: []string, error
 func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([]string, error) {
 	//files, err := ioutil.ReadDir(pathName)
-	files, err := inital.TemplateTpl.ReadDir(pathName)
+	files, err := templatex.TemplateTpl.ReadDir(pathName)
 	for _, fi := range files {
 		if fi.IsDir() {
 			fileList, err = acd.GetAllTplFile(pathName+"/"+fi.Name(), fileList)

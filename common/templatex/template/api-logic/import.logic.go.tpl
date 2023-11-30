@@ -9,7 +9,7 @@ import (
 	"github.com/qiaogw/gocode/common/errx"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 )
 
 type Import{{.Table}}Logic struct {
@@ -33,7 +33,7 @@ func (l *Import{{.Table}}Logic) Import{{.Table}}(req *types.ImportRequest) (resp
 
 	// retrieve a byte slice from bytes.Buffer
 	data := buf.Bytes()
-	_, err = l.svcCtx.{{.Service}}Rpc.Import{{.Table}}(l.ctx, &{{.PackageName}}.ExportResponse{
+	_, err = l.svcCtx.{{.Table}}Rpc.Import{{.Table}}(l.ctx, &{{.Db}}.ExportResponse{
 		Data: data,
 	})
 	if err != nil {

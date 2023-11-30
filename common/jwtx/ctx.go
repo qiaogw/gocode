@@ -2,39 +2,29 @@ package jwtx
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"github.com/golang-jwt/jwt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"time"
 )
 
-func GetUserIdFromCtx(ctx context.Context) int64 {
-	var uid int64
-	if jsonUid, ok := ctx.Value(CtxKeyJwtUserId).(json.Number); ok {
-		if int64Uid, err := jsonUid.Int64(); err == nil {
-			uid = int64Uid
-		} else {
-			logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", err)
-		}
+func GetUserIdFromCtx(ctx context.Context) string {
+	var uid string
+	if jsonUid, ok := ctx.Value(CtxKeyJwtUserId).(string); ok {
+		uid = jsonUid
 	}
 
 	return uid
 }
 
-func GetRoleIdFromCtx(ctx context.Context) int64 {
-	var id int64
-	if jsonUid, ok := ctx.Value(CtxKeyJwtRoleId).(json.Number); ok {
-		if int64Uid, err := jsonUid.Int64(); err == nil {
-			id = int64Uid
-		} else {
-			logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", err)
-		}
+func GetRoleIdFromCtx(ctx context.Context) string {
+	var id string
+	if jsonUid, ok := ctx.Value(CtxKeyJwtRoleId).(string); ok {
+		id = jsonUid
 	}
 	return id
 }
 
-func GetUserIdFromToken(tokenString, SigningKey string) (id int64, err error) {
+func GetUserIdFromToken(tokenString, SigningKey string) (id string, err error) {
 	claims, err := ParseToken(tokenString, SigningKey)
 	if err != nil {
 		return
@@ -42,7 +32,7 @@ func GetUserIdFromToken(tokenString, SigningKey string) (id int64, err error) {
 	id = claims.UserId
 	return
 }
-func GetRoleIdFromToken(tokenString, SigningKey string) (id int64, err error) {
+func GetRoleIdFromToken(tokenString, SigningKey string) (id string, err error) {
 	claims, err := ParseToken(tokenString, SigningKey)
 	if err != nil {
 		return

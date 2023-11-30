@@ -6,8 +6,8 @@ import (
 "github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
-
+	"{{.ParentPkg}}/rpc/{{.Db}}"
+	"github.com/qiaogw/gocode/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,8 +25,9 @@ func NewList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 	}
 }
 
-func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (resp *types.List{{.Table}}Response, err error) {
-	res, err := l.svcCtx.{{.Service}}Rpc.List{{.Table}}(l.ctx, &{{.PackageName}}.List{{.Table}}Request{
+func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (resp *types.CommonResponse, err error) {
+
+	res, err := l.svcCtx.{{.Table}}Rpc.List{{.Table}}(l.ctx, &{{.Db}}.List{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
 			{{- else}}
@@ -40,23 +41,9 @@ func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
-
-	var dataList []*types.Get{{.Table}}Response
-
-	for _, v := range res.List {
-		var dm types.Get{{.Table}}Response
-		{{- range  .Columns }}
-				{{- if eq .FieldName "DeletedAt"}}
-				{{- else if .IsPage }}
-				{{- else }}
-					dm.{{.FieldName}}=v.{{.FieldName}}
-				{{- end }}
-		{{- end }}
-dataList = append(dataList, &dm)
-	}
-
-	return &types.List{{.Table}}Response{
-			Count: res.Count,
-		List: dataList,
+	return &types.CommonResponse{
+			Code: errx.Success,
+			Msg: "查询成功",
+			Data: res,
 		}, nil
 }

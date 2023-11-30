@@ -1,17 +1,16 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 "github.com/qiaogw/gocode/common/modelx"
 	"github.com/qiaogw/gocode/common/errx"
-"github.com/qiaogw/gocode/common/timex"
 	"context"
 "github.com/pkg/errors"
 
 "github.com/jinzhu/copier"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"{{.ParentPkg}}/model"
-{{ if .HasTimer }}"github.com/qiaogw/gocode/common/timex"{{ end }}
+"github.com/qiaogw/gocode/common/timex"
 	"github.com/zeromicro/go-zero/core/logx"
 
 )
@@ -31,7 +30,7 @@ func NewList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 }
 
 // List{{.Table}} 条件查询 {{.TableComment}} 列表
-func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.PackageName}}.List{{.Table}}Request) (*{{.PackageName}}.List{{.Table}}Response, error) {
+func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) (*{{.Db}}.List{{.Table}}Response, error) {
 	// 查询{{.TableComment}}
 	var qData model.List{{.Table}}Req
 	{{- range  .Columns }}
@@ -54,14 +53,14 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.PackageName}}.List{{.Table}}
 "{{.TableComment}}-该查询无数据，查询条件: %+v", qData)
 		}
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-"查询 {{.TableComment}} 数据库查询失败，查询条件: %v,err:%v", in,err)
+"查询 {{.TableComment}} db fail，查询条件: %v,err:%v", in,err)
 
 }
 	
-	var dataList []*{{.PackageName}}.Get{{.Table}}Response
+	var dataList[]*{{.Db}}.Get{{.Table}}Response
 
 	for _, v := range list {
-		var dm {{.PackageName}}.Get{{.Table}}Response
+		var dm {{.Db}}.Get{{.Table}}Response
 		_ = copier.Copy(&dm, v)
 		{{- range  .Columns }}
 			{{- if eq .DataType "time.Time"}}
@@ -77,7 +76,7 @@ dataList = append(dataList, &dm)
 	}
 
 
-	return &{{.PackageName}}.List{{.Table}}Response{
+	return &{{.Db}}.List{{.Table}}Response{
 		List: dataList,
 		Count: count,
 	}, nil

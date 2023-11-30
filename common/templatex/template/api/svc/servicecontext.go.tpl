@@ -2,7 +2,10 @@ package svc
 
 import (
 	"{{.ParentPkg}}/api/internal/config"
-	"{{.ParentPkg}}/rpc/{{.FileName}}client"
+
+{{- range .Tables }}
+	"{{.ParentPkg}}/rpc/client/{{.TableUrl}}"
+{{- end}}
 	"github.com/zeromicro/go-zero/zrpc"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/syncx"
@@ -10,14 +13,18 @@ import (
 
 type ServiceContext struct {
 	Config    config.Config
-	{{.Service}}Rpc {{.FileName}}client.{{.Service}}
 	Cache    cache.Cache
+{{- range .Tables }}
+	{{.Table}}Rpc {{.TableUrl}}.{{.Table}}
+{{- end}}
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:   c,
-		{{.Service}}Rpc: {{.FileName}}client.New{{.Service}}(zrpc.MustNewClient(c.{{.Service}}Rpc)),
 		Cache:    cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("dc"), nil),
+{{- range .Tables }}
+	{{.Table}}Rpc: {{.TableUrl}}.New{{.Table}}(zrpc.MustNewClient(c.{{.Service}}Rpc)),
+{{- end}}
 	}
 }

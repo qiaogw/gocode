@@ -109,6 +109,7 @@ option go_package="./{{.Package}}";
             {{.DataTypeProto}} {{.FieldJson}}=1;
         {{- end }}
     {{- end }}
+        string updateBy=2;
     }
 
     //删除 {{.Table}} ({{.TableComment}}) Response

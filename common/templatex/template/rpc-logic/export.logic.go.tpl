@@ -1,4 +1,4 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/qiaogw/gocode/common/toolx"
 	"{{.ParentPkg}}/model"
 
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,7 +28,7 @@ func NewExport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.PackageName}}.ExportRequest) (*{{.PackageName}}.ExportResponse, error) {
+func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.Db}}.ExportRequest) (*{{.Db}}.ExportResponse, error) {
 	var qData model.List{{.Table}}Req
 	qData.PageIndex = in.PageIndex
 	qData.PageSize = in.PageSize
@@ -48,7 +48,7 @@ func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.PackageName}}.ExportRequ
 		return nil, errors.Wrapf(errx.NewErrCode(errx.ServerCommonError),
 			"{{.TableComment}}导出excel 失败，data: %+v,err:%v", list,err)
 	}
-	return &{{.PackageName}}.ExportResponse{
+	return &{{.Db}}.ExportResponse{
 		Data: resp.Bytes(),
 	}, nil
 }

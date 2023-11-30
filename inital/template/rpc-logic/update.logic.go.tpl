@@ -42,6 +42,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 		{{-  if .IsModelTime -}}
 		{{- else if .IsControl -}}
         {{- else if .IsPage}}
+		{{- else if .IsPk }}
 		{{- else if eq .DataType "time.Time"}}
 			res.{{.FieldName}}=timex.DatetimeStrToTime(in.{{.FieldName}})
 		{{- else}}

@@ -1,11 +1,11 @@
-package logic
+package {{.TableUrl}}logic
 
 import (
 	"context"
 	"github.com/pkg/errors"
 
 	"{{.ParentPkg}}/model"
-	"{{.ParentPkg}}/rpc/{{.PackageName}}"
+	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"github.com/jinzhu/copier"
 
@@ -29,7 +29,7 @@ func NewCreate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 // Create{{.Table}} 创建 {{.TableComment}}
-func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.PackageName}}.Create{{.Table}}Request) (*{{.PackageName}}.Create{{.Table}}Response, error) {
+func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Request) (*{{.Db}}.Create{{.Table}}Response, error) {
 
 {{$table:=.Table}}
 {{$tableComment:=.TableComment}}
@@ -64,7 +64,7 @@ new{{.Table}} := model.{{.Table}}{
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
 		"创建 {{$tableComment}} 数据库失败 , 错误:%v ,数据 : %+v  ", err, new{{.Table}})
 	}
-	var rep {{.PackageName}}.Create{{.Table}}Response
+	var rep {{.Db}}.Create{{.Table}}Response
 	_ = copier.Copy(&rep, res)
 	return &rep, nil
 }
