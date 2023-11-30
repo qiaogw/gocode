@@ -1,6 +1,7 @@
 package modelx
 
 import (
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"time"
@@ -9,7 +10,7 @@ import (
 var ErrNotFound = gorm.ErrRecordNotFound
 
 type BaseModel struct {
-	Id string `json:"id" db:"id" gorm:"column:id;primaryKey;comment:主键编码"`
+	Id uuid.UUID `json:"id" db:"id" gorm:"column:id;primaryKey;comment:主键编码"`
 }
 
 type ControlBy struct {

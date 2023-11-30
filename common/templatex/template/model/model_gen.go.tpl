@@ -105,7 +105,7 @@ func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.Fie
 
 func (m *default{{.Table}}Model) Insert(ctx context.Context, data *{{.Table}}) (*{{.Table}}, error) {
 {{- if .PkIsChar }}
-	newUUID := uuid.New().String()
+	newUUID := uuid.New()
 	data.Id = newUUID
 {{- end }}
 	err := m.gormDB.Create(data).Error
