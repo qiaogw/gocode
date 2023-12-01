@@ -176,21 +176,25 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	ct := 0
 	for _, each := range c.Columns {
 		//log.Printf("each.name is %s,is pk is %+v\n", each.Name, each.IsPk)
-
-		if each.Name == "created_at" {
-			each.IsModelTime = true
-		}
-		if each.Name == "updated_at" {
-			each.IsModelTime = true
-		}
-		if each.Name == "deleted_at" {
-			each.IsModelTime = true
-		}
 		if each.Name == "create_by" {
 			each.IsControl = true
+			each.Sort = 100
 		}
 		if each.Name == "update_by" {
 			each.IsControl = true
+			each.Sort = 101
+		}
+		if each.Name == "created_at" {
+			each.IsModelTime = true
+			each.Sort = 102
+		}
+		if each.Name == "updated_at" {
+			each.IsModelTime = true
+			each.Sort = 103
+		}
+		if each.Name == "deleted_at" {
+			each.IsModelTime = true
+			each.Sort = 104
 		}
 		var isDefaultNull bool
 		each.DbType = each.DataType
