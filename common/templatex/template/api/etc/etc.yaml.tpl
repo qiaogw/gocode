@@ -1,6 +1,7 @@
 Name: {{.Package}}-api
 Host: {{.Option.System.ApiHost}}
 Port: {{.Option.System.ApiPort}}
+Mode: dev
 
 Database:
   DriverName: {{.Option.DB.DbType}}

@@ -1,11 +1,11 @@
 Name: {{.Package}}-rpc
 ListenOn: {{.Option.System.RpcHost}}:{{.Option.System.RpcPort}}
-
+Mode: dev
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 
-Auth: false    //rpc认证
-App: {{.Package}}                          # App 标识
-Token: sub-{{.Package}} # Token 值
+#Auth: false    //rpc认证
+#App: {{.Package}}                          # App 标识
+#Token: sub-{{.Package}} # Token 值
 
 JwtAuth:
   AccessSecret: {{.Option.Auth.AccessSecret}}
