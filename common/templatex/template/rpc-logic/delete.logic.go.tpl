@@ -37,5 +37,5 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.Db}}.Delete{{.Table}}Req
 		"数据库删除 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
 	}
 
-	return &{{.Db}}.Delete{{.Table}}Response{}, nil
+	return &{{.Db}}.NullResponse{}, nil
 }

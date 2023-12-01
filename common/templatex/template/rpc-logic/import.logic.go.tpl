@@ -27,5 +27,5 @@ func (l *Import{{.Table}}Logic) Import{{.Table}}(in *{{.Db}}.ExportResponse) (*{
 	reader := bytes.NewReader(in.Data)
 	err := l.svcCtx.{{.Table}}Model.Import(reader)
 
-	return &{{.Db}}.Delete{{.Table}}Response{}, err
+	return &{{.Db}}.NullResponse{}, err
 }
