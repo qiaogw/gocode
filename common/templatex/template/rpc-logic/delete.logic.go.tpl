@@ -29,7 +29,7 @@ func NewDelete{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 // Delete{{.Table}} 删除 {{.TableComment}}
-func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.Db}}.Delete{{.Table}}Request) (*{{.Db}}.Delete{{.Table}}Response, error) {
+func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.Db}}.Delete{{.Table}}Request) (*{{.Db}}.NullResponse, error) {
 
 	err := l.svcCtx.{{.Table}}Model.Delete(l.ctx, in.Id)
 	if err != nil {

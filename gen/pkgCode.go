@@ -71,6 +71,8 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		}
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
+		tb.IsAuth = true
+		tb.IsImport = true
 		tb.Dir = strings.ToLower(db.Database)
 		if modeGen {
 			err = acd.CreateModel(tb)
@@ -99,6 +101,7 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		log.Printf("CreateRpc err is %v\n", err)
 		return
 	}
+
 	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)

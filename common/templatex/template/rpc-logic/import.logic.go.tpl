@@ -23,7 +23,7 @@ func NewImport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *Import{{.Table}}Logic) Import{{.Table}}(in *{{.Db}}.ExportResponse) (*{{.Db}}.Delete{{.Table}}Response, error) {
+func (l *Import{{.Table}}Logic) Import{{.Table}}(in *{{.Db}}.ExportResponse) (*{{.Db}}.NullResponse, error) {
 	reader := bytes.NewReader(in.Data)
 	err := l.svcCtx.{{.Table}}Model.Import(reader)
 
