@@ -87,10 +87,10 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 				if field.Name == "Msg" {
 					data := rv.FieldByName(fieldName)
 					body.Msg = data.String()
-					logx.Infof("【Msg】data: %v ,body:%v", data, body)
 				}
 			}
 		}
+		logx.WithContext(r.Context()).Errorf("【API-OK】")
 	}
 	httpx.OkJson(w, body)
 }

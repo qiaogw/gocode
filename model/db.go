@@ -107,6 +107,7 @@ type (
 		Clearable       bool        `json:"clearable"` // 是否可清空
 		Require         bool        `json:"require"`   // 是否必填
 		IsPk            bool        `json:"is_pk"`
+		Sort            int64       `json:"sort"`
 		IsList          bool        `json:"isList" form:"isList" db:"is_list" gorm:"column:is_list;size:1;comment:是否显示;"`
 		Increment       bool        `json:"increment" form:"increment" db:"increment" gorm:"column:increment;size:1;comment:是否自增;"`
 		IsEdit          bool        `json:"isEdit" form:"isEdit" db:"is_edit" gorm:"column:is_edit;size:1;comment:是否编辑;"`
