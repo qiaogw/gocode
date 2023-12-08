@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BuildVersion = "v1.10.20"
+	BuildVersion = "v1.10.21"
 	ProjectName  = "gocode"
 	OsWindows    = "windows"
 	OsMac        = "darwin"
