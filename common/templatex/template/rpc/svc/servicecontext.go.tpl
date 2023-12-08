@@ -58,7 +58,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//CacheTTL:             5000 * 3600, // 5000 ms
 	//CacheMaxItemCnt:      5,           // if length of objects retrieved one single time
 	// exceeds this number, then don't cache
-	})
+	//})
 	//if err != nil {
 	//	logx.Errorf("setup all cache error: %v", err)
 	//} else {
