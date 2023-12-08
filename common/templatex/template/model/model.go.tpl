@@ -1,11 +1,13 @@
 // Package model 自动生成模板{{.Table}}({{.TableComment}})
+
+{{$table:=.Table}}
 package model
 
 import (
 	"context"
-"io"
-"github.com/qiaogw/gocode/common/modelx"
-"github.com/qiaogw/gocode/common/toolx"
+	"io"
+	"github.com/qiaogw/gocode/common/modelx"
+	"github.com/qiaogw/gocode/common/toolx"
 	"github.com/qiaogw/gocode/common/gormx"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -22,6 +24,9 @@ type (
 		{{.PackageName}}Model
 		FindAll(ctx context.Context, query *List{{.Table}}Req) ([]*{{.Table}},int64, error)
 		Import(reader io.Reader) error
+	{{- range  .CacheKeys}}
+		FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error)
+	{{- end }}
 	}
 
 	custom{{.Table}}Model struct {
@@ -66,41 +71,30 @@ func (m *custom{{.Table}}Model) FindAll(ctx context.Context, query *List{{.Table
 
 // Import 导入
 func (m *custom{{.Table}}Model) Import(reader io.Reader) error {
-var err error
-tx := m.gormDB
-temp := new({{.Table}})
-ex := new(toolx.ExcelStruct)
-ex.Model = temp
-err = ex.SaveDb(tx, reader)
-if err != nil {
-return err
+	var err error
+	tx := m.gormDB
+	temp := new({{.Table}})
+	ex := new(toolx.ExcelStruct)
+	ex.Model = temp
+	err = ex.SaveDb(tx, reader)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-//var data []{{.Table}}
-//err = ex.ReadExcelIo(tx, reader)
-//if err != nil {
-//	return err
-//}
-//err = json.Unmarshal(ex.Content, &data)
-//if err != nil {
-//	return err
-//}
-//tx=tx.Clauses(clause.OnConflict{
-//	Columns: []clause.Column{
-//		{Name: "driver"},
-//		{Name: "host"},
-//		{Name: "dbname"},
-//	},
-//	UpdateAll: true,
-//})
-//for i := 0; i < len(data); i += 1000 {
-//	end := i + 1000
-//	if end > len(data) {
-//		end = len(data)
-//	}
-//	err = tx.CreateInBatches(data[i:end], len(data[i:end])).Error
-//	if err != nil {
-//		return err
-//	}
-//}
-return nil
-}
+
+{{- range  .CacheKeys}}
+	func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error) {
+	var resp {{$table}}
+	err := m.gormDB.Where("{{.FieldJson}} = ?",{{.FieldJson}}).First(&resp).Error
+	switch err {
+	case nil:
+	return &resp, nil
+	default:
+	if  err.Error()==modelx.ErrNotFound.Error(){
+	return nil, modelx.ErrNotFound
+	}
+	return nil, err
+	}
+	}
+{{- end }}

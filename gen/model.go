@@ -49,10 +49,13 @@ func (acd *AutoCodeService) CreateModelZero(table *model.Table) (err error) {
 
 	dir := filepath.Join(global.GenConfig.AutoCode.Root, "model")
 	drivers := "mysql"
-	if table.PostgreSql {
+	if global.GenConfig.DB.DbType == "postgres" {
 		df := global.GenConfig.DB
-		dsn = fmt.Sprintf(`postgres://%s:%s@%s:%s/%s?sslmode=disable`,
-			df.Username, df.Password, df.Path, df.Port, df.Dbname)
+		schema := "public"
+		//dsn = fmt.Sprintf(`postgres://%s:%s@%s:%d/%s?sslmode=disable`,
+		//	df.Username, df.Password, df.Path, df.Port, df.Dbname)
+		dsn = fmt.Sprintf("host=%s user=%s password=%s dbname='%s' search_path=%s port=%d %s",
+			df.Path, df.Username, df.Password, df.Dbname, schema, df.Port, df.Config)
 		drivers = "pg"
 	}
 

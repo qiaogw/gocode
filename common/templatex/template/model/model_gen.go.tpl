@@ -4,6 +4,7 @@ package model
 import (
 	"github.com/qiaogw/gocode/common/modelx"
 	"context"
+	"fmt"
 {{- if .PkIsChar }}
 	"github.com/google/uuid"
 {{- end }}
@@ -15,17 +16,14 @@ import (
 	{{ if .PostgreSql }}_ "github.com/lib/pq"{{ end}}
 )
 
-
+var cache{{.Service}}{{.Table}}IdPrefix = "cache:{{.Db}}:{{.PackageName}}:id:"
 
 type (
 	{{.PackageName}}Model interface {
 		Insert(ctx context.Context, data *{{.Table}}) (*{{.Table}}, error)
 		FindOne(ctx context.Context, id interface{}) (*{{.Table}}, error)
-		Update(ctx context.Context, newData *{{.Table}}) (*{{.Table}}, error)
+		Update(ctx context.Context, newData *{{.Table}})  error
 		Delete(ctx context.Context, id interface{}) error
-	{{- range  .CacheKeys}}
-		FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error)
-	{{- end }}
 	}
 
 	default{{.Table}}Model struct {
@@ -64,7 +62,7 @@ func ({{.Table}}) TableName() string {
 {{ end }}
 
 func new{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormx *gorm.DB) *default{{.Table}}Model {
-	gormx.AutoMigrate(&{{.Table}}{})
+	_ = gormx.AutoMigrate(&{{.Table}}{})
 	return &default{{.Table}}Model{
 		CachedConn: sqlc.NewConn(conn, c),
 		table:      "{{.Name}}",
@@ -73,66 +71,70 @@ func new{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormx *gorm.DB) *d
 }
 
 func (m *default{{.Table}}Model) FindOne(ctx context.Context, id interface{}) (*{{.Table}}, error) {
+	public{{.Service}}{{.Table}}IdKey := fmt.Sprintf("%s%v", cache{{.Service}}{{.Table}}IdPrefix, id)
 	var resp {{.Table}}
-	err := m.gormDB.First(&resp, "id = ?", id).Error
-	switch err {
-	case nil:
-	return &resp, nil
-	default:
-		if  err.Error()==modelx.ErrNotFound.Error(){
-			return nil, modelx.ErrNotFound
-		}
-		return nil, err
-	}
-}
 
-{{- range  .CacheKeys}}
-func (m *default{{$table}}Model) FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error) {
-	var resp {{$table}}
-	err := m.gormDB.Where("{{.FieldJson}} = ?",{{.FieldJson}}).First(&resp).Error
-	switch err {
-	case nil:
-	return &resp, nil
-	default:
-		if  err.Error()==modelx.ErrNotFound.Error(){
-			return nil, modelx.ErrNotFound
+	err := m.GetCacheCtx(ctx, public{{.Service}}{{.Table}}IdKey, &resp)
+	if err != nil {
+		err := m.gormDB.First(&resp, "id = ?", id).Error
+		switch err {
+		case nil:
+			err = m.SetCacheCtx(ctx, public{{.Service}}{{.Table}}IdKey, resp)
+		default:
+			if  err.Error()==modelx.ErrNotFound.Error(){
+				return nil, modelx.ErrNotFound
+			}
+			return nil, err
 		}
-		return nil, err
 	}
+	return &resp, nil
 }
-{{- end }}
-
 
 func (m *default{{.Table}}Model) Insert(ctx context.Context, data *{{.Table}}) (*{{.Table}}, error) {
 {{- if .PkIsChar }}
 	newUUID := uuid.New()
 	data.Id = newUUID
 {{- end }}
+	public{{.Service}}{{.Table}}IdKey := fmt.Sprintf("%s%v", cache{{.Service}}{{.Table}}IdPrefix, data.Id)
 	err := m.gormDB.Create(data).Error
-	//var re sql.Result
-
-	return data, err
+	if err != nil {
+		return nil,err
+	}
+	_ = m.DelCacheCtx(ctx, public{{.Service}}{{.Table}}IdKey)
+	return data, nil
 }
 
-func (m *default{{.Table}}Model) Update(ctx context.Context, newData *{{.Table}}) (*{{.Table}}, error) {
-
+func (m *default{{.Table}}Model) Update(ctx context.Context, newData *{{.Table}}) error {
 	err := m.gormDB.Save(newData).Error
-	return newData,err
+	if err != nil {
+		return err
+	}
+	public{{.Service}}{{.Table}}IdKey := fmt.Sprintf("%s%v", cache{{.Service}}{{.Table}}IdPrefix, newData.Id)
+	_ = m.DelCacheCtx(ctx, public{{.Service}}{{.Table}}IdKey)
+	return nil
 }
 
 func (m *default{{.Table}}Model) Delete(ctx context.Context, id interface{}) error {
+	public{{.Service}}{{.Table}}IdKey := fmt.Sprintf("%s%v", cache{{.Service}}{{.Table}}IdPrefix, id)
 	_, err := m.FindOne(ctx, id)
 	if err != nil {
 		return err
 	}
 
 	err = m.gormDB.Delete(&{{.Table}}{}, "id = ?", id).Error
-	return err
+	if err != nil {
+		return err
+	}
+	_ = m.DelCacheCtx(ctx, public{{.Service}}{{.Table}}IdKey)
+	return nil
 }
 
 
 func (m *default{{.Table}}Model) tableName() string {
 	return m.table
 }
+
+
+
 
 

@@ -4,9 +4,8 @@ import (
 "github.com/qiaogw/gocode/common/modelx"
 	"github.com/qiaogw/gocode/common/errx"
 	"context"
-"github.com/pkg/errors"
+	"github.com/pkg/errors"
 
-"github.com/jinzhu/copier"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 
@@ -51,12 +50,11 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 	{{- end }}
 	res.UpdateBy = in.UpdateBy
 
-	res,err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)
+	err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
 "数据库更新 {{.TableComment}} 失败 , err:%v ,data : %+v  ", err, res)
 	}
 	var rep {{.Db}}.Update{{.Table}}Response
-	_ = copier.Copy(&rep, res)
 	return &rep, nil
 }

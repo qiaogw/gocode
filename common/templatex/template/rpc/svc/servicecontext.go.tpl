@@ -33,44 +33,52 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		c.DbConf.Config)
 
 	conn := sqlx.NewSqlConn(c.DbConf.Driver, dsn)
-	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	redisClient := redis.NewClient(&redis.Options{
-		Addr: c.Redis.Host,
-		Password: c.Redis.Pass,
+	db, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		//自动更新表，不使用外键
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
-	_ = db.Use(&gormx.ZeroGorm{})
-	caches, err := cache.NewGorm2Cache(&cacheConfig.CacheConfig{
-	CacheLevel:           cacheConfig.CacheLevelAll,
-	CacheStorage:         cacheConfig.CacheStorageRedis,
-	RedisConfig:          cache.NewRedisConfigWithClient(redisClient),
-	InvalidateWhenUpdate: true,       // when you create/update/delete objects, invalidate cache
-	CacheTTL:             5000 * 3600, // 5000 ms
-	CacheMaxItemCnt:      5,           // if length of objects retrieved one single time
+
+	//开发模式，打印sql
+	if c.Mode == service.DevMode {
+		err := db.Use(&gormx.ZeroGorm{})
+		if err != nil {
+			logx.Errorf("配置数据库打印日志错误: %v", err)
+		}
+	}
+
+	//redisClient := redis.NewClient(&redis.Options{
+	//	Addr: c.Redis.Host,
+	//	Password: c.Redis.Pass,
+	//})
+	//caches, err := cache.NewGorm2Cache(&cacheConfig.CacheConfig{
+	//CacheLevel:           cacheConfig.CacheLevelAll,
+	//CacheStorage:         cacheConfig.CacheStorageRedis,
+	//RedisConfig:          cache.NewRedisConfigWithClient(redisClient),
+	//InvalidateWhenUpdate: true,       // when you create/update/delete objects, invalidate cache
+	//CacheTTL:             5000 * 3600, // 5000 ms
+	//CacheMaxItemCnt:      5,           // if length of objects retrieved one single time
 	// exceeds this number, then don't cache
 	})
-	if err != nil {
-	logx.Errorf("setup all cache error: %v", err)
-	} else {
-	err = db.Use(caches) // use gorm plugin
-	if err != nil {
-	logx.Errorf("setup all cache error: %v", err)
-	}
-	}
-
-
+	//if err != nil {
+	//	logx.Errorf("setup all cache error: %v", err)
+	//} else {
+	//	err = db.Use(caches) // use gorm plugin
+	//if err != nil {
+	//	logx.Errorf("setup all cache error: %v", err)
+	//	}
+	//}
 
 
 	redisConf := redisX.RedisConf{
-	Host: c.Redis.Host,
-	Pass: c.Redis.Pass,
-	Type: c.Redis.Type,
+		Host: c.Redis.Host,
+		Pass: c.Redis.Pass,
+		Type: c.Redis.Type,
 	}
 	return &ServiceContext{
-	Config:         c,
-	CacheRedis:     redisX.MustNewRedis(redisConf),
+		Config:         c,
+		CacheRedis:     redisX.MustNewRedis(redisConf),
 		{{- range .Tables }}
 			{{.Table}}Model: model.New{{.Table}}Model(conn, c.CacheRedis, db),
 		{{- end }}
-		}
+	}
 }
