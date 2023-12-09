@@ -59,6 +59,8 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 						errmsg = errx.MapErrMsg(errcode)
 					}
 				}
+			} else {
+				errmsg = err.Error()
 			}
 		}
 		logx.WithContext(r.Context()).Errorf("【API-ERR】 : %+v ", err)
