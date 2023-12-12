@@ -21,4 +21,5 @@ const (
 	ErrGenerateTokenError uint32 = 110001
 	ErrAuth               uint32 = 401
 	ErrReq                uint32 = 100009
+	ErrTimeout               uint32 = 110
 )

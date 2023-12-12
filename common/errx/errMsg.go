@@ -19,6 +19,7 @@ func init() {
 	message[ErrUsernamePwdError] = "账号或密码不正确"
 	message[ErrAuth] = "无访问权限"
 	message[ErrReq] = "自定义错误"
+	message[ErrTimeout]="服务器响应超时"
 }
 
 func MapErrMsg(errcode uint32) string {
