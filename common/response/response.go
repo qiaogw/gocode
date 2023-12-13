@@ -92,7 +92,7 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 				}
 			}
 		}
-		logx.WithContext(r.Context()).Errorf("【API-OK】")
+		logx.WithContext(r.Context()).Debugf("【API-OK】")
 	}
 	httpx.OkJson(w, body)
 }
