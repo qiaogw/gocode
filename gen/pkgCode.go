@@ -112,13 +112,12 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 			return
 		}
 
-		err = acd.CreateRpcLogic(&db)
-		if err != nil {
-			log.Printf("CreateRpcLogic err is %v\n", err)
-			return
-		}
 	}
-
+	err = acd.CreateRpcLogic(&db)
+	if err != nil {
+		log.Printf("CreateRpcLogic err is %v\n", err)
+		return
+	}
 	err = acd.CreateWeb(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
