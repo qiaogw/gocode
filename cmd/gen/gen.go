@@ -30,8 +30,8 @@ func init() {
 	pack := "config"
 	Cmd.PersistentFlags().StringVarP(&apiPackage, "package", "p", pack, "包名")
 	_ = Cmd.MarkPersistentFlagRequired("package")
-	mode := "gorm"
-	Cmd.PersistentFlags().StringVarP(&modeGen, "mode", "m", mode, "模式(zero、gorm)")
+	mode := "rpc"
+	Cmd.PersistentFlags().StringVarP(&modeGen, "mode", "m", mode, "模式(rpc、api)")
 	_ = Cmd.MarkPersistentFlagRequired("mode")
 
 }
@@ -53,8 +53,9 @@ func run() error {
 	genApp := gen.AutoCodeServiceApp
 	genApp.Init()
 	m := true
-	if modeGen == "zero" {
-		m = false
+	genApp.Mode = "rpc"
+	if modeGen == "api" {
+		genApp.Mode = "api"
 	}
 	//genApp.Mode = "api"
 	_, _, err := genApp.Code(m)

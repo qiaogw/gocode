@@ -17,7 +17,7 @@ GOPROXY=https://goproxy.cn/,direct go install github.com/qiaogw/gocode@latest
 
  ```
 type BaseModel struct {
-Id int64 `json:"id" db:"id" gorm:"column:id;primaryKey;autoIncrement;comment:主键编码"`
+Id string `json:"id" db:"id" gorm:"column:id;primaryKey;autoIncrement;comment:主键编码"`
 }
 
 type ControlBy struct {

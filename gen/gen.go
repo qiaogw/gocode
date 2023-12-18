@@ -211,7 +211,7 @@ func (acd *AutoCodeService) genAfter(dataList []tplData, pkg ...string) error {
 			return err
 		}
 	}
-	//Init(table.Table)
+
 	return nil
 }
 
