@@ -21,7 +21,7 @@ var Cmd = &cobra.Command{
 func upgrade(_ *cobra.Command, _ []string) error {
 	cmd := `GO111MODULE=on GOPROXY=https://goproxy.cn/,direct go install github.com/qiaogw/gocode@latest`
 	if runtime.GOOS == "windows" {
-		cmd = `set GOPROXY=https://goproxy.cn,direct && go install github.com/qiaogw/gocode@latest`
+		cmd = `set GOPROXY=https://goproxy.io,direct && go install github.com/qiaogw/gocode@latest`
 	}
 	_, err := execx.Run(cmd, "")
 	if err != nil {
