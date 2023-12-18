@@ -56,6 +56,7 @@ func run() error {
 	if modeGen == "zero" {
 		m = false
 	}
+	//genApp.Mode = "api"
 	_, _, err := genApp.Code(m)
 	return err
 }

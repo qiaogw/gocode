@@ -38,7 +38,8 @@ type tplData struct {
 }
 
 type AutoCodeService struct {
-	DB model.Model
+	DB   model.Model
+	Mode string
 }
 
 var AutoCodeServiceApp = new(AutoCodeService)

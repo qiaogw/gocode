@@ -14,7 +14,8 @@ func (acd *AutoCodeService) CreateConfigFile(db *model.Db, fPath string) (err er
 	tf := "template/config/config.yaml.tpl"
 	var tpl tplData
 	t1 := template.New(tf)
-	fi, err := templatex.TemplateTpl.ReadFile(tf)
+
+	fi, err := templatex.GetTpl(acd.Mode).ReadFile(tf)
 	if err != nil {
 		return
 	}

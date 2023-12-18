@@ -39,7 +39,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 		}
 		t1 := template.New(value.locationPath)
 		t1 = t1.Funcs(funcMap)
-		mi, _ := templatex.TemplateTpl.ReadFile(value.locationPath)
+		mi, _ := templatex.GetTpl(acd.Mode).ReadFile(value.locationPath)
 		t2, err := t1.Parse(string(mi))
 		if err != nil {
 			log.Printf("templatePath is %s ,err is %v\n", templatePath, err)
@@ -53,7 +53,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 	pack = strings.ToLower(pack)
 	// log.Printf("pack is %s ,dataList is %v\n", pack, dataList)
 	for index, value := range dataList {
-		trimBase := strings.TrimPrefix(value.locationPath, tempPath+"/")
+		trimBase := strings.TrimPrefix(value.locationPath, templatex.GetTplPath(acd.Mode)+"/")
 		if lastSeparator := strings.LastIndex(trimBase, "/"); lastSeparator != -1 {
 			origFileName := strings.TrimSuffix(trimBase[lastSeparator+1:], ".tpl")
 			firstDot := strings.Index(origFileName, ".")
@@ -97,7 +97,7 @@ func (acd *AutoCodeService) getNeedList(pack, templatePath string) (dataList []t
 // @return: []string, error
 func (acd *AutoCodeService) GetAllTplFile(pathName string, fileList []string) ([]string, error) {
 	//files, err := ioutil.ReadDir(pathName)
-	files, err := templatex.TemplateTpl.ReadDir(pathName)
+	files, err := templatex.GetTpl(acd.Mode).ReadDir(pathName)
 	for _, fi := range files {
 		if fi.IsDir() {
 			fileList, err = acd.GetAllTplFile(pathName+"/"+fi.Name(), fileList)
@@ -171,7 +171,7 @@ func (acd *AutoCodeService) addAutoMoveFile(data *tplData) {
 }
 
 func (acd *AutoCodeService) genBefore(pack, packPath string) (dataList []tplData, err error) {
-	tPath := tempPath + "/" + packPath
+	tPath := templatex.GetTplPath(acd.Mode) + "/" + packPath
 	dataList, _, needMkdir, err := acd.getNeedList(pack, tPath)
 	if err = util.CreateDir(needMkdir...); err != nil {
 		return
