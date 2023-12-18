@@ -2,7 +2,7 @@ package {{.TableUrl}}
 
 import (
 	"context"
-
+	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
