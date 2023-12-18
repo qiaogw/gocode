@@ -43,11 +43,14 @@ func (acd *AutoCodeService) CreateRpcLogic(db *model.Db) (err error) {
 		v.ParentPkg = db.ParentPkg
 		v.Pkg = db.Pkg
 		v.PackageName = db.Database
-		err = acd.createRpcLogic(v)
-		if err != nil {
-			log.Printf("createRpcLogic err is %v\n", err)
-			continue
+		if acd.Mode == "rpc" {
+			err = acd.createRpcLogic(v)
+			if err != nil {
+				log.Printf("createRpcLogic err is %v\n", err)
+				continue
+			}
 		}
+
 		err = acd.createApiLogic(v)
 		if err != nil {
 			log.Printf("createApiLogic err is %v\n", err)
