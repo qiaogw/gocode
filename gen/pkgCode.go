@@ -36,7 +36,12 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		log.Println(util.Red(fmt.Sprintf("GetParentPackage err is %v", err)))
 		return
 	}
+
 	db.ParentPkg = pkg + "/" + global.GenConfig.AutoCode.Pkg
+	if acd.Mode == "api" {
+		db.ParentPkg = global.GenConfig.AutoCode.Pkg
+	}
+
 	db.Pkg = pkg
 
 	db.RpcHost = global.GenConfig.System.RpcHost
@@ -95,23 +100,25 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		}
 		tbList = append(tbList, *tb)
 	}
-
-	err = acd.CreateRpc(&db)
-	if err != nil {
-		log.Printf("CreateRpc err is %v\n", err)
-		return
-	}
-
 	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)
 		return
 	}
-	err = acd.CreateRpcLogic(&db)
-	if err != nil {
-		log.Printf("CreateRpcLogic err is %v\n", err)
-		return
+	if acd.Mode == "rpc" {
+		err = acd.CreateRpc(&db)
+		if err != nil {
+			log.Printf("CreateRpc err is %v\n", err)
+			return
+		}
+
+		err = acd.CreateRpcLogic(&db)
+		if err != nil {
+			log.Printf("CreateRpcLogic err is %v\n", err)
+			return
+		}
 	}
+
 	err = acd.CreateWeb(&db)
 	if err != nil {
 		log.Printf("CreateRpcLogic err is %v\n", err)
