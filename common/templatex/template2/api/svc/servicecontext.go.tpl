@@ -3,7 +3,7 @@ package svc
 import (
 	"{{.ParentPkg}}/api/internal/config"
 	"{{.ParentPkg}}/model"
-
+	"gorm.io/driver/{{.DriverName}}"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/syncx"
@@ -40,7 +40,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			logx.Errorf("配置数据库打印日志错误: %v", err)
 		}
 	}
-	dbCache:=cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("dc"), nil),
+	dbCache:=cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("dc"), nil)
 	return &ServiceContext{
 		Config:   c,
 		Cache:    dbCache,
