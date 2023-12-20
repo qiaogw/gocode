@@ -30,9 +30,10 @@ func GormMysql() (*gorm.DB, error) {
 		SkipInitializeWithVersion: false,             // 根据版本自动配置
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		DisableForeignKeyConstraintWhenMigrating: true,
+		Logger:                                   logger.Default.LogMode(logger.Silent),
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   dbConf.TablePrefix,   // 表名前缀，`Article` 的表名应该是 `it_articles`
+			//TablePrefix:   dbConf.TablePrefix,   // 表名前缀，`Article` 的表名应该是 `it_articles`
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {
@@ -54,9 +55,10 @@ func GormPgSql() (*gorm.DB, error) {
 		PreferSimpleProtocol: false,
 	}
 	if db, err := gorm.Open(postgres.New(pgsqlConfig), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		DisableForeignKeyConstraintWhenMigrating: true,
+		Logger:                                   logger.Default.LogMode(logger.Silent),
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   dbConf.TablePrefix,   // 表名前缀，`Article` 的表名应该是 `it_articles`
+			//TablePrefix:   dbConf.TablePrefix,   // 表名前缀，`Article` 的表名应该是 `it_articles`
 			SingularTable: dbConf.SingularTable, // 使用单数表名，启用该选项，此时，`Article` 的表名应该是 `it_article`
 		},
 	}); err != nil {

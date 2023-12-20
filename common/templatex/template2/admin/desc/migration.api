@@ -1,0 +1,57 @@
+type (
+    //GetAdminMigrationRequest 提取-版本
+    GetAdminMigrationRequest {
+                Id string `json:"id"`
+    }
+
+    //GetAdminMigrationResponse 提取-版本
+    GetAdminMigrationResponse {
+            Id string `json:"id"`
+            Version string `json:"version"`
+    }
+
+    //ListAdminMigrationRequest 列表-版本-
+    ListAdminMigrationRequest {
+        
+            Version string `json:"version,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListAdminMigrationResponse 列表-版本
+    ListAdminMigrationResponse {
+        Count int64 `json:"count"`
+        List []GetAdminMigrationResponse `json:"list"`
+    }
+
+    //CreateAdminMigrationRequest 创建-版本
+    CreateAdminMigrationRequest {
+            
+                Version string `json:"version"`
+    }
+
+    //CreateAdminMigrationResponse 创建-版本
+    CreateAdminMigrationResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateAdminMigrationRequest 修改-版本
+    UpdateAdminMigrationRequest {
+           Id string `json:"id,default={nextval('admin_migration_id_seq'::regclass) true}"`
+           Version string `json:"version"`
+    }
+
+    // UpdateAdminMigrationResponse 修改-版本
+    UpdateAdminMigrationResponse {}
+
+    //DeleteAdminMigrationRequest 删除-版本
+    DeleteAdminMigrationRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteAdminMigrationResponse 删除-版本
+    DeleteAdminMigrationResponse {}
+)

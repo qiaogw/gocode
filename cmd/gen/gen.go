@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/global"
+	"github.com/qiaogw/gocode/schema"
 	"github.com/qiaogw/gocode/setting"
 	utils2 "github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
+	"os"
+	"path/filepath"
 )
 
 var (
@@ -56,7 +59,12 @@ func run() error {
 	genApp.Mode = "rpc"
 	if modeGen == "api" {
 		genApp.Mode = "api"
+		schema.NewAdmin(global.GenDB)
+		p, _ := os.Getwd()
+		global.GenConfig.AutoCode.Pkg = "sub-admin"
+		global.GenConfig.AutoCode.Root = filepath.Join(p, global.GenConfig.AutoCode.Pkg)
 	}
+
 	//genApp.Mode = "api"
 	_, _, err := genApp.Code(m)
 	return err

@@ -1,0 +1,28 @@
+[
+  {
+    "active_color": null,
+    "avatar": null,
+    "base_color": null,
+    "create_by": "1",
+    "created_at": "2023-11-25 12:41:38",
+    "deleted_at": null,
+    "dept_id": "71e9835d-9a95-43d1-acc1-b4b2e9143a9f",
+    "email": null,
+    "gender": null,
+    "id": "71e9835d-9a95-43d1-acc1-b4b2e9143a9f",
+    "mobile": "189193",
+    "nick_name": "管理员",
+    "password": "bffaf142d6ed2b2871ad6f4c69462cdb6059ab3b8ef9d5ac2ce46fb4b6d364ec",
+    "post_id": "71e9835d-9a95-43d1-acc1-b4b2e9143a9f",
+    "real_name": null,
+    "remark": null,
+    "role_id": "71e9835d-9a95-43d1-acc1-b4b2e9143a9f",
+    "side_mode": null,
+    "sort": 20,
+    "status": "true",
+    "update_by": "1",
+    "updated_at": "2023-11-25 12:41:48",
+    "username": "admin",
+    "uuid": "1"
+  }
+]

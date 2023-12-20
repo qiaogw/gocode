@@ -132,9 +132,6 @@ func queryTableData(db *sql.DB, tableName string) (interface{}, error) {
 			} else {
 				v = val
 				getType := reflect.TypeOf(val)
-				fmt.Println(col)
-				fmt.Println(col, " 类型:", getType)
-
 				if getType != nil && getType.String() == "time.Time" {
 					v = val.(time.Time).Format("2006-01-02 15:04:05")
 				}
@@ -199,12 +196,6 @@ func RestoreData(backupFolder string) error {
 				log.Printf("表  %s 数据导入错误: %v\n", tableName, err)
 				continue
 			}
-			//for _, data := range jsonData {
-			//	if err := insertDataIntoTable(db, tableName, dbConf.DbType, data); err != nil {
-			//		log.Printf("表  %s 数据导入错误: %v", tableName, err)
-			//		continue
-			//	}
-			//}
 
 			log.Println(utils2.Green(fmt.Sprintf("数据从 %s 恢复到表 %s", fileName, tableName)))
 			if dbConf.DbType == "postgres" {

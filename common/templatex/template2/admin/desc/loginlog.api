@@ -1,0 +1,93 @@
+type (
+    //GetLoginLogRequest 提取-登录日志
+    GetLoginLogRequest {
+                Id string `json:"id"`
+    }
+
+    //GetLoginLogResponse 提取-登录日志
+    GetLoginLogResponse {
+            Id string `json:"id"`
+            Username string `json:"username"`
+            Status string `json:"status"`
+            Ipaddr string `json:"ipaddr"`
+            LoginLocation string `json:"loginLocation"`
+            Browser string `json:"browser"`
+            Os string `json:"os"`
+            Platform string `json:"platform"`
+            LoginTime string `json:"loginTime"`
+            Remark string `json:"remark"`
+            Msg string `json:"msg"`
+    }
+
+    //ListLoginLogRequest 列表-登录日志-
+    ListLoginLogRequest {
+        
+            Username string `json:"username,optional"`
+            Status string `json:"status,optional"`
+            Ipaddr string `json:"ipaddr,optional"`
+            LoginLocation string `json:"loginLocation,optional"`
+            Browser string `json:"browser,optional"`
+            Os string `json:"os,optional"`
+            Platform string `json:"platform,optional"`
+            LoginTime string `json:"loginTime,optional"`
+            Remark string `json:"remark,optional"`
+            Msg string `json:"msg,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListLoginLogResponse 列表-登录日志
+    ListLoginLogResponse {
+        Count int64 `json:"count"`
+        List []GetLoginLogResponse `json:"list"`
+    }
+
+    //CreateLoginLogRequest 创建-登录日志
+    CreateLoginLogRequest {
+            
+                Username string `json:"username,optional"`
+                Status string `json:"status,optional"`
+                Ipaddr string `json:"ipaddr,optional"`
+                LoginLocation string `json:"loginLocation,optional"`
+                Browser string `json:"browser,optional"`
+                Os string `json:"os,optional"`
+                Platform string `json:"platform,optional"`
+                LoginTime string `json:"loginTime,optional"`
+                Remark string `json:"remark,optional"`
+                Msg string `json:"msg,optional"`
+    }
+
+    //CreateLoginLogResponse 创建-登录日志
+    CreateLoginLogResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateLoginLogRequest 修改-登录日志
+    UpdateLoginLogRequest {
+           Id string `json:"id,default={nextval('admin_login_log_id_seq'::regclass) true}"`
+           Username string `json:"username,optional"`
+           Status string `json:"status,optional"`
+           Ipaddr string `json:"ipaddr,optional"`
+           LoginLocation string `json:"loginLocation,optional"`
+           Browser string `json:"browser,optional"`
+           Os string `json:"os,optional"`
+           Platform string `json:"platform,optional"`
+           LoginTime string `json:"loginTime,optional"`
+           Remark string `json:"remark,optional"`
+           Msg string `json:"msg,optional"`
+    }
+
+    // UpdateLoginLogResponse 修改-登录日志
+    UpdateLoginLogResponse {}
+
+    //DeleteLoginLogRequest 删除-登录日志
+    DeleteLoginLogRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteLoginLogResponse 删除-登录日志
+    DeleteLoginLogResponse {}
+)

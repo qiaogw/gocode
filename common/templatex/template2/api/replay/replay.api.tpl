@@ -7,9 +7,11 @@ type CommonResponse {
 
 //导入请求
 type ImportRequest {
-UpFile interface{} `json:"upFile"`
+    UpFile interface{} `json:"upFile"`
 }
-
+type ExportResponse {
+    Byte []byte `json:"byte"`
+}
 // 空请求
 type NullRequest {}
 

@@ -1,0 +1,81 @@
+type (
+    //GetAdminDeptRequest 提取-部门
+    GetAdminDeptRequest {
+                Id string `json:"id"`
+    }
+
+    //GetAdminDeptResponse 提取-部门
+    GetAdminDeptResponse {
+            Id string `json:"id"`
+            ParentId string `json:"parentId"`
+            Name string `json:"name"`
+            Sort int64 `json:"sort"`
+            Leader string `json:"leader"`
+            Phone string `json:"phone"`
+            Email string `json:"email"`
+            Enabled bool `json:"enabled"`
+    }
+
+    //ListAdminDeptRequest 列表-部门-
+    ListAdminDeptRequest {
+        
+            ParentId string `json:"parentId,optional"`
+            Name string `json:"name,optional"`
+            Sort int64 `json:"sort,optional"`
+            Leader string `json:"leader,optional"`
+            Phone string `json:"phone,optional"`
+            Email string `json:"email,optional"`
+            Enabled bool `json:"enabled,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListAdminDeptResponse 列表-部门
+    ListAdminDeptResponse {
+        Count int64 `json:"count"`
+        List []GetAdminDeptResponse `json:"list"`
+    }
+
+    //CreateAdminDeptRequest 创建-部门
+    CreateAdminDeptRequest {
+            
+                ParentId string `json:"parentId,optional"`
+                Name string `json:"name"`
+                Sort int64 `json:"sort,default=20"`
+                Leader string `json:"leader,optional"`
+                Phone string `json:"phone,optional"`
+                Email string `json:"email,optional"`
+                Enabled bool `json:"enabled"`
+    }
+
+    //CreateAdminDeptResponse 创建-部门
+    CreateAdminDeptResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateAdminDeptRequest 修改-部门
+    UpdateAdminDeptRequest {
+           Id string `json:"id,default={nextval('admin_dept_id_seq'::regclass) true}"`
+           ParentId string `json:"parentId,optional"`
+           Name string `json:"name"`
+           Sort int64 `json:"sort,default=20"`
+           Leader string `json:"leader,optional"`
+           Phone string `json:"phone,optional"`
+           Email string `json:"email,optional"`
+           Enabled bool `json:"enabled"`
+    }
+
+    // UpdateAdminDeptResponse 修改-部门
+    UpdateAdminDeptResponse {}
+
+    //DeleteAdminDeptRequest 删除-部门
+    DeleteAdminDeptRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteAdminDeptResponse 删除-部门
+    DeleteAdminDeptResponse {}
+)

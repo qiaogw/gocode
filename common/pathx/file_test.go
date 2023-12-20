@@ -1,6 +1,7 @@
 package pathx
 
 import (
+	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"io/ioutil"
 	"os"
@@ -104,4 +105,22 @@ func TestGetGoctlHome(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, dir, home)
 	})
+}
+func TestRenameFilesWithPrefixAndSuffix(t *testing.T) {
+
+	wd, err := os.Getwd()
+	if err != nil {
+		assert.NoError(t, err)
+	}
+	parentDir := filepath.Dir(wd)
+	fmt.Println("Parent directory:", parentDir)
+	homeDir := filepath.Join(parentDir, "templatex", "template2", "admin", "logic")
+
+	prefix := "admin"
+	suffix := ""
+	err = RenameFilesWithPrefixAndSuffix(homeDir, prefix, suffix)
+	if err != nil {
+		assert.NoError(t, err)
+	}
+
 }

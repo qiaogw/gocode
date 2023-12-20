@@ -1,0 +1,73 @@
+type (
+    //GetAdminApiRequest 提取-api
+    GetAdminApiRequest {
+                Id string `json:"id"`
+    }
+
+    //GetAdminApiResponse 提取-api
+    GetAdminApiResponse {
+            Id string `json:"id"`
+            Title string `json:"title"`
+            Path string `json:"path"`
+            Method string `json:"method"`
+            Module string `json:"module"`
+            Remark string `json:"remark"`
+    }
+
+    //ListAdminApiRequest 列表-api-
+    ListAdminApiRequest {
+        
+            Title string `json:"title,optional"`
+            Path string `json:"path,optional"`
+            Method string `json:"method,optional"`
+            Module string `json:"module,optional"`
+            Remark string `json:"remark,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListAdminApiResponse 列表-api
+    ListAdminApiResponse {
+        Count int64 `json:"count"`
+        List []GetAdminApiResponse `json:"list"`
+    }
+
+    //CreateAdminApiRequest 创建-api
+    CreateAdminApiRequest {
+            
+                Title string `json:"title"`
+                Path string `json:"path"`
+                Method string `json:"method"`
+                Module string `json:"module"`
+                Remark string `json:"remark,optional"`
+    }
+
+    //CreateAdminApiResponse 创建-api
+    CreateAdminApiResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateAdminApiRequest 修改-api
+    UpdateAdminApiRequest {
+           Id string `json:"id,default={nextval('admin_api_id_seq'::regclass) true}"`
+           Title string `json:"title"`
+           Path string `json:"path"`
+           Method string `json:"method"`
+           Module string `json:"module"`
+           Remark string `json:"remark,optional"`
+    }
+
+    // UpdateAdminApiResponse 修改-api
+    UpdateAdminApiResponse {}
+
+    //DeleteAdminApiRequest 删除-api
+    DeleteAdminApiRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteAdminApiResponse 删除-api
+    DeleteAdminApiResponse {}
+)

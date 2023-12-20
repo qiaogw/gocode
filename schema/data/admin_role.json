@@ -1,0 +1,34 @@
+[
+  {
+    "code": "admin",
+    "create_by": "",
+    "created_at": "2023-11-24 22:47:07",
+    "data_filter": "sub",
+    "data_scope": "",
+    "default_route": "",
+    "deleted_at": null,
+    "id": "71e9835d-9a95-43d1-acc1-b4b2e9143a9f",
+    "is_admin": false,
+    "name": "管理员",
+    "remark": "管理员",
+    "sort": 1,
+    "update_by": "",
+    "updated_at": "2023-11-26 16:56:15"
+  },
+  {
+    "code": "drugUser",
+    "create_by": "",
+    "created_at": "2023-11-26 17:17:24",
+    "data_filter": "",
+    "data_scope": "",
+    "default_route": "",
+    "deleted_at": null,
+    "id": "2f4b3958-8b6c-4dd5-b16c-cb5cb6085e2b",
+    "is_admin": false,
+    "name": "drug业务用户",
+    "remark": "drug业务用户",
+    "sort": 2,
+    "update_by": "",
+    "updated_at": "2023-11-26 23:57:31"
+  }
+]

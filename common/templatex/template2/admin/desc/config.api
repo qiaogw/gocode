@@ -1,0 +1,77 @@
+type (
+    //GetAdminConfigRequest 提取-系统配置
+    GetAdminConfigRequest {
+                Id string `json:"id"`
+    }
+
+    //GetAdminConfigResponse 提取-系统配置
+    GetAdminConfigResponse {
+            Id string `json:"id"`
+            ConfigName string `json:"configName"`
+            ConfigKey string `json:"configKey"`
+            ConfigValue string `json:"configValue"`
+            ConfigType string `json:"configType"`
+            IsFrontend string `json:"isFrontend"`
+            Remark string `json:"remark"`
+    }
+
+    //ListAdminConfigRequest 列表-系统配置-
+    ListAdminConfigRequest {
+        
+            ConfigName string `json:"configName,optional"`
+            ConfigKey string `json:"configKey,optional"`
+            ConfigValue string `json:"configValue,optional"`
+            ConfigType string `json:"configType,optional"`
+            IsFrontend string `json:"isFrontend,optional"`
+            Remark string `json:"remark,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListAdminConfigResponse 列表-系统配置
+    ListAdminConfigResponse {
+        Count int64 `json:"count"`
+        List []GetAdminConfigResponse `json:"list"`
+    }
+
+    //CreateAdminConfigRequest 创建-系统配置
+    CreateAdminConfigRequest {
+            
+                ConfigName string `json:"configName,optional"`
+                ConfigKey string `json:"configKey,optional"`
+                ConfigValue string `json:"configValue,optional"`
+                ConfigType string `json:"configType,optional"`
+                IsFrontend string `json:"isFrontend,optional"`
+                Remark string `json:"remark,optional"`
+    }
+
+    //CreateAdminConfigResponse 创建-系统配置
+    CreateAdminConfigResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateAdminConfigRequest 修改-系统配置
+    UpdateAdminConfigRequest {
+           Id string `json:"id,default={nextval('admin_config_id_seq'::regclass) true}"`
+           ConfigName string `json:"configName,optional"`
+           ConfigKey string `json:"configKey,optional"`
+           ConfigValue string `json:"configValue,optional"`
+           ConfigType string `json:"configType,optional"`
+           IsFrontend string `json:"isFrontend,optional"`
+           Remark string `json:"remark,optional"`
+    }
+
+    // UpdateAdminConfigResponse 修改-系统配置
+    UpdateAdminConfigResponse {}
+
+    //DeleteAdminConfigRequest 删除-系统配置
+    DeleteAdminConfigRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteAdminConfigResponse 删除-系统配置
+    DeleteAdminConfigResponse {}
+)

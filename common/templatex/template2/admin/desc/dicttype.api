@@ -1,0 +1,70 @@
+type (
+    //GetAdminDictTypeRequest 提取-字典
+    GetAdminDictTypeRequest {
+        Id string `json:"id"`
+    }
+
+        //GetAdminDictTypeResponse 提取-字典
+    GetAdminDictTypeResponse {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Enabled bool `json:"enabled"`
+        Remark string `json:"remark"`
+    }
+
+        //ListAdminDictTypeRequest 列表-字典-
+    ListAdminDictTypeRequest {
+        Name string `json:"name,optional"`
+        Type string `json:"type,optional"`
+        Enabled bool `json:"enabled,optional"`
+        Remark string `json:"remark,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //ListAdminDictTypeResponse 列表-字典
+    ListAdminDictTypeResponse {
+        Count int64 `json:"count"`
+        List []GetAdminDictTypeResponse `json:"list"`
+    }
+
+        //CreateAdminDictTypeRequest 创建-字典
+    CreateAdminDictTypeRequest {
+
+        Name string `json:"name,optional"`
+        Type string `json:"type,optional"`
+        Enabled bool `json:"enabled,optional"`
+        Remark string `json:"remark,optional"`
+    }
+
+        //CreateAdminDictTypeResponse 创建-字典
+    CreateAdminDictTypeResponse {
+        Id string `json:"id"`
+    }
+
+        //UpdateAdminDictTypeRequest 修改-字典
+    UpdateAdminDictTypeRequest {
+        Id string `json:"id,default={nextval('admin_dict_type_id_seq'::regclass) true}"`
+        Name string `json:"name,optional"`
+        Type string `json:"type,optional"`
+        Enabled bool `json:"enabled,optional"`
+        Remark string `json:"remark,optional"`
+    }
+
+        // UpdateAdminDictTypeResponse 修改-字典
+    UpdateAdminDictTypeResponse {
+    }
+
+        //DeleteAdminDictTypeRequest 删除-字典
+    DeleteAdminDictTypeRequest {
+        Id string `json:"id"`
+    }
+
+        //DeleteAdminDictTypeResponse 删除-字典
+    DeleteAdminDictTypeResponse {
+    }
+)

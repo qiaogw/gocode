@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/global"
 	"github.com/qiaogw/gocode/model"
+
 	"github.com/qiaogw/gocode/util"
+
 	"github.com/zeromicro/go-zero/tools/goctl/pkg/golang"
 	"log"
 	"os"
@@ -43,7 +45,7 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 	}
 
 	db.Pkg = pkg
-
+	fmt.Printf("Pkg:%s,ParentPkg:%s,Package:%s\n", db.Pkg, db.ParentPkg, db.Package)
 	db.RpcHost = global.GenConfig.System.RpcHost
 	db.RpcPort = global.GenConfig.System.RpcPort
 	db.ApiHost = global.GenConfig.System.ApiHost
@@ -123,7 +125,18 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		log.Printf("CreateRpcLogic err is %v\n", err)
 		return
 	}
-	err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
+	//err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
+	//if err != nil {
+	//	log.Printf("CreateConfigFile err is %v\n", err)
+	//	return
+	//}
+	if acd.Mode == "api" {
+		err = acd.CreateAdminFile()
+		if err != nil {
+			log.Printf("CreateAdminFile err is %v\n", err)
+			return
+		}
+	}
 	fmt.Println(util.Green("Done!"))
 	return db, tbList, nil
 }

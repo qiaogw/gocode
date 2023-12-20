@@ -1,0 +1,19 @@
+
+type (
+    // 用户登录
+    LoginRequest {
+        Mobile    string `json:"mobile"`
+        Password  string `json:"password"`
+        Captcha   string `json:"captcha"`   // 验证码
+        CaptchaId string `json:"captchaId"` // 验证码ID
+    }
+        // 验证码
+    CaptchaRequest {
+    }
+        // 有效验证
+    VerifyResponse {
+        Token  string `json:"token"`
+        UserId string `json:"userId"`
+        Ok     bool   `json:"ok"`
+    }
+)

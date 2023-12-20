@@ -1,0 +1,125 @@
+type (
+    //GetAdminOperaLogRequest 提取-操作日志
+    GetAdminOperaLogRequest {
+                Id string `json:"id"`
+    }
+
+    //GetAdminOperaLogResponse 提取-操作日志
+    GetAdminOperaLogResponse {
+            Id string `json:"id"`
+            Title string `json:"title"`
+            BusinessType string `json:"businessType"`
+            BusinessTypes string `json:"businessTypes"`
+            Method string `json:"method"`
+            RequestMethod string `json:"requestMethod"`
+            OperatorType string `json:"operatorType"`
+            OperName string `json:"operName"`
+            DeptName string `json:"deptName"`
+            OperUrl string `json:"operUrl"`
+            OperIp string `json:"operIp"`
+            OperLocation string `json:"operLocation"`
+            OperParam string `json:"operParam"`
+            Status string `json:"status"`
+            OperTime string `json:"operTime"`
+            JsonResult string `json:"jsonResult"`
+            Remark string `json:"remark"`
+            LatencyTime string `json:"latencyTime"`
+            UserAgent string `json:"userAgent"`
+    }
+
+    //ListAdminOperaLogRequest 列表-操作日志-
+    ListAdminOperaLogRequest {
+        
+            Title string `json:"title,optional"`
+            BusinessType string `json:"businessType,optional"`
+            BusinessTypes string `json:"businessTypes,optional"`
+            Method string `json:"method,optional"`
+            RequestMethod string `json:"requestMethod,optional"`
+            OperatorType string `json:"operatorType,optional"`
+            OperName string `json:"operName,optional"`
+            DeptName string `json:"deptName,optional"`
+            OperUrl string `json:"operUrl,optional"`
+            OperIp string `json:"operIp,optional"`
+            OperLocation string `json:"operLocation,optional"`
+            OperParam string `json:"operParam,optional"`
+            Status string `json:"status,optional"`
+            OperTime string `json:"operTime,optional"`
+            JsonResult string `json:"jsonResult,optional"`
+            Remark string `json:"remark,optional"`
+            LatencyTime string `json:"latencyTime,optional"`
+            UserAgent string `json:"userAgent,optional"`
+            PageIndex int64 `json:"pageIndex,optional"`
+            PageSize int64 `json:"pageSize,optional"`
+            SearchKey string `json:"searchKey,optional"`
+            SortBY string `json:"sortBy,optional"`
+            Descending bool `json:"descending,optional"`
+    }
+
+    //ListAdminOperaLogResponse 列表-操作日志
+    ListAdminOperaLogResponse {
+        Count int64 `json:"count"`
+        List []GetAdminOperaLogResponse `json:"list"`
+    }
+
+    //CreateAdminOperaLogRequest 创建-操作日志
+    CreateAdminOperaLogRequest {
+            
+                Title string `json:"title,optional"`
+                BusinessType string `json:"businessType,optional"`
+                BusinessTypes string `json:"businessTypes,optional"`
+                Method string `json:"method,optional"`
+                RequestMethod string `json:"requestMethod,optional"`
+                OperatorType string `json:"operatorType,optional"`
+                OperName string `json:"operName,optional"`
+                DeptName string `json:"deptName,optional"`
+                OperUrl string `json:"operUrl,optional"`
+                OperIp string `json:"operIp,optional"`
+                OperLocation string `json:"operLocation,optional"`
+                OperParam string `json:"operParam,optional"`
+                Status string `json:"status,optional"`
+                OperTime string `json:"operTime,optional"`
+                JsonResult string `json:"jsonResult,optional"`
+                Remark string `json:"remark,optional"`
+                LatencyTime string `json:"latencyTime,optional"`
+                UserAgent string `json:"userAgent,optional"`
+    }
+
+    //CreateAdminOperaLogResponse 创建-操作日志
+    CreateAdminOperaLogResponse {
+                Id string `json:"id"`
+    }
+
+    //UpdateAdminOperaLogRequest 修改-操作日志
+    UpdateAdminOperaLogRequest {
+           Id string `json:"id,default={nextval('admin_opera_log_id_seq'::regclass) true}"`
+           Title string `json:"title,optional"`
+           BusinessType string `json:"businessType,optional"`
+           BusinessTypes string `json:"businessTypes,optional"`
+           Method string `json:"method,optional"`
+           RequestMethod string `json:"requestMethod,optional"`
+           OperatorType string `json:"operatorType,optional"`
+           OperName string `json:"operName,optional"`
+           DeptName string `json:"deptName,optional"`
+           OperUrl string `json:"operUrl,optional"`
+           OperIp string `json:"operIp,optional"`
+           OperLocation string `json:"operLocation,optional"`
+           OperParam string `json:"operParam,optional"`
+           Status string `json:"status,optional"`
+           OperTime string `json:"operTime,optional"`
+           JsonResult string `json:"jsonResult,optional"`
+           Remark string `json:"remark,optional"`
+           LatencyTime string `json:"latencyTime,optional"`
+           UserAgent string `json:"userAgent,optional"`
+    }
+
+    // UpdateAdminOperaLogResponse 修改-操作日志
+    UpdateAdminOperaLogResponse {}
+
+    //DeleteAdminOperaLogRequest 删除-操作日志
+    DeleteAdminOperaLogRequest {
+                Id string `json:"id"`
+    }
+
+    //DeleteAdminOperaLogResponse 删除-操作日志
+    DeleteAdminOperaLogResponse {}
+)
