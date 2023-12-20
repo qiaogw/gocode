@@ -23,6 +23,9 @@ Auth:
   AccessSecret: {{.Option.Auth.AccessSecret}}
   AccessExpire: {{.Option.Auth.AccessExpire}}
   Issuer: {{.Option.Auth.Issuer}}
+  ResetPassword: "sub-123"
+
+Salt: sub-admin-88732
 
 Captcha:
   ImgHeight: 4

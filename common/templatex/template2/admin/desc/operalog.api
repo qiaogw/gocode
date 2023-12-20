@@ -1,11 +1,11 @@
 type (
-    //GetAdminOperaLogRequest 提取-操作日志
-    GetAdminOperaLogRequest {
+    //AdminGetOperaLogRequest 提取-操作日志
+    AdminGetOperaLogRequest {
                 Id string `json:"id"`
     }
 
-    //GetAdminOperaLogResponse 提取-操作日志
-    GetAdminOperaLogResponse {
+    //AdminGetOperaLogResponse 提取-操作日志
+    AdminGetOperaLogResponse {
             Id string `json:"id"`
             Title string `json:"title"`
             BusinessType string `json:"businessType"`
@@ -27,8 +27,8 @@ type (
             UserAgent string `json:"userAgent"`
     }
 
-    //ListAdminOperaLogRequest 列表-操作日志-
-    ListAdminOperaLogRequest {
+    //AdminListOperaLogRequest 列表-操作日志-
+    AdminListOperaLogRequest {
         
             Title string `json:"title,optional"`
             BusinessType string `json:"businessType,optional"`
@@ -55,14 +55,14 @@ type (
             Descending bool `json:"descending,optional"`
     }
 
-    //ListAdminOperaLogResponse 列表-操作日志
-    ListAdminOperaLogResponse {
+    //AdminListOperaLogResponse 列表-操作日志
+    AdminListOperaLogResponse {
         Count int64 `json:"count"`
-        List []GetAdminOperaLogResponse `json:"list"`
+        List []AdminGetOperaLogResponse `json:"list"`
     }
 
-    //CreateAdminOperaLogRequest 创建-操作日志
-    CreateAdminOperaLogRequest {
+    //AdminCreateOperaLogRequest 创建-操作日志
+    AdminCreateOperaLogRequest {
             
                 Title string `json:"title,optional"`
                 BusinessType string `json:"businessType,optional"`
@@ -84,13 +84,13 @@ type (
                 UserAgent string `json:"userAgent,optional"`
     }
 
-    //CreateAdminOperaLogResponse 创建-操作日志
-    CreateAdminOperaLogResponse {
+    //AdminCreateOperaLogResponse 创建-操作日志
+    AdminCreateOperaLogResponse {
                 Id string `json:"id"`
     }
 
-    //UpdateAdminOperaLogRequest 修改-操作日志
-    UpdateAdminOperaLogRequest {
+    //AdminUpdateOperaLogRequest 修改-操作日志
+    AdminUpdateOperaLogRequest {
            Id string `json:"id,default={nextval('admin_opera_log_id_seq'::regclass) true}"`
            Title string `json:"title,optional"`
            BusinessType string `json:"businessType,optional"`
@@ -112,14 +112,14 @@ type (
            UserAgent string `json:"userAgent,optional"`
     }
 
-    // UpdateAdminOperaLogResponse 修改-操作日志
-    UpdateAdminOperaLogResponse {}
+    // AdminUpdateOperaLogResponse 修改-操作日志
+    AdminUpdateOperaLogResponse {}
 
-    //DeleteAdminOperaLogRequest 删除-操作日志
-    DeleteAdminOperaLogRequest {
+    //AdminDeleteOperaLogRequest 删除-操作日志
+    AdminDeleteOperaLogRequest {
                 Id string `json:"id"`
     }
 
-    //DeleteAdminOperaLogResponse 删除-操作日志
-    DeleteAdminOperaLogResponse {}
+    //AdminDeleteOperaLogResponse 删除-操作日志
+    AdminDeleteOperaLogResponse {}
 )

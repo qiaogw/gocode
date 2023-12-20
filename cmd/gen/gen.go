@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/global"
-	"github.com/qiaogw/gocode/schema"
 	"github.com/qiaogw/gocode/setting"
 	utils2 "github.com/qiaogw/gocode/util"
 	"github.com/spf13/cobra"
-	"os"
-	"path/filepath"
 )
 
 var (
@@ -18,7 +15,7 @@ var (
 	Cmd        = &cobra.Command{
 		Use:          "gen",
 		Short:        "生成代码",
-		Example:      "gocode gen -p admin -m zero",
+		Example:      "gocode gen -p admin -m rpc",
 		SilenceUsage: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return setup()
@@ -35,7 +32,7 @@ func init() {
 	_ = Cmd.MarkPersistentFlagRequired("package")
 	mode := "rpc"
 	Cmd.PersistentFlags().StringVarP(&modeGen, "mode", "m", mode, "模式(rpc、api)")
-	_ = Cmd.MarkPersistentFlagRequired("mode")
+	//_ = Cmd.MarkPersistentFlagRequired("mode")
 
 }
 
@@ -59,13 +56,7 @@ func run() error {
 	genApp.Mode = "rpc"
 	if modeGen == "api" {
 		genApp.Mode = "api"
-		schema.NewAdmin(global.GenDB)
-		p, _ := os.Getwd()
-		global.GenConfig.AutoCode.Pkg = "sub-admin"
-		global.GenConfig.AutoCode.Root = filepath.Join(p, global.GenConfig.AutoCode.Pkg)
 	}
-
-	//genApp.Mode = "api"
 	_, _, err := genApp.Code(m)
 	return err
 }

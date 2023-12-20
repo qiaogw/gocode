@@ -32,9 +32,9 @@ func (acd *AutoCodeService) CreateAdminFile() (err error) {
 	}
 
 	// 获取 logic 目录
-	src = templatex.GetTplPath(acd.Mode) + "/admin/model"
+	src = templatex.GetTplPath(acd.Mode) + "/admin/adminmodel"
 	// 获取目标目录
-	dstDir = filepath.Join(rPath, modelPath, "admin")
+	dstDir = filepath.Join(rPath, modelPath, "adminmodel")
 	err = pathx.CopyTpl(templateFS, src, dstDir)
 	if err != nil {
 		return fmt.Errorf("复制错误：%v", err)

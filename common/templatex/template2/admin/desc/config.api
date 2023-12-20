@@ -1,11 +1,11 @@
 type (
-    //GetAdminConfigRequest 提取-系统配置
-    GetAdminConfigRequest {
+    //AdminGetConfigRequest 提取-系统配置
+    AdminGetConfigRequest {
                 Id string `json:"id"`
     }
 
-    //GetAdminConfigResponse 提取-系统配置
-    GetAdminConfigResponse {
+    //AdminGetConfigResponse 提取-系统配置
+    AdminGetConfigResponse {
             Id string `json:"id"`
             ConfigName string `json:"configName"`
             ConfigKey string `json:"configKey"`
@@ -15,8 +15,8 @@ type (
             Remark string `json:"remark"`
     }
 
-    //ListAdminConfigRequest 列表-系统配置-
-    ListAdminConfigRequest {
+    //AdminListConfigRequest 列表-系统配置-
+    AdminListConfigRequest {
         
             ConfigName string `json:"configName,optional"`
             ConfigKey string `json:"configKey,optional"`
@@ -31,14 +31,14 @@ type (
             Descending bool `json:"descending,optional"`
     }
 
-    //ListAdminConfigResponse 列表-系统配置
-    ListAdminConfigResponse {
+    //AdminListConfigResponse 列表-系统配置
+    AdminListConfigResponse {
         Count int64 `json:"count"`
-        List []GetAdminConfigResponse `json:"list"`
+        List []AdminGetConfigResponse `json:"list"`
     }
 
-    //CreateAdminConfigRequest 创建-系统配置
-    CreateAdminConfigRequest {
+    //AdminCreateConfigRequest 创建-系统配置
+    AdminCreateConfigRequest {
             
                 ConfigName string `json:"configName,optional"`
                 ConfigKey string `json:"configKey,optional"`
@@ -48,13 +48,13 @@ type (
                 Remark string `json:"remark,optional"`
     }
 
-    //CreateAdminConfigResponse 创建-系统配置
-    CreateAdminConfigResponse {
+    //AdminCreateConfigResponse 创建-系统配置
+    AdminCreateConfigResponse {
                 Id string `json:"id"`
     }
 
-    //UpdateAdminConfigRequest 修改-系统配置
-    UpdateAdminConfigRequest {
+    //AdminUpdateConfigRequest 修改-系统配置
+    AdminUpdateConfigRequest {
            Id string `json:"id,default={nextval('admin_config_id_seq'::regclass) true}"`
            ConfigName string `json:"configName,optional"`
            ConfigKey string `json:"configKey,optional"`
@@ -64,14 +64,14 @@ type (
            Remark string `json:"remark,optional"`
     }
 
-    // UpdateAdminConfigResponse 修改-系统配置
-    UpdateAdminConfigResponse {}
+    // AdminUpdateConfigResponse 修改-系统配置
+    AdminUpdateConfigResponse {}
 
-    //DeleteAdminConfigRequest 删除-系统配置
-    DeleteAdminConfigRequest {
+    //AdminDeleteConfigRequest 删除-系统配置
+    AdminDeleteConfigRequest {
                 Id string `json:"id"`
     }
 
-    //DeleteAdminConfigResponse 删除-系统配置
-    DeleteAdminConfigResponse {}
+    //AdminDeleteConfigResponse 删除-系统配置
+    AdminDeleteConfigResponse {}
 )

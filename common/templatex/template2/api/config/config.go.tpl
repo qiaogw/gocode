@@ -1,7 +1,7 @@
 package config
 
 import (
-    "github.com/zeromicro/go-zero/zrpc"
+
     "github.com/zeromicro/go-zero/core/stores/cache"
     "github.com/zeromicro/go-zero/rest"
 )
@@ -11,6 +11,8 @@ type Config struct {
     Auth struct {
         AccessSecret string
         AccessExpire int64
+        Issuer        string
+		ResetPassword string
     }
     DbConf struct {
 		Driver   string
@@ -23,9 +25,7 @@ type Config struct {
 		Config   string `json:"config,optional"`
 	}
     CacheRedis cache.ClusterConf
-
-    {{.Service}}Rpc zrpc.RpcClientConf
-
+	Salt    string
     Captcha  struct {
 		KeyLong   int // 验证码长度
 		ImgWidth  int // 验证码宽度

@@ -1,20 +1,21 @@
 type (
-    //GetAdminDictTypeRequest 提取-字典
-    GetAdminDictTypeRequest {
+    //AdminGetDictTypeRequest 提取-字典
+    AdminGetDictTypeRequest {
         Id string `json:"id"`
     }
 
-        //GetAdminDictTypeResponse 提取-字典
-    GetAdminDictTypeResponse {
+        //AdminGetDictTypeResponse 提取-字典
+    AdminGetDictTypeResponse {
         Id string `json:"id"`
-        Name string `json:"name"`
-        Type string `json:"type"`
-        Enabled bool `json:"enabled"`
-        Remark string `json:"remark"`
+        Name string `json:"name,omitempty"`
+        Type string `json:"type,omitempty"`
+        Enabled bool `json:"enabled,omitempty"`
+        Remark string `json:"remark,omitempty"`
+        DictDatas []*AdminGetDictDataResponse `json:"dictDatas,omitempty"`
     }
 
-        //ListAdminDictTypeRequest 列表-字典-
-    ListAdminDictTypeRequest {
+        //AdminListDictTypeRequest 列表-字典-
+    AdminListDictTypeRequest {
         Name string `json:"name,optional"`
         Type string `json:"type,optional"`
         Enabled bool `json:"enabled,optional"`
@@ -26,14 +27,14 @@ type (
         Descending bool `json:"descending,optional"`
     }
 
-        //ListAdminDictTypeResponse 列表-字典
-    ListAdminDictTypeResponse {
+        //AdminListDictTypeResponse 列表-字典
+    AdminListDictTypeResponse {
         Count int64 `json:"count"`
-        List []GetAdminDictTypeResponse `json:"list"`
+        List []AdminGetDictTypeResponse `json:"list"`
     }
 
-        //CreateAdminDictTypeRequest 创建-字典
-    CreateAdminDictTypeRequest {
+        //AdminCreateDictTypeRequest 创建-字典
+    AdminCreateDictTypeRequest {
 
         Name string `json:"name,optional"`
         Type string `json:"type,optional"`
@@ -41,13 +42,13 @@ type (
         Remark string `json:"remark,optional"`
     }
 
-        //CreateAdminDictTypeResponse 创建-字典
-    CreateAdminDictTypeResponse {
+        //AdminCreateDictTypeResponse 创建-字典
+    AdminCreateDictTypeResponse {
         Id string `json:"id"`
     }
 
-        //UpdateAdminDictTypeRequest 修改-字典
-    UpdateAdminDictTypeRequest {
+        //AdminUpdateDictTypeRequest 修改-字典
+    AdminUpdateDictTypeRequest {
         Id string `json:"id,default={nextval('admin_dict_type_id_seq'::regclass) true}"`
         Name string `json:"name,optional"`
         Type string `json:"type,optional"`
@@ -55,16 +56,99 @@ type (
         Remark string `json:"remark,optional"`
     }
 
-        // UpdateAdminDictTypeResponse 修改-字典
-    UpdateAdminDictTypeResponse {
+        // AdminUpdateDictTypeResponse 修改-字典
+    AdminUpdateDictTypeResponse {
     }
 
-        //DeleteAdminDictTypeRequest 删除-字典
-    DeleteAdminDictTypeRequest {
+        //AdminDeleteDictTypeRequest 删除-字典
+    AdminDeleteDictTypeRequest {
         Id string `json:"id"`
     }
 
-        //DeleteAdminDictTypeResponse 删除-字典
-    DeleteAdminDictTypeResponse {
+        //AdminDeleteDictTypeResponse 删除-字典
+    AdminDeleteDictTypeResponse {
     }
+)
+
+type (
+    //AdminGetDictDataRequest 提取-字典数据
+    AdminGetDictDataRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetDictDataResponse 提取-字典数据
+    AdminGetDictDataResponse {
+        Id string `json:"id"`
+        DictTypeId string `json:"dictTypeId"`
+        Sort int64 `json:"sort"`
+        Label string `json:"label"`
+        Value string `json:"value"`
+        IsDefault bool `json:"isDefault"`
+        Enabled bool `json:"enabled"`
+        Remark string `json:"remark"`
+        DictType *AdminGetDictTypeResponse `json:"dictType"`
+    }
+
+        //AdminListDictDataRequest 列表-字典数据-
+    AdminListDictDataRequest {
+
+        DictTypeId string `json:"dictTypeId,optional"`
+        Sort int64 `json:"sort,optional"`
+        Label string `json:"label,optional"`
+        Value string `json:"value,optional"`
+        IsDefault bool `json:"isDefault,optional"`
+        Enabled bool `json:"enabled,optional"`
+        Remark string `json:"remark,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListDictDataResponse 列表-字典数据
+    AdminListDictDataResponse {
+        Count int64 `json:"count"`
+        List []AdminGetDictDataResponse `json:"list"`
+    }
+
+        //AdminCreateDictDataRequest 创建-字典数据
+    AdminCreateDictDataRequest {
+
+        DictTypeId string `json:"dictTypeId,optional"`
+        Sort int64 `json:"sort"`
+        Label string `json:"label"`
+        Value string `json:"value"`
+        IsDefault bool `json:"isDefault,optional"`
+        Enabled bool `json:"enabled"`
+        Remark string `json:"remark,optional"`
+    }
+
+        //AdminCreateDictDataResponse 创建-字典数据
+    AdminCreateDictDataResponse {
+        Id string `json:"id"`
+    }
+
+        //AdminUpdateDictDataRequest 修改-字典数据
+    AdminUpdateDictDataRequest {
+        Id string `json:"id,default={nextval('admin_dict_data_id_seq'::regclass) true}"`
+        DictTypeId string `json:"dictTypeId,optional"`
+        Sort int64 `json:"sort"`
+        Label string `json:"label"`
+        Value string `json:"value"`
+        IsDefault bool `json:"isDefault,optional"`
+        Enabled bool `json:"enabled"`
+        Remark string `json:"remark,optional"`
+    }
+
+        // AdminUpdateDictDataResponse 修改-字典数据
+    AdminUpdateDictDataResponse {}
+
+        //AdminDeleteDictDataRequest 删除-字典数据
+    AdminDeleteDictDataRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeleteDictDataResponse 删除-字典数据
+    AdminDeleteDictDataResponse {}
 )

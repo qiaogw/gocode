@@ -1,29 +1,34 @@
 type (
-    //GetAdminUserRequest 提取-用户
-    GetAdminUserRequest {
+    //AdminGetUserRequest 提取-用户
+    AdminGetUserRequest {
                 Id string `json:"id"`
     }
 
-    //GetAdminUserResponse 提取-用户
-    GetAdminUserResponse {
+    //AdminGetUserResponse 提取-用户
+    AdminGetUserResponse {
             Id string `json:"id"`
-            DeptId string `json:"deptId"`
-            PostId string `json:"postId"`
-            Uuid string `json:"uuid"`
-            Username string `json:"username"`
-            Password string `json:"password"`
-            NickName string `json:"nickName"`
-            Mobile string `json:"mobile"`
-            Avatar string `json:"avatar"`
-            Gender string `json:"gender"`
-            Email string `json:"email"`
-            Sort int64 `json:"sort"`
-            Remark string `json:"remark"`
-            Status string `json:"status"`
+            DeptId string `json:"deptId,omitempty"`
+            PostId string `json:"postId,omitempty"`
+            Uuid string `json:"uuid,omitempty"`
+            Username string `json:"username,omitempty"`
+            Password string `json:"password,omitempty"`
+            NickName string `json:"nickName,omitempty"`
+            Mobile string `json:"mobile,omitempty"`
+            Avatar string `json:"avatar,omitempty"`
+            Gender string `json:"gender,omitempty"`
+            Email string `json:"email,omitempty"`
+            Sort int64 `json:"sort,omitempty"`
+            Remark string `json:"remark,omitempty"`
+            Status string `json:"status,omitempty"`
+            roles []*AdminGetPostResponse `json:"roles,omitempty"`
+            Dept *AdminGetDeptResponse `json:"dept,omitempty"`
+            Post *AdminGetPostResponse `json:"post,omitempty"`
+            Role *AdminGetRoleResponse `json:"role,omitempty"`
+            ParentId string `json:"parentId,omitempty"`
     }
 
-    //ListAdminUserRequest 列表-用户-
-    ListAdminUserRequest {
+    //AdminListUserRequest 列表-用户-
+    AdminListUserRequest {
         
             DeptId string `json:"deptId,optional"`
             PostId string `json:"postId,optional"`
@@ -45,14 +50,14 @@ type (
             Descending bool `json:"descending,optional"`
     }
 
-    //ListAdminUserResponse 列表-用户
-    ListAdminUserResponse {
+    //AdminListUserResponse 列表-用户
+    AdminListUserResponse {
         Count int64 `json:"count"`
-        List []GetAdminUserResponse `json:"list"`
+        List []AdminGetUserResponse `json:"list"`
     }
 
-    //CreateAdminUserRequest 创建-用户
-    CreateAdminUserRequest {
+    //AdminCreateUserRequest 创建-用户
+    AdminCreateUserRequest {
                 DeptId string `json:"deptId,optional"`
                 PostId string `json:"postId,optional"`
                 Uuid string `json:"uuid,optional"`
@@ -66,17 +71,17 @@ type (
                 Sort int64 `json:"sort,default=20"`
                 Remark string `json:"remark,optional"`
                 Status string `json:"status,optional"`
-                roles []UpdateAdminRoleRequest `json:"roles,optional"`
+                roles []AdminUpdateRoleRequest `json:"roles,optional"`
                 roleId string `json:"roleId,optional"`
     }
 
-    //CreateAdminUserResponse 创建-用户
-    CreateAdminUserResponse {
+    //AdminCreateUserResponse 创建-用户
+    AdminCreateUserResponse {
                 Id string `json:"id"`
     }
 
-    //UpdateAdminUserRequest 修改-用户
-    UpdateAdminUserRequest {
+    //AdminUpdateUserRequest 修改-用户
+    AdminUpdateUserRequest {
            Id string `json:"id,default={nextval('admin_user_id_seq'::regclass) true}"`
            DeptId string `json:"deptId,optional"`
            PostId string `json:"postId,optional"`
@@ -91,20 +96,20 @@ type (
            Sort int64 `json:"sort,default=20"`
            Remark string `json:"remark,optional"`
            Status string `json:"status,optional"`
-           roles []UpdateAdminRoleRequest `json:"roles,optional"`
+           roles []AdminUpdateRoleRequest `json:"roles,optional"`
            roleId string `json:"roleId,optional"`
     }
 
-    // UpdateAdminUserResponse 修改-用户
-    UpdateAdminUserResponse {}
+    // AdminUpdateUserResponse 修改-用户
+    AdminUpdateUserResponse {}
 
-    //DeleteAdminUserRequest 删除-用户
-    DeleteAdminUserRequest {
+    //AdminDeleteUserRequest 删除-用户
+    AdminDeleteUserRequest {
                 Id string `json:"id"`
     }
 
-    //DeleteAdminUserResponse 删除-用户
-    DeleteAdminUserResponse {}
+    //AdminDeleteUserResponse 删除-用户
+    AdminDeleteUserResponse {}
 
         //GetmeRequest 获取自己
    GetmeAdminRequest {}
@@ -116,7 +121,7 @@ type (
     }
 
     ResetPasswordRequest {
-        Ids []GetAdminUserRequest `json:"ids"`
+        Ids []AdminGetUserRequest `json:"ids"`
     }
 
     SetMeAdminRoleRequest{
@@ -131,8 +136,8 @@ type (
         SortBY string `json:"sortBy,optional"`
         Descending bool `json:"descending,optional"`
     }
-        //UpdateAdminRoleRequest 修改-角色
-    UpdateAdminRoleRequest {
+        //AdminUpdateRoleRequest 修改-角色
+    AdminUpdateRoleRequest {
         Id string `json:"id"`
         Name string `json:"name"`
         Code string `json:"code"`
@@ -142,5 +147,454 @@ type (
         DefaultRoute string `json:"defaultRoute,optional"`
         Remark string `json:"remark,optional"`
         DataFilter string `json:"dataFilter,optional"`
+    }
+)
+
+type (
+    //AdminGetDeptRequest 提取-部门
+    AdminGetDeptRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetDeptResponse 提取-部门
+    AdminGetDeptResponse {
+        Id string `json:"id"`
+        ParentId string `json:"parentId,omitempty"`
+        Name string `json:"name,omitempty"`
+        Sort int64 `json:"sort,omitempty"`
+        Leader string `json:"leader,omitempty"`
+        Phone string `json:"phone,omitempty"`
+        Email string `json:"email,omitempty"`
+        Enabled bool `json:"enabled,omitempty"`
+    }
+
+        //AdminListDeptRequest 列表-部门-
+    AdminListDeptRequest {
+
+        ParentId string `json:"parentId,optional"`
+        Name string `json:"name,optional"`
+        Sort int64 `json:"sort,optional"`
+        Leader string `json:"leader,optional"`
+        Phone string `json:"phone,optional"`
+        Email string `json:"email,optional"`
+        Enabled bool `json:"enabled,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListDeptResponse 列表-部门
+    AdminListDeptResponse {
+        Count int64 `json:"count"`
+        List []AdminGetDeptResponse `json:"list"`
+    }
+
+        //AdminCreateDeptRequest 创建-部门
+    AdminCreateDeptRequest {
+
+        ParentId string `json:"parentId,optional"`
+        Name string `json:"name"`
+        Sort int64 `json:"sort,default=20"`
+        Leader string `json:"leader,optional"`
+        Phone string `json:"phone,optional"`
+        Email string `json:"email,optional"`
+        Enabled bool `json:"enabled"`
+    }
+
+        //AdminCreateDeptResponse 创建-部门
+    AdminCreateDeptResponse {
+        Id string `json:"id"`
+    }
+
+        //AdminUpdateDeptRequest 修改-部门
+    AdminUpdateDeptRequest {
+        Id string `json:"id,default={nextval('admin_dept_id_seq'::regclass) true}"`
+        ParentId string `json:"parentId,optional"`
+        Name string `json:"name"`
+        Sort int64 `json:"sort,default=20"`
+        Leader string `json:"leader,optional"`
+        Phone string `json:"phone,optional"`
+        Email string `json:"email,optional"`
+        Enabled bool `json:"enabled"`
+    }
+
+        // AdminUpdateDeptResponse 修改-部门
+    AdminUpdateDeptResponse {}
+
+        //AdminDeleteDeptRequest 删除-部门
+    AdminDeleteDeptRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeleteDeptResponse 删除-部门
+    AdminDeleteDeptResponse {}
+)
+
+type (
+    //AdminGetPostRequest 提取-职务
+    AdminGetPostRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetPostResponse 提取-职务
+    AdminGetPostResponse {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Code string `json:"code"`
+        Sort int64 `json:"sort"`
+        Remark string `json:"remark"`
+    }
+
+        //AdminListPostRequest 列表-职务-
+    AdminListPostRequest {
+
+        Name string `json:"name,optional"`
+        Code string `json:"code,optional"`
+        Sort int64 `json:"sort,optional"`
+        Remark string `json:"remark,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListPostResponse 列表-职务
+    AdminListPostResponse {
+        Count int64 `json:"count"`
+        List []AdminGetPostResponse `json:"list"`
+    }
+
+        //AdminCreatePostRequest 创建-职务
+    AdminCreatePostRequest {
+
+        Name string `json:"name"`
+        Code string `json:"code"`
+        Sort int64 `json:"sort,default=20"`
+        Remark string `json:"remark,optional"`
+    }
+
+        //AdminCreatePostResponse 创建-职务
+    AdminCreatePostResponse {
+        Id string `json:"id"`
+    }
+
+        //AdminUpdatePostRequest 修改-职务
+    AdminUpdatePostRequest {
+        Id string `json:"id,default={nextval('admin_post_id_seq'::regclass) true}"`
+        Name string `json:"name"`
+        Code string `json:"code"`
+        Sort int64 `json:"sort,default=20"`
+        Remark string `json:"remark,optional"`
+    }
+
+        // AdminUpdatePostResponse 修改-职务
+    AdminUpdatePostResponse {}
+
+        //AdminDeletePostRequest 删除-职务
+    AdminDeletePostRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeletePostResponse 删除-职务
+    AdminDeletePostResponse {}
+)
+
+type (
+    //AdminGetRoleRequest 提取-角色
+    AdminGetRoleRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetRoleResponse 提取-角色
+    AdminGetRoleResponse {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Code string `json:"code"`
+        Sort int64 `json:"sort"`
+        IsAdmin bool `json:"isAdmin"`
+        DataScope string `json:"dataScope"`
+        DefaultRoute string `json:"defaultRoute"`
+        Remark string `json:"remark"`
+        DataFilter string `json:"dataFilter,omitempty"`
+        Apis    []*AdminGetApiResponse `json:"apis,omitempty"`
+        Menus   []*AdminGetMenuResponse `json:"menus,omitempty"`
+        Users   []*AdminGetUserResponse `json:"users,omitempty"`
+    }
+
+        //AdminListRoleRequest 列表-角色-
+    AdminListRoleRequest {
+
+        Name string `json:"name,optional"`
+        Code string `json:"code,optional"`
+        Sort int64 `json:"sort,optional"`
+        IsAdmin bool `json:"isAdmin,optional"`
+        DataScope string `json:"dataScope,optional"`
+        DefaultRoute string `json:"defaultRoute,optional"`
+        Remark string `json:"remark,optional"`
+        DataFilter string `json:"dataFilter,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListRoleResponse 列表-角色
+    AdminListRoleResponse {
+        Count int64 `json:"count"`
+        List []AdminGetRoleResponse `json:"list"`
+    }
+
+        //AdminCreateRoleRequest 创建-角色
+    AdminCreateRoleRequest {
+
+        Name string `json:"name"`
+        Code string `json:"code"`
+        Sort int64 `json:"sort,default=20"`
+        IsAdmin bool `json:"isAdmin,optional"`
+        DataScope string `json:"dataScope,optional"`
+        DefaultRoute string `json:"defaultRoute,optional"`
+        Remark string `json:"remark,optional"`
+        DataFilter string `json:"dataFilter,optional"`
+    }
+
+        //AdminCreateRoleResponse 创建-角色
+    AdminCreateRoleResponse {
+        Id string `json:"id"`
+    }
+
+
+    UpdateRoleUsersRequest{
+        Id string `json:"id"`
+        Ids []AdminGetRoleRequest `json:"ids"`
+    }
+
+        // AdminUpdateRoleResponse 修改-角色
+    UpdateRoleResponse{
+    }
+
+        //AdminDeleteRoleRequest 删除-角色
+    AdminDeleteRoleRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeleteRoleResponse 删除-角色
+    DeleteRoleResponse{
+    }
+
+        //AdminDeleteRoleRequest 删除-角色
+    SetAdminRoleRequest {
+        Id string `json:"id"`
+        Permission []string `json:"permission"`
+    }
+)
+
+type (
+    //AdminGetMenuRequest 提取-菜单
+    AdminGetMenuRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetMenuResponse 提取-菜单
+    AdminGetMenuResponse {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Title string `json:"title,optional"`
+        Icon string `json:"icon,optional"`
+        Path string `json:"path,omitempty"`
+        Type string `json:"type,omitempty"`
+        Component string `json:"component,omitempty"`
+        ParentId string `json:"parentId,omitempty"`
+        Sort int64 `json:"sort,omitempty"`
+        KeepAlive bool `json:"keepAlive,omitempty"`
+        Hidden bool `json:"hidden,omitempty"`
+        IsFrame bool `json:"isFrame,omitempty"`
+        Remark string `json:"remark,omitempty"`
+        Meta MetaResponse `json:"meta,omitempty"`
+        Button        []*AdminGetMenuResponse `json:"button,omitempty"`
+        Children    []*AdminGetMenuResponse `json:"children,omitempty"`
+    }
+        //MetaResponse 提取-菜单-meta
+    MetaResponse {
+        KeepAlive bool `json:"keepAlive,omitempty"`           // 是否缓存
+        DefaultMenu bool `json:"defaultMenu,omitempty"`       // 是否是基础路由（开发中）
+        Title string `json:"title,omitempty"`                 // 菜单名
+        Icon string `json:"icon,omitempty"`                   // 菜单图标
+        CloseTab bool `json:"closeTab,omitempty"`             // 自动关闭tab
+    }
+        //AdminListMenuRequest 列表-菜单-
+    AdminListMenuRequest {
+
+        Name string `json:"name,optional"`
+        Title string `json:"title,optional"`
+        Icon string `json:"icon,optional"`
+        Path string `json:"path,optional"`
+        Type string `json:"type,optional"`
+        Component string `json:"component,optional"`
+        ParentId string `json:"parentId,optional"`
+        Sort int64 `json:"sort,optional"`
+        KeepAlive bool `json:"keepAlive,optional"`
+        Hidden bool `json:"hidden,optional"`
+        IsFrame bool `json:"isFrame,optional"`
+        Remark string `json:"remark,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListMenuResponse 列表-菜单
+    AdminListMenuResponse {
+        Count int64 `json:"count"`
+        List []AdminGetMenuResponse `json:"list"`
+    }
+
+        //AdminCreateMenuRequest 创建-菜单
+    AdminCreateMenuRequest {
+        Name string `json:"name"`
+        Title string `json:"title"`
+        Icon string `json:"icon"`
+        Path string `json:"path"`
+        Type string `json:"type,optional"`
+        Component string `json:"component,optional"`
+        ParentId string `json:"parentId,optional"`
+        Sort int64 `json:"sort,optional"`
+        KeepAlive bool `json:"keepAlive,optional"`
+        Hidden bool `json:"hidden,optional"`
+        IsFrame bool `json:"isFrame,optional"`
+        DefaultMenu bool `json:"defaultMenu,optional"`
+        CloseTab bool `json:"closeTab,optional"`
+        Remark string `json:"remark,optional"`
+        Button []*AdminCreateMenuRequest `json:"button,optional"`
+    }
+
+        //AdminCreateMenuResponse 创建-菜单
+    AdminCreateMenuResponse {
+        Id string `json:"id"`
+    }
+
+        //AdminUpdateMenuRequest 修改-菜单
+    AdminUpdateMenuRequest {
+        Id string `json:"id,default={nextval('admin_menu_id_seq'::regclass) true}"`
+        Name string `json:"name"`
+        Title string `json:"title"`
+        Icon string `json:"icon"`
+        Path string `json:"path"`
+        Type string `json:"type,optional"`
+        Component string `json:"component,optional"`
+        ParentId string `json:"parentId,optional"`
+        Sort int64 `json:"sort,optional"`
+        KeepAlive bool `json:"keepAlive,optional"`
+        Hidden bool `json:"hidden,optional"`
+        IsFrame bool `json:"isFrame,optional"`
+        DefaultMenu bool `json:"defaultMenu,optional"`
+        CloseTab bool `json:"closeTab,optional"`
+        Remark string `json:"remark,optional"`
+        Button []*AdminCreateMenuRequest `json:"button,optional"`
+    }
+
+        // AdminUpdateMenuResponse 修改-菜单
+    AdminUpdateMenuResponse{
+    }
+
+        //AdminDeleteMenuRequest 删除-菜单
+    AdminDeleteMenuRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeleteMenuResponse 删除-菜单
+    AdminDeleteMenuResponse{
+    }
+
+        // AdminGetMenuSelfRequest 提取自身角色菜单
+    AdminGetMenuSelfRequest {
+    }
+)
+
+type (
+    //AdminGetApiRequest 提取-api
+    AdminGetApiRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminGetApiResponse 提取-api
+    AdminGetApiResponse {
+        Id string `json:"id"`
+        Title string `json:"title"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Module string `json:"module"`
+        Remark string `json:"remark"`
+    }
+
+        //AdminListApiRequest 列表-api-
+    AdminListApiRequest {
+
+        Title string `json:"title,optional"`
+        Path string `json:"path,optional"`
+        Method string `json:"method,optional"`
+        Module string `json:"module,optional"`
+        Remark string `json:"remark,optional"`
+        PageIndex int64 `json:"pageIndex,optional"`
+        PageSize int64 `json:"pageSize,optional"`
+        SearchKey string `json:"searchKey,optional"`
+        SortBY string `json:"sortBy,optional"`
+        Descending bool `json:"descending,optional"`
+    }
+
+        //AdminListApiResponse 列表-api
+    AdminListApiResponse {
+        Count int64 `json:"count"`
+        List []AdminGetApiResponse `json:"list"`
+    }
+
+        //AdminCreateApiRequest 创建-api
+    AdminCreateApiRequest {
+
+        Title string `json:"title"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Module string `json:"module"`
+        Remark string `json:"remark,optional"`
+    }
+
+        //AdminCreateApiResponse 创建-api
+    AdminCreateApiResponse {
+        Id string `json:"id"`
+    }
+
+        //AdminUpdateApiRequest 修改-api
+    AdminUpdateApiRequest {
+        Id string `json:"id,default={nextval('admin_api_id_seq'::regclass) true}"`
+        Title string `json:"title"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Module string `json:"module"`
+        Remark string `json:"remark,optional"`
+    }
+
+        // AdminUpdateApiResponse 修改-api
+    AdminUpdateApiResponse {}
+
+        //AdminDeleteApiRequest 删除-api
+    AdminDeleteApiRequest {
+        Id string `json:"id"`
+    }
+
+        //AdminDeleteApiResponse 删除-api
+    AdminDeleteApiResponse {}
+)
+
+type (
+    //登录 Login (用户) Response
+    LoginResponse {
+        AccessToken string `json:"accessToken"`
+        AccessExpire int64 `json:"accessExpire"`
+        RefreshAfter int64 `json:"refreshAfter"`
+        User *AdminGetUserResponse `json:"user"`
     }
 )

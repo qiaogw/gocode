@@ -1,17 +1,17 @@
 type (
-    //GetAdminMigrationRequest 提取-版本
-    GetAdminMigrationRequest {
+    //AdminGetMigrationRequest 提取-版本
+    AdminGetMigrationRequest {
                 Id string `json:"id"`
     }
 
-    //GetAdminMigrationResponse 提取-版本
-    GetAdminMigrationResponse {
+    //AdminGetMigrationResponse 提取-版本
+    AdminGetMigrationResponse {
             Id string `json:"id"`
             Version string `json:"version"`
     }
 
-    //ListAdminMigrationRequest 列表-版本-
-    ListAdminMigrationRequest {
+    //AdminListMigrationRequest 列表-版本-
+    AdminListMigrationRequest {
         
             Version string `json:"version,optional"`
             PageIndex int64 `json:"pageIndex,optional"`
@@ -21,37 +21,37 @@ type (
             Descending bool `json:"descending,optional"`
     }
 
-    //ListAdminMigrationResponse 列表-版本
-    ListAdminMigrationResponse {
+    //AdminListMigrationResponse 列表-版本
+    AdminListMigrationResponse {
         Count int64 `json:"count"`
-        List []GetAdminMigrationResponse `json:"list"`
+        List []AdminGetMigrationResponse `json:"list"`
     }
 
-    //CreateAdminMigrationRequest 创建-版本
-    CreateAdminMigrationRequest {
+    //AdminCreateMigrationRequest 创建-版本
+    AdminCreateMigrationRequest {
             
                 Version string `json:"version"`
     }
 
-    //CreateAdminMigrationResponse 创建-版本
-    CreateAdminMigrationResponse {
+    //AdminCreateMigrationResponse 创建-版本
+    AdminCreateMigrationResponse {
                 Id string `json:"id"`
     }
 
-    //UpdateAdminMigrationRequest 修改-版本
-    UpdateAdminMigrationRequest {
+    //AdminUpdateMigrationRequest 修改-版本
+    AdminUpdateMigrationRequest {
            Id string `json:"id,default={nextval('admin_migration_id_seq'::regclass) true}"`
            Version string `json:"version"`
     }
 
-    // UpdateAdminMigrationResponse 修改-版本
-    UpdateAdminMigrationResponse {}
+    // AdminUpdateMigrationResponse 修改-版本
+    AdminUpdateMigrationResponse {}
 
-    //DeleteAdminMigrationRequest 删除-版本
-    DeleteAdminMigrationRequest {
+    //AdminDeleteMigrationRequest 删除-版本
+    AdminDeleteMigrationRequest {
                 Id string `json:"id"`
     }
 
-    //DeleteAdminMigrationResponse 删除-版本
-    DeleteAdminMigrationResponse {}
+    //AdminDeleteMigrationResponse 删除-版本
+    AdminDeleteMigrationResponse {}
 )
