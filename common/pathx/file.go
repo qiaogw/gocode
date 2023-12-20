@@ -302,7 +302,7 @@ func Hash(file string) (string, error) {
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
-func RenameFilesWithPrefixAndSuffix(dir, prefix, suffix string) error {
+func RenameFilesAndDirWithPrefixAndSuffix(dir, prefix, suffix string) error {
 	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
@@ -322,6 +322,45 @@ func RenameFilesWithPrefixAndSuffix(dir, prefix, suffix string) error {
 
 			// 递归处理子目录下的文件和子目录
 			if err := RenameFilesWithPrefixAndSuffix(newDirPath, prefix, suffix); err != nil {
+				return err
+			}
+		} else {
+			// 修改文件名
+			fileExt := filepath.Ext(file.Name())
+			fileBase := strings.TrimSuffix(file.Name(), fileExt)
+
+			newName := prefix + fileBase + suffix + fileExt
+			newPath := filepath.Join(dir, newName)
+
+			if err := os.Rename(filePath, newPath); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+
+}
+
+func RenameFilesWithPrefixAndSuffix(dir, prefix, suffix string) error {
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		filePath := filepath.Join(dir, file.Name())
+
+		if file.IsDir() {
+			// 修改子目录的名称
+			//newDirName := prefix + file.Name() + suffix
+			//newDirPath := filepath.Join(dir, newDirName)
+			//
+			//if err := os.Rename(filePath, newDirPath); err != nil {
+			//	return err
+			//}
+
+			// 递归处理子目录下的文件和子目录
+			if err := RenameFilesWithPrefixAndSuffix(filePath, prefix, suffix); err != nil {
 				return err
 			}
 		} else {

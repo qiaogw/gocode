@@ -25,7 +25,7 @@ func (acd *AutoCodeService) CreateAdminFile() (err error) {
 	// 获取 logic 目录
 	src = templatex.GetTplPath(acd.Mode) + "/admin/logic"
 	// 获取目标目录
-	dstDir = filepath.Join(rPath, apiPath, internalPath, logicPath)
+	dstDir = filepath.Join(rPath, apiPath, internalPath, logicPath, "admin")
 	err = pathx.CopyTpl(templateFS, src, dstDir)
 	if err != nil {
 		return fmt.Errorf("复制错误：%v", err)
@@ -34,7 +34,7 @@ func (acd *AutoCodeService) CreateAdminFile() (err error) {
 	// 获取 logic 目录
 	src = templatex.GetTplPath(acd.Mode) + "/admin/model"
 	// 获取目标目录
-	dstDir = filepath.Join(rPath, modelPath)
+	dstDir = filepath.Join(rPath, modelPath, "admin")
 	err = pathx.CopyTpl(templateFS, src, dstDir)
 	if err != nil {
 		return fmt.Errorf("复制错误：%v", err)

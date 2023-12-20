@@ -96,7 +96,7 @@ service {{.Db}} {
 
 
 @server(
-	group : adminauth
+	group : admin/auth
 	prefix : /admin/auth
 )
 
@@ -115,7 +115,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminauth
+	group : admin/auth
 	prefix : /admin/auth
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -129,7 +129,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminapi
+	group : admin/api
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -174,7 +174,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminconfig
+	group : admin/config
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -212,7 +212,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : admindept
+	group : admin/dept
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -250,7 +250,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : admindictdata
+	group : admin/dictdata
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -288,7 +288,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : admindicttype
+	group : admin/dicttype
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -326,7 +326,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminloginlog
+	group : admin/loginlog
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -366,7 +366,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminmenu
+	group : admin/menu
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -416,7 +416,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminmigration
+	group : admin/migration
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -454,7 +454,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminoperalog
+	group : admin/operalog
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -492,7 +492,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminpost
+	group : admin/post
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -530,7 +530,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminrole
+	group : admin/role
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明
@@ -586,7 +586,7 @@ service {{.Database}} {
 }
 
 @server(
-	group : adminuser
+	group : admin/user
 	prefix : /admin
 	jwt: Auth
 	middleware: RefreshToken // 路由中间件声明

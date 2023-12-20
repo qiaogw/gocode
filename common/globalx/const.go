@@ -10,3 +10,8 @@ const (
 	// TempDownPath 生成代码路径
 	TempDownPath = "TempDown"
 )
+
+// CacheUserTokenKey /** 用户登陆的token
+const CacheUserTokenKey = "user_token:%v"
+
+const SuperRole = "sub"
