@@ -39,5 +39,14 @@ func (acd *AutoCodeService) CreateAdminFile() (err error) {
 	if err != nil {
 		return fmt.Errorf("复制错误：%v", err)
 	}
+
+	// 获取 web 目录
+	src = templatex.GetTplPath(acd.Mode) + "/admin/web"
+	// 获取目标目录
+	dstDir = filepath.Join(rPath, webPath)
+	err = pathx.CopyTpl(templateFS, src, dstDir)
+	if err != nil {
+		return fmt.Errorf("复制错误：%v", err)
+	}
 	return nil
 }

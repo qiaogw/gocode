@@ -1,0 +1,31 @@
+version: '3.5'
+# 网络配置
+networks:
+  zero-dev_dev_net:
+    external: true
+
+# 服务容器配置
+services:
+  app-web:
+    image: harbor.sub-cloud.com/base/vue
+    container_name: app-web
+    environment:
+      # 时区上海 - Timezone Shanghai
+      TZ: Asia/Shanghai
+    working_dir: /app
+    volumes:
+      - .:/app:z
+      - ./conf:/etc/nginx/conf.d
+    privileged: true
+    ports:
+      - 9001:9001
+      - 8088:80
+    restart: always
+    command:
+      - /bin/bash
+      - -c
+      - |
+        modd &
+        nginx -g "daemon off;"
+    networks:
+      - zero-dev_dev_net

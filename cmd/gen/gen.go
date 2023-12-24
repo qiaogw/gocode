@@ -32,8 +32,6 @@ func init() {
 	_ = Cmd.MarkPersistentFlagRequired("package")
 	mode := "rpc"
 	Cmd.PersistentFlags().StringVarP(&modeGen, "mode", "m", mode, "模式(rpc、api)")
-	//_ = Cmd.MarkPersistentFlagRequired("mode")
-
 }
 
 func setup() error {
