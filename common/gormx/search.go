@@ -2,7 +2,6 @@ package gormx
 
 import (
 	"fmt"
-	"github.com/qiaogw/gocode/common/stringx"
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/gorm"
@@ -78,7 +77,6 @@ func Paginate(pageSize, pageIndex int64) func(db *gorm.DB) *gorm.DB {
 }
 
 func SortBy(sortBy string, descending bool) func(db *gorm.DB) *gorm.DB {
-	sortBy = stringx.From(sortBy).ToSnake()
 	return func(db *gorm.DB) *gorm.DB {
 		var orderBy string
 		if descending {
