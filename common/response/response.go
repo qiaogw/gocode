@@ -25,11 +25,7 @@ func Response(r *http.Request, w http.ResponseWriter, resp interface{}, err erro
 		errmsg := "服务器开小差啦，稍后再来试一试"
 		causeErr := errors.Cause(err) // err类型
 		if e, ok := causeErr.(*errx.CodeError); ok {
-			// 自定义错误
-
-			if e.GetErrCode() == errx.ErrAuth {
-				httpx.Error(w, e)
-			}
+			// api自定义错误
 			errcode = e.GetErrCode()
 			errmsg = e.GetErrMsg()
 		} else {

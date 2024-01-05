@@ -256,7 +256,11 @@
     </q-dialog>
   </q-page>
 </template>
-
+<script>
+  export default {
+    name: '{{- $db -}}{{.Table}}',
+  }
+</script>
 <script setup>
   import {
     computed,

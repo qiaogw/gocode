@@ -125,11 +125,6 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		log.Printf("CreateRpcLogic err is %v\n", err)
 		return
 	}
-	//err = acd.CreateConfigFile(&db, global.GenConfig.AutoCode.Root)
-	//if err != nil {
-	//	log.Printf("CreateConfigFile err is %v\n", err)
-	//	return
-	//}
 	if acd.Mode == "api" {
 		err = acd.CreateAdminFile()
 		if err != nil {
