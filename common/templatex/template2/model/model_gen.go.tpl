@@ -44,7 +44,7 @@ type (
 			{{- else}}
 				{{- if .IsPage}}
 				{{- else}}
-				{{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" comment:"{{.ColumnComment}}" {{- if ne .GormName "-" }} gorm:"column:{{.GormName}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.ColumnComment}};"{{- end -}}`
+					{{.FieldName}}  {{.DataType}} `json:"{{.FieldJson}}" comment:"{{.ColumnComment}}" {{- if ne .GormName "-" }} gorm:"column:{{.GormName}};type:{{.DbType}};{{- if .DataTypeLong -}}size:{{.DataTypeLong}};{{- end -}}comment:{{.ColumnComment}};"{{- end -}}`
 				{{- end -}}
 			{{- end -}}
 		{{- end }}

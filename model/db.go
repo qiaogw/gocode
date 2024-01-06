@@ -118,6 +118,22 @@ type (
 		FkTablePackage  string      `json:"fkTablePackage" form:"fkTablePackage" db:"fk_table_package" gorm:"column:fk_table_package;size:256;comment:关联包;"`
 		FkLabelId       string      `json:"fkLabelId" form:"fkLabelId" db:"fk_label_id" gorm:"column:fk_label_id;size:256;comment:关联id;"`
 		FkLabelName     string      `json:"fkLabelName" form:"fkLabelName" db:"fk_label_name" gorm:"column:fk_label_name;size:256;comment:关联名;"`
+		FormType        string      `json:"formType" form:"formType" gorm:"column:form_type;size:256;comment:表单类型;"`
+		FormOptions     string      `json:"formOptions" form:"formOptions" gorm:"column:form_options;type:text;comment:表单选项列表;"`
+		FormOptionLabel string      `json:"formOptionLabel" form:"formOptionLabel" gorm:"column:form_option_label;size:256;comment:表单选项标签;"`
+		FormOptionValue string      `json:"formOptionValue" form:"formOptionValue" gorm:"column:form_option_value;size:256;comment:表单选项数据;"`
+		FormMultiple    bool        `json:"formMultiple" form:"formMultiple" gorm:"column:form_multiple;comment:是否多选;"`
+		FormDisable     bool        `json:"formDisable" form:"formDisable" gorm:"column:form_disable;comment:是否禁用;"`
+		FormReadonly    bool        `json:"formReadonly" form:"formReadonly" gorm:"column:form_readonly;comment:是否只读;"`
+		FormClearable   bool        `json:"formClearable" form:"formClearable" gorm:"column:form_clearable;comment:是否清空;"`
+		FormRange       bool        `json:"formRange" form:"formRange" gorm:"column:form_range;comment:是否循环;"`
+		FormSize        string      `json:"formSize" form:"formSize" gorm:"column:form_size;size:256;comment:尺寸;"`
+		FormColor       string      `json:"formColor" form:"formColor" gorm:"column:form_color;size:256;comment:颜色;"`
+		FormTextColor   string      `json:"formTextColor" form:"formTextColor" gorm:"column:form_text_color;size:256;comment:字体颜色;"`
+		FormSrc         string      `json:"formSrc" form:"formSrc" gorm:"column:form_src;size:256;comment:文件源;"`
+		FormMin         int64       `json:"formMin" form:"formMin" gorm:"column:form_min;comment:最小值;"`
+		FormMax         int64       `json:"formMax" form:"formMax" gorm:"column:form_max;comment:最大值;"`
+		FormClass       string      `json:"formClass" form:"formClass" gorm:"column:form_class;size:2560;comment:样式类型;"`
 	}
 
 	DbIndex struct {
