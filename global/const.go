@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BuildVersion = "v1.10.38"
+	BuildVersion = "v1.10.39"
 	ProjectName  = "gocode"
 	OsWindows    = "windows"
 	OsMac        = "darwin"
@@ -19,6 +19,31 @@ const (
 	ConfigTestFile    = "config.test.yaml"
 	ConfigDebugFile   = "config.debug.yaml"
 	ConfigReleaseFile = "config.release.yaml"
+)
+
+const (
+	FormSelect      = "Select"
+	FormInput       = "Input"
+	FormInputNumber = "InputNumber"
+	FormInputText   = "InputText"
+	FormEditor      = "Editor"
+	FormRadio       = "Radio"
+	FormCheckbox    = "Checkbox"
+	FormToggle      = "Toggle"
+	FormBtnToggle   = "BtnToggle"
+	FormOptionGroup = "OptionGroup"
+	FormSlider      = "Slider"
+	FormRange       = "Range"
+	FormTimePick    = "TimePick"
+	FormDatePick    = "DatePick"
+	FormFilePick    = "FilePick"
+
+	FormOptionsFk   = "FkTable"
+	FormOptionsDict = "Dict"
+	FormOptionsList = "List"
+
+	FormCol6  = "col-6 q-pb-md"
+	FormCol12 = "col-12 q-pb-md"
 )
 
 func GetDefaultConfigFile() string {

@@ -127,7 +127,7 @@ type (
 		FormReadonly    bool        `json:"formReadonly" form:"formReadonly" gorm:"column:form_readonly;comment:是否只读;"`
 		FormClearable   bool        `json:"formClearable" form:"formClearable" gorm:"column:form_clearable;comment:是否清空;"`
 		FormRange       bool        `json:"formRange" form:"formRange" gorm:"column:form_range;comment:是否循环;"`
-		FormSize        string      `json:"formSize" form:"formSize" gorm:"column:form_size;size:256;comment:尺寸;"`
+		FormSize        int64       `json:"formSize" form:"formSize" gorm:"column:form_size;comment:尺寸;"`
 		FormColor       string      `json:"formColor" form:"formColor" gorm:"column:form_color;size:256;comment:颜色;"`
 		FormTextColor   string      `json:"formTextColor" form:"formTextColor" gorm:"column:form_text_color;size:256;comment:字体颜色;"`
 		FormSrc         string      `json:"formSrc" form:"formSrc" gorm:"column:form_src;size:256;comment:文件源;"`
@@ -225,6 +225,8 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 		each.DataType = dt
 		each.DataTypeProto = dt
 		each.DataTypeApi = dt
+		each.FormClass = "col-6 q-pb-md"
+		each.FormSize = 6
 		if dt == "float64" {
 			each.DataTypeProto = "double"
 		}

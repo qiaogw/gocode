@@ -181,7 +181,7 @@
                       <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
                     {{- else  }}
                       <q-select
-                              class="col-6 q-pb-md"
+                              class="{{.FormClass}}"
                               outlined
                               dense
                               map-options
@@ -201,7 +201,7 @@
                       <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
                     {{- else  }}
                       <q-select
-                              class="col-6 q-pb-md"
+                              class="{{.FormClass}}"
                               outlined
                               dense
                               map-options
@@ -223,7 +223,7 @@
                             outlined
                             dense
                             {{- if eq .HtmlType "number" }} type="number"{{- end }}
-                            class="col-6 q-pb-md"
+                            class="{{.FormClass}}"
                             v-model{{- if eq .HtmlType "number" -}}.number{{- end -}}="form.{{.FieldJson}}"
                             label="{{.ColumnComment}}"
                             {{- if .Require }}
