@@ -276,6 +276,23 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			each.IsList = false
 			each.IsEdit = false
 		}
+		if each.DataType == "bool" {
+			each.FormType = global.FormToggle
+		}
+		if len(each.FormType) < 1 {
+			each.FormType = global.FormInput
+		}
+		if len(each.FormClass) < 1 {
+			each.FormClass = global.FormCol6
+		}
+		if each.FormSize < 1 {
+			each.FormSize = 6
+		}
+		if each.Name == "remark" {
+			each.FormSize = 12
+			each.FormClass = global.FormCol12
+			each.FormType = global.FormEditor
+		}
 		//log.Printf("table is %s,FieldName is %s\n", c.Table, each.FieldName)
 		table.Columns = append(table.Columns, each)
 	}

@@ -27,7 +27,7 @@ DbConf:
   Host: {{.Option.DB.Path}}
   Port: {{.Option.DB.Port}}
   User: {{.Option.DB.Username}}
-  Password: {{.Option.DB.Password}}
+  Password: "{{.Option.DB.Password}}"
   Db: {{.Option.DB.Dbname}}
   Schema:
   Config: {{.Option.DB.Config}}

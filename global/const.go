@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BuildVersion = "v1.10.40"
+	BuildVersion = "v1.10.41"
 	ProjectName  = "gocode"
 	OsWindows    = "windows"
 	OsMac        = "darwin"
@@ -22,21 +22,22 @@ const (
 )
 
 const (
-	FormSelect      = "Select"
-	FormInput       = "Input"
-	FormInputNumber = "InputNumber"
-	FormInputText   = "InputText"
-	FormEditor      = "Editor"
-	FormRadio       = "Radio"
-	FormCheckbox    = "Checkbox"
-	FormToggle      = "Toggle"
-	FormBtnToggle   = "BtnToggle"
-	FormOptionGroup = "OptionGroup"
-	FormSlider      = "Slider"
-	FormRange       = "Range"
-	FormTimePick    = "TimePick"
-	FormDatePick    = "DatePick"
-	FormFilePick    = "FilePick"
+	FormSelect       = "Select"
+	FormInput        = "Input"
+	FormInputNumber  = "InputNumber"
+	FormInputText    = "InputText"
+	FormEditor       = "Editor"
+	FormRadio        = "Radio"
+	FormCheckbox     = "Checkbox"
+	FormToggle       = "Toggle"
+	FormBtnToggle    = "BtnToggle"
+	FormOptionGroup  = "OptionGroup"
+	FormSlider       = "Slider"
+	FormRange        = "Range"
+	FormTimePick     = "TimePick"
+	FormDatePick     = "DatePick"
+	FormDateTimePick = "DateTimePick"
+	FormFilePick     = "FilePick"
 
 	FormOptionsFk   = "FkTable"
 	FormOptionsDict = "Dict"

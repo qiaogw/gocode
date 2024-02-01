@@ -177,7 +177,7 @@
                 {{else if .IsPage}}
                 {{- else if .IsEdit}}
                   {{- if .DictType }}
-                    {{-  if eq .DataType "bool"}}
+                    {{-  if eq .FormType "Toggle"}}
                       <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
                     {{- else  }}
                       <q-select
@@ -197,9 +197,6 @@
                       />
                     {{- end }}
                   {{- else if .FkTable}}
-                    {{-  if eq .DataType "bool"}}
-                      <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
-                    {{- else  }}
                       <q-select
                               class="{{.FormClass}}"
                               outlined
@@ -215,10 +212,17 @@
                                 :rules="[requiredRule]"
                               {{- end }}
                       />
-                    {{- end }}
-                  {{- else if eq .DataType "bool"}}
+                  {{- else if .FormType "Toggle"}}
                     <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
-                  {{- else }}
+                  {{- else if .FormType "FilePick"}}
+                     <q-file
+                            v-model="form.{{.FieldJson}}"
+                            dense
+                            class="{{.FormClass}}"
+                            label="上传文件-{{.ColumnComment}}"
+                            @update:model-value="updateFile"
+                    />
+                  {{- else if .FormType "Input"}}
                     <q-input
                             outlined
                             dense
@@ -230,6 +234,107 @@
                               :rules="[requiredRule]"
                             {{- end }}
                     />
+                  {{- else if .FormType "DatePick"}}
+                    <q-input
+                            filled
+                             mask="date"
+                            v-model="form.{{.FieldJson}}"
+                            label="{{.ColumnComment}}"
+                            {{- if .Require }}
+                            :rules="[requiredRule]"
+                            {{- end }}>
+                      <template v-slot:append>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="form.{{.FieldJson}}">
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  {{- else if .FormType "TimePick"}}
+                    <q-input
+                            filled
+                            mask="fulltime"
+                            v-model="form.{{.FieldJson}}"
+                            label="{{.ColumnComment}}"
+                            {{- if .Require }}
+                      :rules="[requiredRule]"
+                            {{- end }}>
+                      <template v-slot:append>
+                        <q-icon name="access_time" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-time
+                                    v-model="form.{{.FieldJson}}"
+                                    with-seconds
+                                    format24h
+                            >
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                              </div>
+                            </q-time>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  {{- else if .FormType "DateTimePick"}}
+                    <q-input
+                            filled
+                            dense
+                            outlined
+                            v-model="form.{{.FieldJson}}"
+                            label="{{.ColumnComment}}"
+                    >
+                      <template v-slot:prepend>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy
+                                  cover
+                                  transition-show="scale"
+                                  transition-hide="scale"
+                          >
+                            <q-date v-model="form.{{.FieldJson}}" mask="YYYY-MM-DD HH:mm">
+                              <div class="row items-center justify-end">
+                                <q-btn
+                                        v-close-popup
+                                        label="Close"
+                                        color="primary"
+                                        flat
+                                />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+
+                      <template v-slot:append>
+                        <q-icon name="access_time" class="cursor-pointer">
+                          <q-popup-proxy
+                                  cover
+                                  transition-show="scale"
+                                  transition-hide="scale"
+                          >
+                            <q-time
+                                    v-model="form.{{.FieldJson}}"
+                                    with-seconds
+                                    mask="YYYY-MM-DD HH:mm:ss"
+                                    format24h
+                            >
+                              <div class="row items-center justify-end">
+                                <q-btn
+                                        v-close-popup
+                                        label="Close"
+                                        color="primary"
+                                        flat
+                                />
+                              </div>
+                            </q-time>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
                   {{- end }}
                 {{- end }}
               {{- end }}
@@ -454,6 +559,9 @@
     dialogVisible.value = false
     reset()
     onRequest()
+  }
+  const updateFile = (val) => {
+    form.value.upFileName = val.name
   }
   {{- if .IsImport }}
   const uploadUrl = process.env.BASE_URL + '/{{.Db}}/{{.TableUrl}}/import'
