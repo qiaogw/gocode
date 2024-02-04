@@ -212,9 +212,9 @@
                                 :rules="[requiredRule]"
                               {{- end }}
                       />
-                  {{- else if .FormType "Toggle"}}
+                  {{- else if eq .FormType "Toggle"}}
                     <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
-                  {{- else if .FormType "FilePick"}}
+                  {{- else if eq .FormType "FilePick"}}
                      <q-file
                             v-model="form.{{.FieldJson}}"
                             dense
@@ -222,7 +222,7 @@
                             label="上传文件-{{.ColumnComment}}"
                             @update:model-value="updateFile"
                     />
-                  {{- else if .FormType "Input"}}
+                  {{- else if eq .FormType "Input"}}
                     <q-input
                             outlined
                             dense
@@ -234,7 +234,7 @@
                               :rules="[requiredRule]"
                             {{- end }}
                     />
-                  {{- else if .FormType "DatePick"}}
+                  {{- else if eq .FormType "DatePick"}}
                     <q-input
                             filled
                              mask="date"
@@ -255,7 +255,7 @@
                         </q-icon>
                       </template>
                     </q-input>
-                  {{- else if .FormType "TimePick"}}
+                  {{- else if eq .FormType "TimePick"}}
                     <q-input
                             filled
                             mask="fulltime"
@@ -280,7 +280,7 @@
                         </q-icon>
                       </template>
                     </q-input>
-                  {{- else if .FormType "DateTimePick"}}
+                  {{- else if eq .FormType "DateTimePick"}}
                     <q-input
                             filled
                             dense

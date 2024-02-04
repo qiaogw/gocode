@@ -38,8 +38,9 @@ type tplData struct {
 }
 
 type AutoCodeService struct {
-	DB   model.Model
-	Mode string
+	DB        model.Model
+	Mode      string //模式(rpc、api)
+	Overwrite bool   //是否覆盖
 }
 
 var AutoCodeServiceApp = new(AutoCodeService)

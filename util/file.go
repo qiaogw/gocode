@@ -10,9 +10,7 @@ import (
 	"strings"
 )
 
-//@author: [songzhibin97](https://github.com/songzhibin97)
-//@function: FileMove
-//@description: 文件移动供外部调用
+//FileMove: 文件移动供外部调用
 //@param: src string, dst string(src: 源位置,绝对路径or相对路径, dst: 目标位置,绝对路径or相对路径,必须为文件夹)
 //@return: err error
 
@@ -52,9 +50,7 @@ func DeLFile(filePath string) error {
 	return os.RemoveAll(filePath)
 }
 
-//@author: [songzhibin97](https://github.com/songzhibin97)
-//@function: TrimSpace
-//@description: 去除结构体空格
+//TrimSpace: 去除结构体空格
 //@param: target interface (target: 目标结构体,传入必须是指针类型)
 //@return: null
 
@@ -82,6 +78,7 @@ func FileExist(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+// FmtCode 格式化代码
 func FmtCode(f string) (err error) {
 	cmd := exec.Command("gofmt", "-w", f)
 

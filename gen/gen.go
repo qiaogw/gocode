@@ -196,10 +196,13 @@ func (acd *AutoCodeService) genAfter(dataList []tplData, pkg ...string) error {
 		base := filepath.Base(value.autoCodePath)
 		baseOk := arrays.ContainsString(global.GenConfig.AutoCode.CoverFile, base)
 		// 判断目标文件是否都可以移动
-		if util.FileExist(value.autoMoveFilePath) && baseOk < 0 {
-			fmt.Println(util.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
-			continue
+		if !acd.Overwrite {
+			if util.FileExist(value.autoMoveFilePath) && baseOk < 0 {
+				fmt.Println(util.Yellow(fmt.Sprintf("目标文件已存在:%s", value.autoMoveFilePath)))
+				continue
+			}
 		}
+
 		if err := util.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
 			return err
 		}
