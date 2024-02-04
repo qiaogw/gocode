@@ -380,6 +380,7 @@
     create{{.Table}},
     update{{.Table}},
     delete{{.Table}},
+      get{{.Table}},
   } from "src/api/{{- $db -}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
@@ -524,11 +525,13 @@
     formType.value = "新建"
     dialogVisible.value = true
   }
-  const edit = (p) => {
+  const edit = async (p) => {
     reset()
-    form.value = {
-      ...p,
-    }
+      let req = {
+          id: p.id,
+      }
+      let res = await get{{.Table}}(req)
+      form.value = res
     formType.value = "编辑"
     dialogVisible.value = true
   }
