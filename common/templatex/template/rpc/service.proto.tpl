@@ -109,6 +109,12 @@ message Delete{{.Table}}Request {
     string updateBy=2;
 }
 {{ end}}
+
+//批量删除 {{.Table}} ({{.TableComment}}) Request
+message DeleteList{{.Table}}Request {
+    repeated string list = 1;
+}
+
 //NullRequest 空 Request
 message NullRequest {
 }
@@ -139,6 +145,7 @@ service {{.Table}} {
     rpc Create{{.Table}}(Create{{.Table}}Request) returns(Create{{.Table}}Response);
     rpc Update{{.Table}}(Update{{.Table}}Request) returns(Update{{.Table}}Response);
     rpc Delete{{.Table}}(Delete{{.Table}}Request) returns(NullResponse);
+    rpc DeleteList{{.Table}}(DeleteList{{.Table}}Request) returns(NullResponse);
 {{- if .IsImport}}
     rpc Export{{.Table}}(ExportRequest) returns(ExportResponse);
     rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);

@@ -24,6 +24,8 @@ type (
 		{{.PackageName}}Model
 		FindAll(ctx context.Context, query *List{{.Table}}Req) ([]*{{.Table}},int64, error)
 		Import(reader io.Reader) error
+		GetName() string
+		DeleteList(ctx context.Context, list []string) error
 	{{- range  .CacheKeys}}
 		FindOneBy{{.Field}}(ctx context.Context, {{.FieldJson}} {{.DataType}}) (*{{$table}}, error)
 	{{- end }}
@@ -44,6 +46,19 @@ func New{{.Table}}Model(conn sqlx.SqlConn, c cache.CacheConf, gormX *gorm.DB) {{
 	return &custom{{.Table}}Model{
 		default{{.Table}}Model: new{{.Table}}Model(conn, c, gormX),
 	}
+}
+// GetName 获取业务表名
+func (m *custom{{.Table}}Model) GetName() string {
+		return m.tableName()
+}
+
+// DeleteList 批量删除
+func (m *custom{{.Table}}Model) DeleteList(ctx context.Context, list []string) error {
+	err := m.gormDB.Debug().Where("id in ?", list).Delete(&{{.Table}}{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // FindAll 条件查询列表

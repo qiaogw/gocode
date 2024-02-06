@@ -84,6 +84,11 @@ type (
 {{- end }}
     }
 
+    //DeleteList{{.Table}}Request 批量删除-{{.TableComment}}
+    DeleteList{{.Table}}Request {
+        IdList []string `json:"idList"`
+    }
+
     //Delete{{.Table}}Response 删除-{{.TableComment}}
     Delete{{.Table}}Response {}
 )

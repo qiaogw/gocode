@@ -380,7 +380,7 @@
     create{{.Table}},
     update{{.Table}},
     delete{{.Table}},
-      get{{.Table}},
+    get{{.Table}},
   } from "src/api/{{- $db -}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
@@ -527,11 +527,11 @@
   }
   const edit = async (p) => {
     reset()
-      let req = {
-          id: p.id,
-      }
-      let res = await get{{.Table}}(req)
-      form.value = res
+    let req = {
+        id: p.id,
+    }
+    let res = await get{{.Table}}(req)
+    form.value = res
     formType.value = "编辑"
     dialogVisible.value = true
   }
