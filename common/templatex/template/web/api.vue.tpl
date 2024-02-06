@@ -538,17 +538,15 @@
   }
 
   const del = async (p) => {
-    let res = await delete{{.Table}}(p)
+    await delete{{.Table}}(p)
     onRequest()
   }
 
   const delList = async () => {
-    // let res = await deleteDatasource()
-    // onRequest()
     let req = {
         idList: getIds(selected.value),
     }
-    let res = await deleteList{{.Table}}(req)
+    await deleteList{{.Table}}(req)
     onRequest()
   }
   const submit = async () => {
