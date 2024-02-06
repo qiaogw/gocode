@@ -108,12 +108,12 @@ message Delete{{.Table}}Request {
 {{- end }}
     string updateBy=2;
 }
-{{ end}}
-
 //批量删除 {{.Table}} ({{.TableComment}}) Request
-message DeleteList{{.Table}}Request {
+    message DeleteList{{.Table}}Request {
     repeated string list = 1;
 }
+{{ end}}
+
 
 //NullRequest 空 Request
 message NullRequest {
