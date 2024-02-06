@@ -20,7 +20,7 @@ type DeleteList{{.Table}}Logic struct {
 	logx.Logger
 }
 
-func NewDeleteList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete{{.Table}}Logic {
+func NewDeleteList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteList{{.Table}}Logic {
 	return &DeleteList{{.Table}}Logic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
