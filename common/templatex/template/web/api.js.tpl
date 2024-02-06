@@ -34,6 +34,14 @@ export function delete{{.Table}}(data) {
     data: data,
   })
 }
+// {{.TableComment}} 批量删除
+export function deleteList{{.Table}}(data) {
+  return api({
+  url: "{{.Db}}/{{.TableUrl}}/deleteList",
+  method: "post",
+  data: data,
+})
+}
 // {{.TableComment}} 更新
 export function update{{.Table}}(data) {
   return api({

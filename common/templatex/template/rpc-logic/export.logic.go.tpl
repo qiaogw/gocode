@@ -41,12 +41,12 @@ func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.Db}}.ExportRequest) (*{{
 			return nil, errx.NewErrCodeMsg(errx.NoData, "{{.TableComment}}-该查询无数据")
 		}
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
-					"该{{.TableComment}}查询失败，err:%v", err)
+					"该{{.TableComment}}查询失败:%v", err)
 	}
 	resp, err := toolx.ExportToWeb(list[0], list, list[0].TableName())
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.ServerCommonError),
-			"{{.TableComment}}导出excel 失败，data: %+v,err:%v", list,err)
+			"{{.TableComment}}导出excel 失败:%v",err)
 	}
 	return &{{.Db}}.ExportResponse{
 		Data: resp.Bytes(),

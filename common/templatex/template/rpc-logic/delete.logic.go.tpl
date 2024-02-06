@@ -34,7 +34,7 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(in *{{.Db}}.Delete{{.Table}}Req
 	err := l.svcCtx.{{.Table}}Model.Delete(l.ctx, in.Id)
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-		"数据库删除 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
+		"数据库删除 {{.TableComment}} 失败:%v",err)
 	}
 
 	return &{{.Db}}.NullResponse{}, nil

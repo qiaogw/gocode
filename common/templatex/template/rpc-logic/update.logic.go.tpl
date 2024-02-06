@@ -53,7 +53,7 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 	err = l.svcCtx.{{.Table}}Model.Update(l.ctx, res)
 	if err != nil {
 		return nil, errors.Wrapf(errx.NewErrCode(errx.DbError),
-"数据库更新 {{.TableComment}} 失败 , err:%v ,data : %+v  ", err, res)
+"数据库更新 {{.TableComment}} 失败:%v", err)
 	}
 	var rep {{.Db}}.Update{{.Table}}Response
 	return &rep, nil

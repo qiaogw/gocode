@@ -381,6 +381,7 @@
     update{{.Table}},
     delete{{.Table}},
     get{{.Table}},
+    deleteList{{.Table}},
   } from "src/api/{{- $db -}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
@@ -390,7 +391,7 @@
   } from "src/api/{{- $db -}}/{{.FkTable}}"
   {{- end }}
   {{- end }}
-
+  import { getIds } from 'src/utils/arrayOrObject'
   import { useQuasar } from "quasar"
   import { requiredRule } from "src/utils/inputRule"
   import { DictOptions,getOptionsByList, getDictLabel,getDict } from "src/utils/dict"
@@ -545,9 +546,9 @@
     // let res = await deleteDatasource()
     // onRequest()
     let req = {
-      ids: getIds(selected.value),
+        idList: getIds(selected.value),
     }
-    let res = await delete{{.Table}}(req)
+    let res = await deleteList{{.Table}}(req)
     onRequest()
   }
   const submit = async () => {

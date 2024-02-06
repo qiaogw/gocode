@@ -59,6 +59,13 @@ service {{.Db}} {
 	@handler Delete{{.Table}}
 	post  /delete (Delete{{.Table}}Request) returns(CommonResponse)
 
+	@doc(
+		summary: "批量删除-{{.TableComment}}"
+	)
+	@handler DeleteList{{.Table}}
+	post  /deleteList (DeleteList{{.Table}}Request) returns(CommonResponse)
+
+
 {{- if .IsImport}}
 	@doc(
 		summary: "导出-{{.TableComment}}"
