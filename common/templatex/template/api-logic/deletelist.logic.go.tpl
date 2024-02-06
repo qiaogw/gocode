@@ -17,8 +17,8 @@ type DeleteList{{.Table}}Logic struct {
 	svcCtx *svc.ServiceContext
 }
 
-func NewDelete{{.Table}}LogicList(ctx context.Context, svcCtx *svc.ServiceContext) *Delete{{.Table}}Logic {
-	return &Delete{{.Table}}LogicList{
+func NewDeleteList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteList{{.Table}}Logic {
+	return &DeleteList{{.Table}}Logic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
