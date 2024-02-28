@@ -5,6 +5,7 @@ import (
 	"github.com/qiaogw/gocode/gen"
 	"github.com/qiaogw/gocode/global"
 	"gorm.io/gorm"
+	"reflect"
 )
 
 func SearchKey(db *gorm.DB, table, key string) string {
@@ -86,4 +87,30 @@ func SortBy(sortBy string, descending bool) func(db *gorm.DB) *gorm.DB {
 		}
 		return db.Order(orderBy)
 	}
+}
+
+// GetSortBy 格式化sortBy字段
+func GetSortBy(sort interface{}, fieldName string) string {
+	tagJson := "json"
+	rt := ""
+	var t *resolveSearchTag
+	// 获取结构体的类型
+	qType := reflect.TypeOf(sort)
+	// 遍历结构体的字段
+	for i := 0; i < qType.NumField(); i++ {
+		tag, ok := qType.Field(i).Tag.Lookup(FromQueryTag)
+		if !ok {
+			continue
+		}
+		switch tag {
+		case "-":
+			continue
+		}
+		t = makeTag(tag)
+		if qType.Field(i).Tag.Get(tagJson) == fieldName {
+			rt = t.Column
+			break
+		}
+	}
+	return rt
 }

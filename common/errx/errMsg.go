@@ -18,7 +18,7 @@ func init() {
 	message[ErrGenerateTokenError] = "生成token失败"
 	message[ErrUsernamePwdError] = "账号或密码不正确"
 	message[ErrAuth] = "无访问权限"
-	message[ErrReq] = "自定义错误"
+	message[ErrReq] = "数据请求错误"
 	message[ErrTimeout] = "服务器响应超时"
 }
 

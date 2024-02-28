@@ -21,6 +21,7 @@ func (e *CodeError) GetErrMsg() string {
 	return e.errMsg
 }
 
+
 func (e *CodeError) Error() string {
 	return fmt.Sprintf("ErrCode:%d,ErrMsg:%s", e.errCode, e.errMsg)
 }

@@ -511,6 +511,8 @@
     pagination.value.rowsNumber = table.count
     if (table.list) {
       dataList.value = table.list
+    } else {
+        dataList.value = []
     }
   }
   const getSelectedString = () => {

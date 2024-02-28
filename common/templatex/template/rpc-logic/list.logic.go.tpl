@@ -10,6 +10,7 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"{{.ParentPkg}}/rpc/internal/svc"
 	"{{.ParentPkg}}/model"
+"github.com/qiaogw/gocode/common/gormx"
 "github.com/qiaogw/gocode/common/timex"
 	"github.com/zeromicro/go-zero/core/logx"
 
@@ -44,7 +45,7 @@ func (l *List{{.Table}}Logic) List{{.Table}}(in *{{.Db}}.List{{.Table}}Request) 
 		{{- end}}
 	{{- end }}
 	qData.SearchKey = in.SearchKey
-	qData.SortBY = in.SortBy
+	qData.SortBY = gormx.GetSortBy(qData.{{.Table}}Order, in.SortBy)
 	qData.Descending = in.Descending
 	list,count, err := l.svcCtx.{{.Table}}Model.FindAll(l.ctx, &qData)
 	if err != nil {
