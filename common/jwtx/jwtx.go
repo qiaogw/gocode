@@ -11,6 +11,7 @@ const (
 	CtxKeyJwtUserId       = "userId"
 	CtxKeyJwtUserName     = "userName"
 	CtxKeyJwtRoleId       = "roleId"
+	CtxKeyJwtDeptId       = "deptId"
 	CtxKeyJwtNickName     = "nickName"
 	CtxKeyRefreshAt       = "refreshAt"
 	CtxKeyExpire          = "expire"
@@ -22,6 +23,7 @@ type Jwt struct {
 type SysJwtClaims struct {
 	UserId    string `json:"userId"`
 	RoleId    string `json:"roleId"`
+	DeptId    string `json:"deptId"`
 	UserName  string `json:"userName"`
 	NickName  string `json:"nickName"`
 	RefreshAt int64  `json:"refreshAt"`
@@ -45,12 +47,13 @@ func GetToken(secretKey, username, nickName, issuer string, iat, seconds, uid, r
 	return token.SignedString([]byte(secretKey))
 }
 
-func GetTokenClaims(secretKey, username, nickName, issuer string, iat, seconds int64, uid, roleId string) (string, error) {
+func GetTokenClaims(secretKey, username, nickName, issuer string, iat, seconds int64, uid, roleId, deptId string) (string, error) {
 	var claims SysJwtClaims
 	claims.ExpiresAt = iat + seconds
 	claims.IssuedAt = iat
 	claims.UserId = uid
 	claims.RoleId = roleId
+	claims.DeptId = deptId
 	claims.NickName = nickName
 	claims.UserName = username
 	claims.Issuer = issuer

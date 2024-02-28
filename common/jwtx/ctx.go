@@ -40,7 +40,22 @@ func GetRoleIdFromToken(tokenString, SigningKey string) (id string, err error) {
 	id = claims.RoleId
 	return
 }
-
+func GetDeptIdFromToken(tokenString, SigningKey string) (id string, err error) {
+	claims, err := ParseToken(tokenString, SigningKey)
+	if err != nil {
+		return
+	}
+	id = claims.DeptId
+	return
+}
+func GetClaimsFromToken(tokenString, SigningKey string) (data *SysJwtClaims, err error) {
+	claims, err := ParseToken(tokenString, SigningKey)
+	if err != nil {
+		return
+	}
+	data = claims
+	return
+}
 func CheckToken(token, secretKey string) (ok bool, refreshToken string) {
 	claims, err := ParseToken(token, secretKey)
 	if err != nil {

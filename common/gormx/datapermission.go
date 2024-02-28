@@ -1,8 +1,14 @@
 package gormx
 
 import (
+	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+)
+
+const (
+	PermissionKey = "dataPermission"
 )
 
 type DataPermission struct {
@@ -40,4 +46,35 @@ func PermissionData(tableName string, p *DataPermission) func(db *gorm.DB) *gorm
 			return db
 		}
 	}
+}
+
+func getPermissionFromContext(c *gin.Context) *DataPermission {
+	p := new(DataPermission)
+	if pm, ok := c.Get(PermissionKey); ok {
+		switch pm.(type) {
+		case *DataPermission:
+			p = pm.(*DataPermission)
+		}
+	}
+	return p
+}
+
+// GetPermissionFromContext 提供非action写法数据范围约束
+func GetPermissionFromContext(c *gin.Context) *DataPermission {
+	return getPermissionFromContext(c)
+}
+
+func newDataPermission(tx *gorm.DB, userId interface{}) (*DataPermission, error) {
+	var err error
+	p := &DataPermission{}
+	err = tx.Table("sys_user").
+		Select("sys_user.user_id", "sys_role.role_id", "sys_user.dept_id", "sys_role.data_scope").
+		Joins("left join sys_role on sys_role.role_id = sys_user.role_id").
+		Where("sys_user.user_id = ?", userId).
+		Scan(p).Error
+	if err != nil {
+		err = errors.New("获取用户数据出错 msg:" + err.Error())
+		return nil, err
+	}
+	return p, nil
 }
