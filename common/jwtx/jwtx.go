@@ -15,6 +15,7 @@ const (
 	CtxKeyJwtNickName     = "nickName"
 	CtxKeyRefreshAt       = "refreshAt"
 	CtxKeyExpire          = "expire"
+	CtxKeyJwtToken        = "tokenStr"
 )
 
 type Jwt struct {
@@ -28,6 +29,7 @@ type SysJwtClaims struct {
 	NickName  string `json:"nickName"`
 	RefreshAt int64  `json:"refreshAt"`
 	Expire    int64  `json:"expire"`
+	TokenStr  string `json:"tokenStr"`
 	jwt.StandardClaims
 }
 
@@ -60,8 +62,9 @@ func GetTokenClaims(secretKey, username, nickName, issuer string, iat, seconds i
 	claims.RefreshAt = iat + seconds/2
 	claims.Expire = seconds
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	//token.Claims = claims
-	return token.SignedString([]byte(secretKey))
+	tokenStr, err := token.SignedString([]byte(secretKey))
+	claims.TokenStr = tokenStr
+	return tokenStr, err
 }
 func MakeJwt(secretKey string, claim *SysJwtClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)

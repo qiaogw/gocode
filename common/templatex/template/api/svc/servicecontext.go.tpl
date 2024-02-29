@@ -22,7 +22,7 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:   c,
-		Cache:    cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("dc"), nil),
+		Cache:    cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("sub-{{.Package}}-api"), nil),
 {{- range .Tables }}
 	{{.Table}}Rpc: {{.TableUrl}}.New{{.Table}}(zrpc.MustNewClient(c.{{.Service}}Rpc)),
 {{- end}}

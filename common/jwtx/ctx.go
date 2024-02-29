@@ -24,6 +24,14 @@ func GetRoleIdFromCtx(ctx context.Context) string {
 	return id
 }
 
+func GetTokenStrFromCtx(ctx context.Context) string {
+	var id string
+	if jsonUid, ok := ctx.Value(CtxKeyJwtToken).(string); ok {
+		id = jsonUid
+	}
+	return id
+}
+
 func GetUserIdFromToken(tokenString, SigningKey string) (id string, err error) {
 	claims, err := ParseToken(tokenString, SigningKey)
 	if err != nil {

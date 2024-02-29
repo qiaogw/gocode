@@ -40,6 +40,8 @@ message List{{.Table}}Request {
     string sortBy ={{- $i -}};
     {{- $i = add $i }}
     bool descending = {{- $i -}};
+    {{- $i = add $i }}
+    string token={{- $i -}};
 }
 //列表 {{.Table}} ({{.TableComment}}) Response
     message List{{.Table}}Response {

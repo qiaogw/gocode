@@ -2,13 +2,14 @@ package {{.TableUrl}}
 
 import (
 	"context"
+	"github.com/pkg/errors"
+	"github.com/qiaogw/gocode/common/errx"
+	"github.com/qiaogw/gocode/common/jwtx"
+	"github.com/zeromicro/go-zero/core/logx"
 
-"github.com/pkg/errors"
 	"{{.ParentPkg}}/api/internal/svc"
 	"{{.ParentPkg}}/api/internal/types"
 	"{{.ParentPkg}}/rpc/{{.Db}}"
-	"github.com/qiaogw/gocode/common/errx"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type List{{.Table}}Logic struct {
@@ -26,7 +27,7 @@ func NewList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 }
 
 func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (resp *types.CommonResponse, err error) {
-
+  token := jwtx.GetTokenStrFromCtx(l.ctx)
 	res, err := l.svcCtx.{{.Table}}Rpc.List{{.Table}}(l.ctx, &{{.Db}}.List{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
@@ -34,6 +35,7 @@ func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (
 				{{.FieldName}}: req.{{.FieldName}},
 			{{- end}}
 		{{- end }}
+		Token:      token,
 		SearchKey: req.SearchKey,
 		SortBy:     req.SortBY,
 		Descending: req.Descending,

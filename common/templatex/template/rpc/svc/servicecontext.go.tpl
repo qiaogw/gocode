@@ -4,7 +4,7 @@ import (
 	"github.com/qiaogw/gocode/common/gormx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
-	redisX "github.com/zeromicro/go-zero/core/stores/redis"
+"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/driver/{{.DriverName}}"
@@ -15,7 +15,7 @@ import (
 
 type ServiceContext struct {
 	Config    config.Config
-	CacheRedis     *redisX.Redis
+  Cache     cache.Cache
 	{{- range .Tables }}
 	{{.Table}}Model model.{{.Table}}Model
 	{{- end }}
@@ -44,15 +44,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			logx.Errorf("配置数据库打印日志错误: %v", err)
 		}
 	}
-	redisConf := redisX.RedisConf{
-		Host: c.Redis.Host,
-		Pass: c.Redis.Pass,
-		Type: c.Redis.Type,
-	}
+
 	return &ServiceContext{
 		Config:         c,
-		CacheRedis:     redisX.MustNewRedis(redisConf),
-		{{- range .Tables }}
+		Cache:          cache.New(c.CacheRedis, syncx.NewSingleFlight(), cache.NewStat("sub-{{.Package}}-rpc"), nil),
+{{- range .Tables }}
 			{{.Table}}Model: model.New{{.Table}}Model(conn, c.CacheRedis, db),
 		{{- end }}
 	}
