@@ -11,20 +11,20 @@ var ErrNotFound = gorm.ErrRecordNotFound
 
 // BaseModel 主键
 type BaseModel struct {
-	Id uuid.UUID `json:"id" db:"id" gorm:"column:id;primaryKey;comment:主键编码"`
+	Id uuid.UUID `json:"id" comment:"主键编码" gorm:"column:id;primaryKey;comment:主键编码"`
 }
 
 // ControlBy 控制字段
 type ControlBy struct {
-	CreateBy string `json:"createBy" db:"create_by" gorm:"column:create_by;size:255;index;comment:创建者"`
-	UpdateBy string `json:"updateBy" db:"update_by" gorm:"column:update_by;size:255;index;comment:更新者"`
+	CreateBy string `json:"createBy" comment:"创建者" gorm:"column:create_by;size:255;index;comment:创建者"`
+	UpdateBy string `json:"updateBy" comment:"更新者" gorm:"column:update_by;size:255;index;comment:更新者"`
 }
 
 // ModelTime 时间字段
 type ModelTime struct {
-	CreatedAt time.Time      `json:"createdAt"  db:"created_at" gorm:"column:created_at;comment:创建时间"`
-	UpdatedAt time.Time      `json:"updatedAt"  db:"updated_at" gorm:"column:updated_at;comment:最后更新时间"`
-	DeletedAt gorm.DeletedAt `json:"-" db:"deleted_at" gorm:"index;comment:删除时间"` // 软删除
+	CreatedAt time.Time      `json:"createdAt"  comment:"创建时间" gorm:"column:created_at;comment:创建时间"`
+	UpdatedAt time.Time      `json:"updatedAt"  comment:"最后更新时间" gorm:"column:updated_at;comment:最后更新时间"`
+	DeletedAt gorm.DeletedAt `json:"-" comment:"删除时间" gorm:"index;comment:删除时间"` // 软删除
 }
 
 // ModelUtils 排序、备注、可用

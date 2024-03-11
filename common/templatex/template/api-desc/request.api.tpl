@@ -16,6 +16,11 @@ type (
         {{.FieldName}} {{.DataTypeApi}} `json:"{{.FieldJson}},omitempty"`
         {{- end }}
     {{- end }}
+    {{- if .IsFlow }}
+        FlowInstance GetFlowInstanceResponse `json:"flowInstance,omitempty"`
+        CurrentNode GetNodeInstanceResponse `json:"currentNode,omitempty"`
+        FlowInstanceHistory []*GetFlowInstanceResponse `json:"flowInstanceHistory,omitempty"`
+    {{- end}}
     }
 
     //List{{.Table}}Request 列表-{{.TableComment}}-

@@ -27,10 +27,25 @@ Auth:
      {{- end }}
     Key: {{.Package}}.rpc
 
-Captcha:
-  ImgHeight: 4
-  ImgWidth: 160
-  KeyLong: 80
+AdminRpc:
+  App: admin                          # App 标识
+  Token: 6jKNZbEpYGeUMAifz10gOnmoty3TV  # Token 值
+  Etcd:
+    Hosts:
+      {{- range  .Option.Etcd.Hosts }}
+      - {{.}}
+     {{- end }}
+    Key: admin.rpc
+
+FsmRpc:
+  App: fsm                          # App 标识
+  Token: 6jKNZbEpYGeUMAifz10gOnmoty3TV-fsm  # Token 值
+  Etcd:
+    Hosts:
+      {{- range  .Option.Etcd.Hosts }}
+      - {{.}}
+     {{- end }}
+    Key: fsm.rpc
 
 Prometheus:
   Host: 0.0.0.0

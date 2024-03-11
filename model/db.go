@@ -29,6 +29,7 @@ type (
 		ApiPort    int
 		RpcHost    string
 		RpcPort    int
+		IsFlow     bool
 	}
 	CacheKey struct {
 		Key       string
@@ -58,6 +59,7 @@ type (
 		IsAuth       bool
 		IsImport     bool
 		IsDataScope  bool
+		IsFlow       bool
 		Columns      []*Column
 		// Primary key not included
 		UniqueIndex   map[string][]*Column
@@ -293,7 +295,7 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 			each.FormClass = global.FormCol12
 			each.FormType = global.FormEditor
 		}
-		//log.Printf("table is %s,FieldName is %s\n", c.Table, each.FieldName)
+		//log.Println(util.Red(fmt.Sprintf("获取字段  is: %+v", each.DbColumn)))
 		table.Columns = append(table.Columns, each)
 	}
 

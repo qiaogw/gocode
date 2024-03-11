@@ -15,4 +15,7 @@ type Config struct {
     CacheRedis cache.ClusterConf
 
     {{.Service}}Rpc zrpc.RpcClientConf
+    AdminRpc zrpc.RpcClientConf
+    FsmRpc   zrpc.RpcClientConf
+
 }

@@ -85,5 +85,15 @@ service {{.Db}} {
 	@handler Import{{.Table}}
 	post /import (ImportRequest) returns (CommonResponse)
 {{- end }}
+
+{{- if .IsFlow }}
+	@doc(
+		summary: "流程转换-{{.TableComment}}"
+	)
+	@handler Trigger{{.Table}}
+	post /trigger (Update{{.Table}}Request) returns (CommonResponse)
+{{- end}}
+
+
 }
 {{- end }}

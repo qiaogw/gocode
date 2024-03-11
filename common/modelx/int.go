@@ -1,12 +1,12 @@
 package modelx
 
 type BaseModelInt struct {
-	Id int64 `json:"id" db:"id" gorm:"column:id;primaryKey;comment:主键编码"`
+	Id int64 `json:"id" comment:"主键编码" gorm:"column:id;primaryKey;comment:主键编码"`
 }
 
 type ControlByInt struct {
-	CreateBy int64 `json:"createBy" db:"create_by" gorm:"column:create_by;index;comment:创建者"`
-	UpdateBy int64 `json:"updateBy" db:"update_by" gorm:"column:update_by;index;comment:更新者"`
+	CreateBy int64 `json:"createBy" comment:"创建者" gorm:"column:create_by;index;comment:创建者"`
+	UpdateBy int64 `json:"updateBy" comment:"更新者" gorm:"column:update_by;index;comment:更新者"`
 }
 
 // SetCreateBy 设置创建人id

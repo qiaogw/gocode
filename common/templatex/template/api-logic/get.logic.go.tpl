@@ -9,6 +9,12 @@ import (
 	"{{.ParentPkg}}/rpc/{{.Db}}"
 	"github.com/qiaogw/gocode/common/errx"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/jinzhu/copier"
+
+{{- if .IsFlow }}
+	"{{.Pkg}}/fsm/rpc/fsmx"
+	"{{.Pkg}}/fsm/rpc/client/flow"
+{{- end}}
 )
 
 type Get{{.Table}}Logic struct {
@@ -37,11 +43,40 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(req *types.Get{{.Table}}Request) (res
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
+	var rep types.Get{{.Table}}Response
+	_ = copier.Copy(&rep, res)
 
-return &types.CommonResponse{
-	Code: errx.Success,
-	Msg: "查询成功",
-	Data: res,
-}, nil
 
+{{- if .IsFlow }}
+	flowIns, err := l.svcCtx.FlowInstanceRpc.GetFlowInstanceByBusy(l.ctx, &flow.GetFlowInstanceByBusyRequest{
+	BusyId:   res.Id,
+	BusyName: res.BusyName,
+	UserId:   userId,
+	})
+	if err != nil {
+	return nil, errors.Wrapf(err, "req: %+v", req)
+	}
+	history, err := l.svcCtx.FlowInstanceRpc.GetFlowInstanceHistoryByBusy(l.ctx, &flow.GetFlowInstanceByBusyRequest{
+	BusyId:   res.Id,
+	BusyName: res.BusyName,
+	UserId:   userId,
+	})
+	if err != nil {
+	return nil, errors.Wrapf(err, "req: %+v", req)
+	}
+	var fins types.GetFlowInstanceResponse
+	_ = copier.Copy(&fins, flowIns)
+	var list []*types.GetFlowInstanceResponse
+	_ = copier.Copy(&list, history.List)
+	rep.FlowInstance = fins
+	rep.FlowInstanceHistory = list
+	_ = copier.Copy(&rep.CurrentNode, flowIns.CurrentNode)
+
+{{- end}}
+
+	return &types.CommonResponse{
+		Code: errx.Success,
+		Msg:  "查询成功",
+		Data: rep,
+	}, nil
 }

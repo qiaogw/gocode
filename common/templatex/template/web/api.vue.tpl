@@ -1,4 +1,5 @@
 {{- $db :=.Db }}
+{{- $isTableFlow :=.IsFlow }}
 <template>
   <q-page class="q-pa-xs">
     <div class="shadow-2 q-pa-xs">
@@ -22,6 +23,25 @@
         <template v-slot:top="table">
           <div class="row no-wrap full-width">
             <com-search @query="onRequest" v-model:filter="searchKey"/>
+              {{- if .IsFlow}}
+            <q-option-group
+                    v-model="flowStatus"
+                    :options="flowStatusOptions"
+                    color="primary"
+                    inline
+                    @update:model-value="onRequest"
+            />
+            <q-btn
+                    flat
+                    dense
+                    icon="lock_reset"
+                    no-wrap
+                    class="q-ml-md"
+                    color="primary"
+                    @click="clear"
+            ><q-tooltip>清空</q-tooltip></q-btn
+            >
+              {{- end}}
             <q-space />
             <q-btn-group class="q-gutter-xs">
               <q-btn
@@ -35,6 +55,8 @@
                       @click="create"
               ><q-tooltip>新建</q-tooltip></q-btn
               >
+                {{if not .IsFlow}}
+                  // 如果IsFlow为false时执行
               <com-del
                       :disable="selected.length < 1"
                       v-permission="'{{.TableUrl}}:del'"
@@ -43,6 +65,7 @@
                       label="{{.TableComment}}"
                       @confirm="delList"
               />
+                {{end}}
               {{- if .IsImport }}
                 <q-btn
                         v-permission="'{{.TableUrl}}:export'"
@@ -139,18 +162,59 @@
                 >
               </q-td>
             </template>
+          {{- else if  eq  .DataType "bool" }}
+            <template v-slot:body-cell-{{.FieldJson}}="props">
+              <q-td :props="props">
+                <q-chip
+                        dense
+                        text-color="white"
+                        :color="props.value ? 'positive' : 'grey'"
+                >{{"{{"}} format_sys_enabled(props.value) {{"}}"}}
+                </q-chip>
+              </q-td>
+            </template>
           {{- end }}
         {{- end }}
-
+          {{- if .IsFlow}}
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <q-chip
+                        dense
+                        text-color="white"
+                        :color="getFlowStatusColor(props.value)"
+                >{{"{{"}} formatFlowStatus(props.value) {{"}}"}}
+                </q-chip>
+              </q-td>
+            </template>
+          {{- end }}
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <div class="q-gutter-xs">
+                {{- if .IsFlow }}
+                  <q-btn
+                      flat
+                      round
+                      dense
+                      color="primary"
+                      icon="approval"
+                      @click="triggerHandle(props.row)"
+              >
+                <q-tooltip>工作流审批</q-tooltip></q-btn
+              >
+                {{- end}}
+
               <com-edit
+                      {{- if .IsFlow }}
+                      v-if="checkEdit(props.row)"
+                      {{- end}}
                       v-permission="'{{.TableUrl}}:edit'"
                       label="{{.TableComment}}"
                       @confirm="edit(props.row)"
               />
               <com-del
+                      {{- if .IsFlow }}
+                        v-if="checkEdit(props.row)"
+                      {{- end}}
                       v-permission="'{{.TableUrl}}:del'"
                       label="{{.TableComment}}"
                       @confirm="del(props.row)"
@@ -160,8 +224,8 @@
         </template>
       </q-table>
     </div>
-    <q-dialog v-model="dialogVisible" persistent>
-      <q-card style="width: 800px; min-width: 40vw">
+    <q-dialog  v-model="dialogVisible" persistent :full-width="isFlow">
+      <q-card :class="isFlow ? 'flow-card' : 'edit-card'">
         <q-bar class="bg-primary text-white">
           <span> {{"{{"}}formType{{"}}"}}{{.TableComment}} </span>
           <q-space />
@@ -170,6 +234,9 @@
           </q-btn>
         </q-bar>
         <q-card-section>
+            {{- if .IsFlow }}
+          <q-chip v-if="isFlow" size="18px" icon="bookmark">业务数据</q-chip>
+            {{- end}}
           <q-form @submit="submit">
             <div class="row q-col-gutter-x-md dialog_form q-pt-md">
               {{- range  .Columns }}
@@ -178,7 +245,15 @@
                 {{- else if .IsEdit}}
                   {{- if .DictType }}
                     {{-  if eq .FormType "Toggle"}}
-                      <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
+                      <q-toggle
+                              label="{{.ColumnComment}}"
+                              color="green"
+                              class="{{.FormClass}}"
+                              v-model="form.{{.FieldJson}}"
+                      {{- if $isTableFlow }}
+                        :disable="isFlow"
+                      {{- end}}
+                      />
                     {{- else  }}
                       <q-select
                               class="{{.FormClass}}"
@@ -194,6 +269,9 @@
                               {{- if .Require }}
                                 :rules="[requiredRule]"
                               {{- end }}
+                      {{- if $isTableFlow }}
+                        :disable="isFlow"
+                      {{- end}}
                       />
                     {{- end }}
                   {{- else if .FkTable}}
@@ -211,9 +289,19 @@
                               {{- if .Require }}
                                 :rules="[requiredRule]"
                               {{- end }}
+                      {{- if $isTableFlow }}
+                        :disable="isFlow"
+                      {{- end}}
                       />
                   {{- else if eq .FormType "Toggle"}}
-                    <q-toggle label="{{.ColumnComment}}" color="green" v-model="form.{{.FieldJson}}" />
+                    <q-toggle
+                            label="{{.ColumnComment}}"
+                            color="green"
+                            class="{{.FormClass}}"
+                            v-model="form.{{.FieldJson}}"
+                    {{- if $isTableFlow }}
+                      :disable="isFlow"
+                    {{- end}}/>
                   {{- else if eq .FormType "FilePick"}}
                      <q-file
                             v-model="form.{{.FieldJson}}"
@@ -221,6 +309,9 @@
                             class="{{.FormClass}}"
                             label="上传文件-{{.ColumnComment}}"
                             @update:model-value="updateFile"
+                     {{- if $isTableFlow }}
+                       :disable="isFlow"
+                     {{- end}}
                     />
                   {{- else if eq .FormType "Input"}}
                     <q-input
@@ -233,6 +324,24 @@
                             {{- if .Require }}
                               :rules="[requiredRule]"
                             {{- end }}
+                    {{- if $isTableFlow }}
+                      :disable="isFlow"
+                    {{- end}}
+                    />
+                  {{- else if eq .FormType "Editor"}}
+                    <q-input
+                            outlined
+                            dense
+                            type="textarea"
+                            class="{{.FormClass}}"
+                            label="{{.ColumnComment}}"
+                            v-model="form.{{.FieldJson}}"
+                            {{- if .Require }}
+                              :rules="[requiredRule]"
+                            {{- end }}
+                            {{- if $isTableFlow }}
+                              :disable="isFlow"
+                            {{- end}}
                     />
                   {{- else if eq .FormType "DatePick"}}
                     <q-input
@@ -242,7 +351,11 @@
                             label="{{.ColumnComment}}"
                             {{- if .Require }}
                             :rules="[requiredRule]"
-                            {{- end }}>
+                            {{- end }}
+                    {{- if $isTableFlow }}
+                      :disable="isFlow"
+                    {{- end}}
+                    >
                       <template v-slot:append>
                         <q-icon name="event" class="cursor-pointer">
                           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -263,7 +376,11 @@
                             label="{{.ColumnComment}}"
                             {{- if .Require }}
                       :rules="[requiredRule]"
-                            {{- end }}>
+                            {{- end }}
+                    {{- if $isTableFlow }}
+                      :disable="isFlow"
+                    {{- end}}
+                    >
                       <template v-slot:append>
                         <q-icon name="access_time" class="cursor-pointer">
                           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -287,6 +404,9 @@
                             outlined
                             v-model="form.{{.FieldJson}}"
                             label="{{.ColumnComment}}"
+                    {{- if $isTableFlow }}
+                      :disable="isFlow"
+                    {{- end}}
                     >
                       <template v-slot:prepend>
                         <q-icon name="event" class="cursor-pointer">
@@ -339,7 +459,11 @@
                 {{- end }}
               {{- end }}
             </div>
-            <div class="row justify-center q-pa-md">
+            <div
+                    {{- if .IsFlow }}
+                      v-if="!isFlow"
+              {{- end}}
+              class="row justify-center q-pa-md">
               <q-btn
                       outline
                       color="primary"
@@ -357,6 +481,12 @@
             </div>
           </q-form>
         </q-card-section>
+          {{- if .IsFlow }}
+            <q-card-section v-if="isFlow">
+              <flowTriger :flowData="form" @submitTriger="submitTriger" />
+            </q-card-section>
+          {{- end}}
+
       </q-card>
     </q-dialog>
   </q-page>
@@ -382,6 +512,10 @@
     delete{{.Table}},
     get{{.Table}},
     deleteList{{.Table}},
+    {{- if .IsFlow }}
+      trigger,
+  {{- end}}
+
   } from "src/api/{{- $db -}}/{{.TableUrl}}"
 
   {{- range  .Columns }}
@@ -391,12 +525,26 @@
   } from "src/api/{{- $db -}}/{{.FkTable}}"
   {{- end }}
   {{- end }}
+
+
+
   import { getIds } from 'src/utils/arrayOrObject'
   import { useQuasar } from "quasar"
   import { requiredRule } from "src/utils/inputRule"
   import { DictOptions,getOptionsByList, getDictLabel,getDict } from "src/utils/dict"
   import { downloadAction } from 'src/api/manage'
   import { useRoute } from 'vue-router'
+
+  {{- if .IsFlow }}
+  import { commonEvents } from 'src/components/comfsm/script/link'
+  import flowTriger from 'src/components/comfsm/components/flowTriger.vue'
+  const flowStatus = ref('')
+  const formatFlowStatus = (prop) => {
+      return getDictLabel(dictOptions.value.flowStatus, prop)
+  }
+  const flowStatusOptions = ref([])
+  {{- end}}
+
   const route = useRoute()
 
   const $q = useQuasar()
@@ -424,12 +572,18 @@
   {{- end }}
   {{- end }}
 
+  const format_sys_enabled = (prop) => {
+      if (!prop) {
+          prop = false
+      }
+      return getDictLabel(dictOptions.value.sys_enabled, prop)
+  }
   const searchKey = ref('')
 
   const selected = ref([])
   const pagination = ref({
-    sortBy: "id",
-    descending: false,
+    sortBy: 'createdAt',
+    descending: true,
     page: 1,
     rowsPerPage: 10,
     rowsNumber: 0,
@@ -469,13 +623,16 @@
     {{.FkTablePackage}}Options.value = getOptionsByList(res{{.FkTableClass}}.list, "{{.FkLabelId}}", "{{.FkLabelName}}")
     {{- end }}
     {{- end }}
+      {{- if .IsFlow }}
+      flowStatusOptions.value = await getDict('flowStatus')
+      {{- end}}
     onRequest()
   })
 
   const reset = () => {
     pagination.value = {
-      sortBy: "id",
-      descending: false,
+      sortBy: 'createdAt',
+      descending: true,
       page: 1,
       rowsPerPage: 10,
       rowsNumber: 0,
@@ -484,9 +641,18 @@
       enabled: true,
     }
     dictId.value = 0
+      searchKey.value = undefined
+      formType.value = ''
+      {{- if .IsFlow }}
+      flowStatus.value = undefined
+      {{- end}}
   }
-
-  const onRequest = async (val) => {
+  const clear = () => {
+      reset()
+      onRequest()
+  }
+  const onRequest = async () => {
+    let val
     if (!val) {
       val = { pagination: pagination.value }
     }
@@ -503,6 +669,12 @@
     queryReq.sortBy = sortBy
     queryReq.descending = descending
     queryReq.searchKey = val.filter
+
+      {{- if .IsFlow }}
+      if (flowStatus.value) {
+          queryReq.status = flowStatus.value
+      }
+      {{- end}}
 
     let table = await list{{.Table}}(queryReq)
 
@@ -592,4 +764,53 @@
     onRequest()
   }
   {{- end }}
+
+  {{- if .IsFlow }}
+  const checkEdit = (val) => {
+      let ct = false
+      if (val.status === 'start' || val.status === 'goback') {
+          ct = true
+      }
+      return ct
+  }
+  const getFlowStatusColor = (prop) => {
+      let fc = ''
+      if (prop === 'end') {
+          fc = 'teal'
+      }
+      if (prop === 'working') {
+          fc = 'primary'
+      }
+      if (prop === 'goback') {
+          fc = 'red'
+      }
+      if (prop === 'start') {
+          fc = 'positive'
+      }
+      return fc
+  }
+const triggerHandle = async (p) => {
+    let req = {
+        id: p.id,
+    }
+    let res = await getTheme(req)
+    form.value = res
+
+    formType.value = '流程审批'
+    dialogVisible.value = true
+}
+const submitTriger = async () => {
+  await trigger(form.value.currentNode)
+  dialogVisible.value = false
+  reset()
+  onRequest()
+}
+const isFlow = computed(() => {
+  let val = false
+  if (formType.value === '流程审批') {
+    val = true
+  }
+  return val
+})
+  {{- end}}
 </script>

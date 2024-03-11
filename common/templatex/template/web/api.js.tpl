@@ -50,3 +50,14 @@ export function update{{.Table}}(data) {
     data: data,
   })
 }
+
+{{- if .IsFlow }}
+// {{.TableComment}} 工作流审批转换
+export function trigger(data) {
+  return api({
+    url: '{{.Db}}/{{.TableUrl}}/trigger',
+    method: 'post',
+    data: data,
+  })
+}
+{{- end}}

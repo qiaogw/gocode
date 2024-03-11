@@ -27,9 +27,7 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 
 	db.Database = global.GenConfig.System.Name
 	db.Package = strings.ToLower(db.Database)
-
 	db.Service = util.LeftUpper(util.CamelString(db.Database))
-
 	db.Option = global.GenConfig
 	db.DriverName = global.GenDB.Name()
 	dir, _ := os.Getwd()
@@ -78,8 +76,13 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		}
 		tb.ParentPkg = db.ParentPkg
 		tb.Pkg = db.Pkg
+
 		tb.IsAuth = true
 		tb.IsImport = true
+		//tb.IsFlow = true
+		//if tb.IsFlow {
+		//	db.IsFlow = true
+		//}
 		tb.Dir = strings.ToLower(db.Database)
 		if modeGen {
 			err = acd.CreateModel(tb)
@@ -101,7 +104,9 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 			log.Printf("CreateApiDesc err is %v\n", err)
 		}
 		tbList = append(tbList, *tb)
+
 	}
+
 	err = acd.CreateApi(&db)
 	if err != nil {
 		log.Printf("CreateApi err is %v\n", err)

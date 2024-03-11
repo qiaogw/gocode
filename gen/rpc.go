@@ -126,7 +126,19 @@ func (acd *AutoCodeService) createApiLogic(table *model.Table) (err error) {
 		}
 		dataList = dataList[:i]
 	}
-
+	if !table.IsFlow {
+		i := 0
+		for _, v := range dataList {
+			trimBase := filepath.Base(v.locationPath)
+			fileSlice := strings.Split(trimBase, ".")
+			importList := []string{"trigger"}
+			if !in(fileSlice[0], importList) {
+				dataList[i] = v
+				i++
+			}
+		}
+		dataList = dataList[:i]
+	}
 	// 生成文件
 	for i, value := range dataList {
 		dataList[i].tablePkg = table.TableUrl
