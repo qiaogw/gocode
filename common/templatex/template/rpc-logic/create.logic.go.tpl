@@ -66,5 +66,6 @@ new{{.Table}} := model.{{.Table}}{
 	}
 	var rep {{.Db}}.Create{{.Table}}Response
 	_ = copier.Copy(&rep, res)
+	rep.BusyName = l.svcCtx.ThemeModel.GetName()
 	return &rep, nil
 }

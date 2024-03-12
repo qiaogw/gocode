@@ -74,6 +74,7 @@ message Create{{.Table}}Response {
     {{.DataTypeProto}} {{.FieldJson}}=1;
 {{- end }}
 {{- end }}
+    string busyName=2;
 }
 
 //修改 {{.Table}} ({{.TableComment}}) Request
