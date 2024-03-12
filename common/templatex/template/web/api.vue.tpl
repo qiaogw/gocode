@@ -112,6 +112,16 @@
               >
                 <q-tooltip>切换全屏</q-tooltip>
               </q-btn>
+              <q-icon name="help_outline" class="text-purple cursor-pointer">
+                <q-popup-proxy :offset="[10, 10]">
+                  <q-banner class="bg-purple text-white">
+                    <template v-slot:avatar>
+                      <q-icon name="help" />
+                    </template>
+                    {{`{{ route.meta.remark }}`}}
+                  </q-banner>
+                </q-popup-proxy>
+              </q-icon>
               <q-btn
                       color="deep-orange"
                       flat
@@ -127,7 +137,7 @@
                     <template v-slot:avatar>
                       <q-icon name="help" />
                     </template>
-                      {{ route.meta.remark }}
+                      {{ `{{ route.meta.remark }}` }}
                   </q-banner>
                 </q-popup-proxy>
               </q-btn>
