@@ -22,6 +22,11 @@ message Get{{.Table}}Response {
     {{.DataTypeProto}} {{.FieldJson}}={{- $j -}};
 {{- end}}
 {{- end }}
+{{- $j = add $j }}
+string busyName={{- $j -}};
+{{- $j = add $j }}
+GetFlowInstanceResponse flowInstance={{- $j -}};
+
 }
 
 //列表 {{.Table}} ({{.TableComment}}) Request
@@ -138,6 +143,103 @@ message ExportRequest {
 //导出 Export  Response
 message ExportResponse {
     bytes data=1;
+}
+
+
+//提取 FlowInstance (工作流实例) Response
+message GetFlowInstanceResponse {
+    string id=1;
+    string flowId=2;
+    string name=3;
+    string busyName=4;
+    string busyId=5;
+    string type=6;
+    string start=7;
+    string end=8;
+    string status=9;
+    int64 sort=10;
+    string startTime=11;
+    string endTime=12;
+    bool enabled=13;
+    string remark=14;
+    string createBy=15;
+    string updateBy=16;
+    string createdAt=17;
+    string updatedAt=18;
+    string deletedAt=19;
+    repeated GetNodeInstanceResponse nodeList = 20;
+    repeated GetLinkInstanceResponse linkList = 21;
+    repeated GetMessageResponse messageList = 22;
+}
+
+//提取 NodeInstance (节点实例) Response
+message GetNodeInstanceResponse {
+    string id=1;
+    string nodeId=2;
+    string flowInstanceId=3;
+    string userId=4;
+    string name=5;
+    string content=6;
+    int64 height=7;
+    int64 width=8;
+    int64 x=9;
+    int64 y=10;
+    string icon=11;
+    string type=12;
+    string startTime=13;
+    string endTime=14;
+    string status=15;
+    int64 sort=16;
+    bool enabled=17;
+    string remark=18;
+    string createBy=19;
+    string updateBy=20;
+    string createdAt=21;
+    string updatedAt=22;
+    string deletedAt=23;
+}
+
+//提取 LinkInstance (状态转换实例) Response
+message GetLinkInstanceResponse {
+    string id=1;
+    string finkId=2;
+    string flowInstanceId=3;
+    string name=4;
+    string sourceId=5;
+    string targetId=6;
+    string status=7;
+    int64 sort=8;
+    bool enabled=9;
+    string startTime=10;
+    string endTime=11;
+    string remark=12;
+    string createBy=13;
+    string updateBy=14;
+    string createdAt=15;
+    string updatedAt=16;
+    string deletedAt=17;
+}
+
+//提取 Message (消息) Response
+message GetMessageResponse {
+    string id=1;
+    string flowInstanceId=2;
+    string userId=3;
+    string busyName=4;
+    string busyId=5;
+    string title=6;
+    string content=7;
+    string type=8;
+    bool readed=9;
+    string status=10;
+    int64 sort=11;
+    bool enabled=12;
+    string remark=13;
+    string createBy=14;
+    string updateBy=15;
+    string createdAt=16;
+    string updatedAt=17;
+    string deletedAt=18;
 }
 
 {{range .Tables }}
