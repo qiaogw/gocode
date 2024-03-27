@@ -11,6 +11,7 @@ import (
 	"github.com/zeromicro/go-zero/core/syncx"
 {{- if .IsFlow }}
 	"{{.Pkg}}/admin/rpc/client/user"
+	"{{.Pkg}}/fsm/rpc/client/flow"
 	"{{.Pkg}}/fsm/rpc/client/flowinstance"
 {{- end}}
 )
@@ -24,6 +25,7 @@ type ServiceContext struct {
 {{- if .IsFlow }}
 	UserRpc         user.User
 	FlowInstanceRpc flowinstance.FlowInstance
+	FlowRpc         flow.Flow
 {{- end}}
 
 }
@@ -38,6 +40,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 {{- if .IsFlow }}
 		FlowInstanceRpc: flowinstance.NewFlowInstance(zrpc.MustNewClient(c.FsmRpc)),
 		UserRpc:         user.NewUser(zrpc.MustNewClient(c.AdminRpc)),
+		FlowRpc:         flow.NewFlow(zrpc.MustNewClient(c.FsmRpc)),
 {{- end}}
 	}
 }

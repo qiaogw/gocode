@@ -80,9 +80,9 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 		tb.IsAuth = true
 		tb.IsImport = true
 		//tb.IsFlow = true
-		//if tb.IsFlow {
-		//	db.IsFlow = true
-		//}
+		if tb.IsFlow {
+			db.IsFlow = true
+		}
 		tb.Dir = strings.ToLower(db.Database)
 		if modeGen {
 			err = acd.CreateModel(tb)

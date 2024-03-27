@@ -35,6 +35,17 @@ func NewCreate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *Create{{.Table}}Logic) Create{{.Table}}(req *types.Create{{.Table}}Request) (resp *types.CommonResponse, err error) {
 	userId := jwtx.GetUserIdFromCtx(l.ctx)
+{{- if .IsFlow }}
+	busyName, _ := l.svcCtx.{{.Table}}Rpc.GetBusyName(l.ctx, &{{.Db}}.NullRequest{})
+	_, err = l.svcCtx.FlowRpc.GetFlowByBusy(l.ctx, &flow.GetFlowByBusyRequest{
+		BusyName: busyName.Name,
+		Type:     fsmx.FORM,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "req: %+v", req)
+	}
+{{- end }}
+
 	res, err := l.svcCtx.{{.Table}}Rpc.Create{{.Table}}(l.ctx, &{{.Db}}.Create{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}

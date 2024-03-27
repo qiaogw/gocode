@@ -154,7 +154,7 @@ order by
 		return nil, err
 	}
 	schame := "public"
-	//log.Printf("%s columnData is %+v\n", table, len(reply))
+
 	list, err := m.getColumns(schame, table, reply)
 	if err != nil {
 		return nil, err
@@ -174,12 +174,10 @@ func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Col
 	}
 	var list []*Column
 	for _, e := range in {
-
 		var dft interface{}
 		if len(e.ColumnDefault) > 0 {
 			dft = e.ColumnDefault
 		}
-
 		isNullAble := "YES"
 		if e.NotNull {
 			isNullAble = "NO"
@@ -229,8 +227,8 @@ func (m *Postgres) getColumns(schema, table string, in []*PostgreColumn) ([]*Col
 				IsPk: e.IsPk,
 			})
 		}
-		//log.Printf("%s columnDatalist is: %+v,len: %d\n", table, e, len(list))
 	}
+
 	return list, nil
 }
 
@@ -250,31 +248,32 @@ func (m *Postgres) getIndex(schema, table string) (map[string][]*DbIndex, error)
 	}
 
 	index := make(map[string][]*DbIndex)
-	var pkName string
+	indexMap := make(map[string]interface{})
 	for _, e := range indexes {
 		if e.IsPrimary.Bool {
-			pkName = e.ColumnName.String
-			index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
+			var pk []*DbIndex
+			indexMap[e.ColumnName.String] = e.ColumnName
+			index[e.ColumnName.String] = append(pk, &DbIndex{
 				IndexName:  indexPri,
 				SeqInIndex: int(e.IndexSort.Int32),
 			})
 			continue
 		}
-		if e.ColumnName.String == pkName {
+		_, ok := indexMap[e.ColumnName.String]
+		if ok {
 			continue
 		}
 		nonUnique := 0
 		if !e.IsUnique.Bool {
 			nonUnique = 1
 		}
-
 		index[e.ColumnName.String] = append(index[e.ColumnName.String], &DbIndex{
 			IndexName:  e.IndexName.String,
 			NonUnique:  nonUnique,
 			SeqInIndex: int(e.IndexSort.Int32),
 		})
+		indexMap[e.ColumnName.String] = e.ColumnName
 	}
-
 	return index, nil
 }
 

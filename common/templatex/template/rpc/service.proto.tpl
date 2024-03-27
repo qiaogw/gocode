@@ -119,14 +119,18 @@ message Delete{{.Table}}Request {
 }
 {{ end}}
 
-
 //NullRequest 空 Request
 message NullRequest {
 }
 //NullResponse 空 Response
 message  NullResponse {
 }
-
+{{- if .IsFlow }}
+//BusyNameResponse 业务名称 Response
+message  BusyNameResponse {
+    string name=1;
+}
+{{- end}}
 
 //导出 Export  Request
 message ExportRequest {
@@ -157,5 +161,8 @@ service {{.Table}} {
     rpc ExportTemplate{{.Table}}(NullRequest) returns(ExportResponse);
     rpc Import{{.Table}}(ExportResponse) returns(NullResponse);
 {{ end}}
+{{- if .IsFlow }}
+    rpc GetBusyName(NullRequest) returns(BusyNameResponse);
+{{- end}}
 }
 {{ end}}

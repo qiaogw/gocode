@@ -11,7 +11,7 @@
               :columns="columns"
               :rows="dataList"
               row-key="id"
-              v-model:filter="searchKey"
+              v-model:filter="pagination.searchKey"
               @request="onRequest"
               :grid="$q.screen.xs"
               v-model:pagination="pagination"
@@ -22,26 +22,21 @@
       >
         <template v-slot:top="table">
           <div class="row no-wrap full-width">
-            <com-search @query="onRequest" v-model:filter="searchKey"/>
-              {{- if .IsFlow}}
-            <q-option-group
-                    v-model="flowStatus"
-                    :options="flowStatusOptions"
-                    color="primary"
-                    inline
-                    @update:model-value="onRequest"
+            <com-filter
+                    @query="onRequest"
+                    @reset="resetQuery"
+                    v-model:filter="pagination.searchKey"
             />
             <q-btn
                     flat
                     dense
-                    icon="lock_reset"
                     no-wrap
                     class="q-ml-md"
                     color="primary"
-                    @click="clear"
-            ><q-tooltip>清空</q-tooltip></q-btn
+                    @click="filterVisible = !filterVisible"
+                    :icon="filterVisible ? 'arrow_drop_up' : 'arrow_drop_down'"
+            ><q-tooltip>更多查询条件</q-tooltip></q-btn
             >
-              {{- end}}
             <q-space />
             <q-btn-group class="q-gutter-xs">
               <q-btn
@@ -55,8 +50,7 @@
                       @click="create"
               ><q-tooltip>新建</q-tooltip></q-btn
               >
-                {{if not .IsFlow}}
-                  // 如果IsFlow为false时执行
+
               <com-del
                       :disable="selected.length < 1"
                       v-permission="'{{.TableUrl}}:del'"
@@ -65,7 +59,7 @@
                       label="{{.TableComment}}"
                       @confirm="delList"
               />
-                {{end}}
+
               {{- if .IsImport }}
                 <q-btn
                         v-permission="'{{.TableUrl}}:export'"
@@ -94,7 +88,7 @@
                         flat
                         dense
                         glossy
-                        @upload="uploadFn"
+                        @upload="resetQuery"
                         title="导入"
                         :uploadUrl="uploadUrl"
                         fileType=".xlsx,.xls"
@@ -127,11 +121,52 @@
                     <template v-slot:avatar>
                       <q-icon name="help" />
                     </template>
-                      {{ `{{ route.meta.remark }}` }}
+                    <div v-html="route.meta.remark"></div>
                   </q-banner>
                 </q-popup-proxy>
               </q-btn>
             </q-btn-group>
+          </div>
+          <div v-show="filterVisible" class="row no-wrap full-width">
+            {{- range  .Columns }}
+                {{- if .DictType }}
+                  <q-select
+                          class="col-2 q-pr-sm q-py-sm"
+                          outlined
+                          dense
+                          clearable
+                          map-options
+                          emit-value
+                          option-value="value"
+                          option-label="label"
+                          v-model="pagination.{{.FieldJson}}"
+                          :options="{{.DictType}}Options"
+                          label="{{.ColumnComment}}"
+                          @update:model-value="filterSearch"
+                  />
+                {{- else if  .FkTable}}
+                  <q-select
+                          class="col-2 q-pr-sm q-py-sm"
+                          outlined
+                          dense
+                          map-options
+                          emit-value
+                          clearable
+                          v-model="pagination.{{.FieldJson}}"
+                          :options="{{.FkTablePackage}}Options"
+                          label="{{.ColumnComment}}"
+                          @update:model-value="filterSearch"
+                  />
+                {{- else if  eq  .DataType "bool" }}
+                  <q-toggle
+                          label="{{.ColumnComment}}"
+                          color="green"
+                          class="col-2 q-pr-sm q-py-sm"
+                          v-model="pagination.{{.FieldJson}}"
+                          @update:model-value="filterSearch"
+                  />
+                {{- end }}
+            {{- end }}
           </div>
         </template>
         <template v-slot:body-cell-remark="props">
@@ -492,7 +527,7 @@
         </q-card-section>
           {{- if .IsFlow }}
             <q-card-section v-if="isFlow">
-              <flowTriger :flowData="form" @submitTriger="submitTriger" />
+              <flowTriger :flowData="form" @submitTrigger="submitTrigger" />
             </q-card-section>
           {{- end}}
 
@@ -558,6 +593,7 @@
 
   const $q = useQuasar()
   let { proxy } = getCurrentInstance()
+  const filterVisible = ref(false)
   const dialogVisible = ref(false)
   const dataList = ref([])
   const formType = ref("")
@@ -596,6 +632,19 @@
     page: 1,
     rowsPerPage: 10,
     rowsNumber: 0,
+    searchKey: '',
+  {{- if .IsFlow }}
+    flowStatus: '',
+  {{- end }}
+    {{- range  .Columns }}
+    {{- if .DictType }}
+    {{.FieldJson}}: '',
+    {{- else if  .FkTable}}
+    {{.FieldJson}}: '',
+    {{- else if  eq  .DataType "bool" }}
+    {{.FieldJson}}: '',
+    {{- end }}
+    {{- end }}
   })
   const columns = computed(() => {
     return [
@@ -635,7 +684,7 @@
       {{- if .IsFlow }}
       flowStatusOptions.value = await getDict('flowStatus')
       {{- end}}
-    onRequest()
+      await onRequest()
   })
 
   const reset = () => {
@@ -645,6 +694,19 @@
       page: 1,
       rowsPerPage: 10,
       rowsNumber: 0,
+      searchKey: '',
+      {{- if .IsFlow }}
+        flowStatus: '',
+      {{- end }}
+      {{- range  .Columns }}
+      {{- if .DictType }}
+      {{.FieldJson}}: '',
+      {{- else if  .FkTable}}
+      {{.FieldJson}}: '',
+      {{- else if  eq  .DataType "bool" }}
+      {{.FieldJson}}: '',
+      {{- end }}
+      {{- end }}
     }
     form.value = {
       enabled: true,
@@ -669,21 +731,17 @@
       val.pagination = pagination.value
     }
     if (!val.filter) {
-      val.filter = searchKey.value
+        val.filter = pagination.value.searchKey
+    } else {
+        pagination.value.searchKey = val.filter
     }
-    const { page, rowsPerPage, sortBy, descending } = val.pagination
-    let queryReq = {}
+    const { page, rowsPerPage } = val.pagination
+    let queryReq = pagination.value
     queryReq.pageSize = rowsPerPage
     queryReq.pageIndex = page
-    queryReq.sortBy = sortBy
-    queryReq.descending = descending
+
     queryReq.searchKey = val.filter
 
-      {{- if .IsFlow }}
-      if (flowStatus.value) {
-          queryReq.status = flowStatus.value
-      }
-      {{- end}}
 
     let table = await list{{.Table}}(queryReq)
 
@@ -704,6 +762,12 @@
             } selected of ${dataList.value.length}`
   }
 
+  const filterSearch = () => {
+      let val = {}
+      val.pagination = pagination.value
+      onRequest(val)
+  }
+
   const create = () => {
     reset()
     formType.value = "新建"
@@ -714,15 +778,15 @@
     let req = {
         id: p.id,
     }
-    let res = await get{{.Table}}(req)
-    form.value = res
+    form.value = await get{{.Table}}(req)
+
     formType.value = "编辑"
     dialogVisible.value = true
   }
 
   const del = async (p) => {
     await delete{{.Table}}(p)
-    onRequest()
+    await onRequest()
   }
 
   const delList = async () => {
@@ -730,20 +794,20 @@
         idList: getIds(selected.value),
     }
     await deleteList{{.Table}}(req)
-    onRequest()
+    await onRequest()
   }
   const submit = async () => {
     // const res = undefined
     if (formType.value === "编辑") {
-      let res = await update{{.Table}}(form.value)
+      await update{{.Table}}(form.value)
     } else if (formType.value === "新建") {
-      let res = await create{{.Table}}(form.value)
+      await create{{.Table}}(form.value)
     } else {
       proxy.$error("请求错误")
     }
     dialogVisible.value = false
     reset()
-    onRequest()
+    await onRequest()
   }
   const updateFile = (val) => {
     form.value.upFileName = val.name
@@ -754,13 +818,11 @@
   const exportTemplateUrl = '/{{.Db}}/{{.TableUrl}}/exportTemplate'
   const handleExport = () => {
     let queryReq = {}
-    let val = {}
-    val.pagination = pagination.value
+    let val = pagination.value
+
     queryReq.pageSize = val.pagination.rowsPerPage
     queryReq.pageIndex = val.pagination.page
-    queryReq.sortBy = val.pagination.sortBy
-    queryReq.descending = val.pagination.descending
-    queryReq.searchKey = searchKey.value
+
     downloadAction(exportUrl, '{{.TableComment}}-导出.xlsx', queryReq)
   }
 
@@ -768,9 +830,9 @@
     downloadAction(exportTemplateUrl, '{{.TableComment}}模板.xlsx')
   }
 
-  const uploadFn = async (val) => {
+  const resetQuery = async () => {
     reset()
-    onRequest()
+    await onRequest()
   }
   {{- end }}
 
@@ -802,17 +864,15 @@ const triggerHandle = async (p) => {
     let req = {
         id: p.id,
     }
-    let res = await getTheme(req)
-    form.value = res
-
+    form.value = = await get{{.Table}}(req)
     formType.value = '流程审批'
     dialogVisible.value = true
 }
-const submitTriger = async () => {
+const submitTrigger = async () => {
   await trigger(form.value.currentNode)
   dialogVisible.value = false
   reset()
-  onRequest()
+  await onRequest()
 }
 const isFlow = computed(() => {
   let val = false

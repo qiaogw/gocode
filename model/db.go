@@ -190,8 +190,10 @@ func (c *ColumnData) Convert(tableComment string) (*Table, error) {
 	pageSize.DataType = "int"
 	pageSize.GormName = "-"
 	pageSize.IsPage = true
+
 	c.Columns = append(c.Columns, &Column{DbColumn: &pageIndex}, &Column{DbColumn: &pageSize})
 	ct := 0
+
 	for _, each := range c.Columns {
 		//log.Printf("each.name is %s,is pk is %+v\n", each.Name, each.IsPk)
 		if each.Name == "create_by" {
