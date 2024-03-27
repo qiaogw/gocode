@@ -79,7 +79,7 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 
 		tb.IsAuth = true
 		tb.IsImport = true
-		//tb.IsFlow = true
+		tb.IsFlow = global.GenConfig.AutoCode.IsFlow
 		if tb.IsFlow {
 			db.IsFlow = true
 		}

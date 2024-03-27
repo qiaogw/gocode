@@ -27,6 +27,7 @@ type Autocode struct {
 	Pkg       string
 	CoverFile []string
 	WithCache bool
+	IsFlow    bool
 }
 
 // GeneralDB  Pgsql 和 Mysql 原样使用
