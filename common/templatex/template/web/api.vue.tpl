@@ -128,22 +128,39 @@
             </q-btn-group>
           </div>
           <div v-show="filterVisible" class="row no-wrap full-width">
+            {{-  if  $isTableFlow}}
+            <q-select
+                    class="col-2 q-pr-sm q-py-sm"
+                    outlined
+                    dense
+                    map-options
+                    emit-value
+                    clearable
+                    v-model="pagination.flowStatus"
+                    :options="flowStatusOptions"
+                    label="流程状态"
+                    @update:model-value="filterSearch"
+            />
+            {{- end}}
             {{- range  .Columns }}
                 {{- if .DictType }}
-                  <q-select
-                          class="col-2 q-pr-sm q-py-sm"
-                          outlined
-                          dense
-                          clearable
-                          map-options
-                          emit-value
-                          option-value="value"
-                          option-label="label"
-                          v-model="pagination.{{.FieldJson}}"
-                          :options="{{.DictType}}Options"
-                          label="{{.ColumnComment}}"
-                          @update:model-value="filterSearch"
-                  />
+                  {{- if eq .FieldJson "flowStatus" }}
+                  {{- else }}
+                    <q-select
+                            class="col-2 q-pr-sm q-py-sm"
+                            outlined
+                            dense
+                            clearable
+                            map-options
+                            emit-value
+                            option-value="value"
+                            option-label="label"
+                            v-model="pagination.{{.FieldJson}}"
+                            :options="{{.DictType}}Options"
+                            label="{{.ColumnComment}}"
+                            @update:model-value="filterSearch"
+                    />
+                  {{- end}}
                 {{- else if  .FkTable}}
                   <q-select
                           class="col-2 q-pr-sm q-py-sm"
@@ -158,13 +175,16 @@
                           @update:model-value="filterSearch"
                   />
                 {{- else if  eq  .DataType "bool" }}
-                  <q-toggle
-                          label="{{.ColumnComment}}"
-                          color="green"
-                          class="col-2 q-pr-sm q-py-sm"
-                          v-model="pagination.{{.FieldJson}}"
-                          @update:model-value="filterSearch"
-                  />
+                    {{- if eq .FieldJson "flowStatus" }}
+                    {{- else }}
+                      <q-toggle
+                              label="{{.ColumnComment}}"
+                              color="green"
+                              class="col-2 q-pr-sm q-py-sm"
+                              v-model="pagination.{{.FieldJson}}"
+                              @update:model-value="filterSearch"
+                      />
+                    {{- end}}
                 {{- end }}
             {{- end }}
           </div>
@@ -602,13 +622,16 @@
   const dictOptions = ref({})
   {{- range  .Columns }}
   {{- if .DictType }}
+  {{- if eq .FieldJson "flowStatus" }}
+  {{- else }}
   const {{.DictType}}Options = ref([])
   const format{{.DictType}} = (prop) => {
-    if (!prop) {
-      prop = false
-    }
-    return getDictLabel(dictOptions.value.{{.DictType}}, prop)
+      if (!prop) {
+          prop = false
+      }
+      return getDictLabel(dictOptions.value.{{.DictType}}, prop)
   }
+  {{- end}}
   {{- else if .FkTable}}
   const {{.FkTablePackage}}Options = ref([])
   const format{{.FkTableClass}}= (prop) => {
@@ -638,7 +661,10 @@
   {{- end }}
     {{- range  .Columns }}
     {{- if .DictType }}
-    {{.FieldJson}}: '',
+      {{- if eq .FieldJson "flowStatus" }}
+      {{- else }}
+      {{.FieldJson}}: '',
+      {{- end}}
     {{- else if  .FkTable}}
     {{.FieldJson}}: '',
     {{- else if  eq  .DataType "bool" }}
@@ -671,7 +697,11 @@
     dictOptions.value = await DictOptions()
     {{- range  .Columns }}
     {{- if .DictType }}
-    {{.DictType}}Options.value = await getDict('{{.DictType}}')
+      {{- if eq .FieldJson "flowStatus" }}
+      {{- else }}
+      {{.DictType}}Options.value = await getDict('{{.DictType}}')
+        {{- end}}
+
     {{- else if .FkTable}}
     const queryReq{{.FkTableClass}} = {
       pageIndex: 0,
@@ -700,7 +730,10 @@
       {{- end }}
       {{- range  .Columns }}
       {{- if .DictType }}
-      {{.FieldJson}}: '',
+        {{- if eq .FieldJson "flowStatus" }}
+        {{- else }}
+        {{.FieldJson}}: '',
+        {{- end}}
       {{- else if  .FkTable}}
       {{.FieldJson}}: '',
       {{- else if  eq  .DataType "bool" }}
@@ -864,7 +897,7 @@ const triggerHandle = async (p) => {
     let req = {
         id: p.id,
     }
-    form.value = = await get{{.Table}}(req)
+    form.value = await get{{.Table}}(req)
     formType.value = '流程审批'
     dialogVisible.value = true
 }
