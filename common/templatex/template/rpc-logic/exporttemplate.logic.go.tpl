@@ -25,7 +25,7 @@ func NewExportTemplate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceCo
 		Logger: logx.WithContext(ctx),
 	}
 }
-
+// ExportTemplate{{.Table}} 获取导入模板 {{.TableComment}}
 func (l *ExportTemplate{{.Table}}Logic) ExportTemplate{{.Table}}(in *{{.Db}}.NullRequest) (*{{.Db}}.ExportResponse, error) {
 	var m model.{{.Table}}
 	resp, err := toolx.ExportToWebTemplate(&m, m.TableName())

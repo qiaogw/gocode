@@ -24,7 +24,7 @@ func NewDeleteList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContex
 		svcCtx: svcCtx,
 	}
 }
-
+// DeleteList{{.Table}} 删除多个{{.TableComment}}
 func (l *DeleteList{{.Table}}Logic) DeleteList{{.Table}}(req *types.DeleteList{{.Table}}Request) (resp *types.CommonResponse, err error) {
 
 	_, err = l.svcCtx.{{.Table}}Rpc.DeleteList{{.Table}}(l.ctx, &{{.Db}}.DeleteList{{.Table}}Request{

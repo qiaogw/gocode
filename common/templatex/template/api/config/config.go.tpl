@@ -15,7 +15,9 @@ type Config struct {
     CacheRedis cache.ClusterConf
 
     {{.Service}}Rpc zrpc.RpcClientConf
+{{- if .IsFlow }}
     AdminRpc zrpc.RpcClientConf
     FsmRpc   zrpc.RpcClientConf
-
+    GencodeRpc zrpc.RpcClientConf
+{{- end }}
 }

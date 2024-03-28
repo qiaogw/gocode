@@ -27,6 +27,8 @@ Auth:
      {{- end }}
     Key: {{.Package}}.rpc
 
+
+{{- if .IsFlow }}
 AdminRpc:
   App: admin                          # App 标识
   Token: 6jKNZbEpYGeUMAifz10gOnmoty3TV  # Token 值
@@ -47,6 +49,17 @@ FsmRpc:
      {{- end }}
     Key: fsm.rpc
 
+GencodeRpc:
+  App: gencode                          # App 标识
+  Token: sub-gencode  # Token 值
+  Etcd:
+    Hosts:
+{{- range  .Option.Etcd.Hosts }}
+      - {{.}}
+{{- end }}
+    Key: gencode.rpc
+
+{{- end }}
 Prometheus:
   Host: 0.0.0.0
   Port: 9081

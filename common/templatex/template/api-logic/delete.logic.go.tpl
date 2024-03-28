@@ -25,8 +25,8 @@ func NewDelete{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
+// Delete{{.Table}} 删除{{.TableComment}}
 func (l *Delete{{.Table}}Logic) Delete{{.Table}}(req *types.Delete{{.Table}}Request) (resp *types.CommonResponse, err error) {
-
 	_, err = l.svcCtx.{{.Table}}Rpc.Delete{{.Table}}(l.ctx, &{{.Db}}.Delete{{.Table}}Request{
 		{{- range  .Columns }}
 			{{- if .IsPk }}
@@ -37,8 +37,7 @@ func (l *Delete{{.Table}}Logic) Delete{{.Table}}(req *types.Delete{{.Table}}Requ
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
-	
-	return &types.CommonResponse{
+return &types.CommonResponse{
 	Code: errx.Success,
 	Msg: "删除成功",
 }, nil

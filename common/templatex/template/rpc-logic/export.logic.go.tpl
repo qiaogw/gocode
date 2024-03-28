@@ -27,7 +27,7 @@ func NewExport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 		Logger: logx.WithContext(ctx),
 	}
 }
-
+// Export{{.Table}}  导出{{.TableComment}}
 func (l *Export{{.Table}}Logic) Export{{.Table}}(in *{{.Db}}.ExportRequest) (*{{.Db}}.ExportResponse, error) {
 	var qData model.List{{.Table}}Req
 	qData.PageIndex = in.PageIndex

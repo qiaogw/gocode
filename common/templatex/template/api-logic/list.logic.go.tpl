@@ -25,7 +25,7 @@ func NewList{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 		svcCtx: svcCtx,
 	}
 }
-
+// List{{.Table}} 查询{{.TableComment}}
 func (l *List{{.Table}}Logic) List{{.Table}}(req *types.List{{.Table}}Request) (resp *types.CommonResponse, err error) {
   token := jwtx.GetTokenStrFromCtx(l.ctx)
 	res, err := l.svcCtx.{{.Table}}Rpc.List{{.Table}}(l.ctx, &{{.Db}}.List{{.Table}}Request{

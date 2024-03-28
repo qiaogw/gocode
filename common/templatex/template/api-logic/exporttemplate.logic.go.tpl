@@ -25,6 +25,7 @@ func NewExportTemplate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceCo
 	}
 }
 
+// ExportTemplate{{.Table}} 获取导入模板{{.TableComment}}
 func (l *ExportTemplate{{.Table}}Logic) ExportTemplate{{.Table}}(req *types.NullRequest) (resp []byte, err error) {
 	res, err := l.svcCtx.{{.Table}}Rpc.ExportTemplate{{.Table}}(l.ctx, &{{.Db}}.NullRequest{})
 	if err != nil {

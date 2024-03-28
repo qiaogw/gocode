@@ -33,7 +33,7 @@ func NewTriggerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TriggerLo
 		svcCtx: svcCtx,
 	}
 }
-
+// Trigger 流程转换{{.TableComment}}
 func (l *TriggerLogic) Trigger(req *types.UpdateNodeInstanceRequest) (resp *types.CommonResponse, err error) {
 	userId := jwtx.GetUserIdFromCtx(l.ctx)
 	var nodeReq fsm.UpdateNodeInstanceRequest
@@ -45,7 +45,7 @@ func (l *TriggerLogic) Trigger(req *types.UpdateNodeInstanceRequest) (resp *type
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
 
-	data, err := l.svcCtx.{{.Table}}Rpc.Get{{.Table}}(l.ctx, &cms.Get{{.Table}}Request{
+	data, err := l.svcCtx.{{.Table}}Rpc.Get{{.Table}}(l.ctx, &{{.Db}}.Get{{.Table}}Request{
 		Id: res.BusyId,
 	})
 	if err != nil {

@@ -25,7 +25,7 @@ func NewImport{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 		svcCtx: svcCtx,
 	}
 }
-
+// Import{{.Table}} 导入{{.TableComment}}
 func (l *Import{{.Table}}Logic) Import{{.Table}}(req *types.ImportRequest) (resp *types.CommonResponse, err error) {
 	ioReaderData := req.UpFile.(io.Reader)
 	buf := &bytes.Buffer{}

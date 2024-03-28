@@ -162,7 +162,7 @@ service {{.Table}} {
     rpc Import{{.Table}}(ExportResponse) returns(NullResponse);
 {{ end}}
 {{- if .IsFlow }}
-    rpc GetBusyName(NullRequest) returns(BusyNameResponse);
+    rpc GetBusyName{{.Table}}(NullRequest) returns(BusyNameResponse);
 {{- end}}
 }
 {{ end}}

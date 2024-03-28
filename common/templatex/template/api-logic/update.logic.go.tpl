@@ -24,7 +24,7 @@ func NewUpdate{{.Table}}Logic(ctx context.Context, svcCtx *svc.ServiceContext) *
 		svcCtx: svcCtx,
 	}
 }
-
+// Update{{.Table}} 更新{{.TableComment}}
 func (l *Update{{.Table}}Logic) Update{{.Table}}(req *types.Update{{.Table}}Request) (resp *types.CommonResponse, err error) {
 	userId := jwtx.GetUserIdFromCtx(l.ctx)
 	_, err = l.svcCtx.{{.Table}}Rpc.Update{{.Table}}(l.ctx, &{{.Db}}.Update{{.Table}}Request{

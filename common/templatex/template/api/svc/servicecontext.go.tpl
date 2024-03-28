@@ -13,6 +13,7 @@ import (
 	"{{.Pkg}}/admin/rpc/client/user"
 	"{{.Pkg}}/fsm/rpc/client/flow"
 	"{{.Pkg}}/fsm/rpc/client/flowinstance"
+	"{{.Pkg}}/gencode/rpc/gencodeclient"
 {{- end}}
 )
 
@@ -26,6 +27,7 @@ type ServiceContext struct {
 	UserRpc         user.User
 	FlowInstanceRpc flowinstance.FlowInstance
 	FlowRpc         flow.Flow
+	GencodeRpc      gencodeclient.Gencode
 {{- end}}
 
 }
@@ -41,6 +43,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FlowInstanceRpc: flowinstance.NewFlowInstance(zrpc.MustNewClient(c.FsmRpc)),
 		UserRpc:         user.NewUser(zrpc.MustNewClient(c.AdminRpc)),
 		FlowRpc:         flow.NewFlow(zrpc.MustNewClient(c.FsmRpc)),
+		GencodeRpc:      gencodeclient.NewGencode(zrpc.MustNewClient(c.GencodeRpc)),
 {{- end}}
 	}
 }
