@@ -118,7 +118,6 @@ func (acd *AutoCodeService) Code(modeGen bool) (db model.Db, tables []model.Tabl
 			log.Printf("CreateRpc err is %v\n", err)
 			return
 		}
-
 	}
 	err = acd.CreateRpcLogic(&db)
 	if err != nil {

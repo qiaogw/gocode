@@ -44,10 +44,6 @@ type (
 		Name         string //表名
 		PackageName  string //表首字母小写驼峰
 		TableUrl     string //url 表全小写
-		HasTimer     bool   //存在时间
-		HasCacheKey  bool   //存在非主键的唯一键
-		NeedValid    bool
-		PostgreSql   bool
 		TableComment string `json:"table_comment" gorm:"column:table_comment"`
 		Author       string
 		Email        string
@@ -55,6 +51,10 @@ type (
 		Pkg          string //根目录
 		Service      string //服务名，首字母大写驼峰
 		Dir          string //服务目录，全部小写
+		HasTimer     bool   //存在时间
+		HasCacheKey  bool   //存在非主键的唯一键
+		NeedValid    bool
+		PostgreSql   bool
 		IsCurd       bool
 		IsAuth       bool
 		IsImport     bool

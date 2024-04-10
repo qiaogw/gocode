@@ -13,7 +13,7 @@ const (
 func afterZeroGorm(db *gorm.DB) {
 	// Error
 	if db.Error != nil {
-		logx.Info(db.Error)
+		logx.Error(db.Error)
 	}
 	// sql
 	logx.Infof(db.Statement.SQL.String(), db.Statement.Vars...)

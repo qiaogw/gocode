@@ -1,4 +1,4 @@
-Name: {{.Package}}-api
+Name: {{.Package}}
 Host: {{.Option.System.ApiHost}}
 Port: {{.Option.System.ApiPort}}
 Mode: dev

@@ -37,7 +37,7 @@ func (l *Create{{.Table}}Logic) Create{{.Table}}(in *{{.Db}}.Create{{.Table}}Req
 	// 判断该{{.Field}}记录是否已经存在
 	_, err := l.svcCtx.{{$table}}Model.FindOneBy{{.Field}}(l.ctx,in.{{.Field}})
 	if err == nil {
-		return nil, errors.Wrapf(errx.NewErrCode(errx.Duplicate), "该{{$tableComment}}已存在")
+		return nil, errx.NewErrCodeMsg(errx.ErrReq, "该{{$tableComment}}已存在")
 	}
 {{- end}}
 
@@ -66,6 +66,6 @@ new{{.Table}} := model.{{.Table}}{
 	}
 	var rep {{.Db}}.Create{{.Table}}Response
 	_ = copier.Copy(&rep, res)
-	rep.BusyName = l.svcCtx.ThemeModel.GetName()
+	rep.BusyName = l.svcCtx.{{.Table}}.GetName()
 	return &rep, nil
 }

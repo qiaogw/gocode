@@ -33,9 +33,9 @@ func (l *Update{{.Table}}Logic) Update{{.Table}}(in *{{.Db}}.Update{{.Table}}Req
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if err == modelx.ErrNotFound {
-			return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "该{{.TableComment}}不存在，id: %v", in.Id)
+			return nil, errx.NewErrCodeMsg(errx.ErrReq, "该{{.TableComment}}不存在")
 		}
-		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "数据库查询 {{.TableComment}} 失败，id: %v,err:%v", in.Id,err)
+		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData), "数据库查询 {{.TableComment}} 失败: %v",err)
 	}
 	{{- range  .Columns }}
 		{{-  if .IsModelTime -}}

@@ -33,8 +33,7 @@ func (l *Get{{.Table}}Logic) Get{{.Table}}(in *{{.Db}}.Get{{.Table}}Request) (*{
 	res, err := l.svcCtx.{{.Table}}Model.FindOne(l.ctx, in.Id)
 	if err != nil {
 		if err == modelx.ErrNotFound {
-return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
-"该{{.TableComment}}不存在，id is %v", in.Id)
+return nil, errx.NewErrCodeMsg(errx.ErrReq, "该{{.TableComment}}不存在")
 		}
 		return nil, errors.Wrapf(errx.NewErrCode(errx.NoData),
 "数据库提取 {{.TableComment}} 失败:%v",err)
