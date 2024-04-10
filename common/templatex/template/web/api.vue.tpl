@@ -851,10 +851,8 @@
   const exportTemplateUrl = '/{{.Db}}/{{.TableUrl}}/exportTemplate'
   const handleExport = () => {
     let queryReq = {}
-    let val = pagination.value
-
-    queryReq.pageSize = val.pagination.rowsPerPage
-    queryReq.pageIndex = val.pagination.page
+      queryReq.pageSize = pagination.value.rowsPerPage
+      queryReq.pageIndex = pagination.value.page
 
     downloadAction(exportUrl, '{{.TableComment}}-导出.xlsx', queryReq)
   }
