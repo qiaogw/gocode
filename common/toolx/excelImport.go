@@ -60,12 +60,12 @@ func (excel *ExcelStruct) ReadExcelIo(tx *gorm.DB, file io.Reader) error {
 	if err != nil {
 		return err
 	}
-	if excel.IdIsInt{
+	if excel.IdIsInt {
 		err = excel.GenDataInt(tx)
 		if err != nil {
 			return err
 		}
-	}else {
+	} else {
 		err = excel.GenDataChar(tx)
 		if err != nil {
 			return err
