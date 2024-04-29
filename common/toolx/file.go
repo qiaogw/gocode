@@ -3,6 +3,7 @@ package toolx
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"github.com/qiaogw/gocode/util"
 	"io"
 	"os"
@@ -145,25 +146,34 @@ func WriteFileString(path, info string, coverType bool) (err error) {
 
 // WriteFileByte 写入Byte文件内容
 // coverType true 覆盖写入，false 追加写入
-func WriteFileByte(path string, info []byte, coverType bool) (err error) {
-	var fl *os.File
-	flag := os.O_APPEND | os.O_WRONLY
+func WriteFileByte(path string, info []byte, coverType bool) error {
+	var flag int
 	if coverType {
-		flag = os.O_APPEND | os.O_TRUNC | os.O_WRONLY
-	}
-	if util.FileExist(path) { //如果文件存在
-		fl, err = os.OpenFile(path, flag, os.ModePerm) //打开文件
+		flag = os.O_WRONLY | os.O_CREATE | os.O_TRUNC
 	} else {
-		fl, err = os.Create(path) //创建文件
+		flag = os.O_APPEND | os.O_WRONLY | os.O_CREATE
+	}
+
+	// OpenFile 能够处理文件的创建和打开
+	fl, err := os.OpenFile(path, flag, 0666) // 0666 提供普通文件权限
+	if err != nil {
+		return fmt.Errorf("%s 打开文件失败: %v", path, err)
 	}
 	defer fl.Close()
-	if err != nil {
-		// err = errors.New(path + "打开文件失败！")
-		return
+
+	// 写入信息到文件
+	if _, err = fl.Write(info); err != nil {
+		return fmt.Errorf("%s 写入失败: %v", path, err)
 	}
-	n, err := fl.Write(info)
-	if err == nil && n < len(info) {
-		err = errors.New(path + "写入失败！")
-	}
-	return
+
+	return nil
+}
+
+// TrimPrefixPath 去除目录前缀
+func TrimPrefixPath(fullPath, prefix string) string {
+	// 使用strings.TrimPrefix移除指定的前缀
+	trimmedPath := strings.TrimPrefix(fullPath, prefix)
+	// 检查结果开头是否有额外的斜杠，并去除
+	trimmedPath = strings.TrimLeft(trimmedPath, "/")
+	return trimmedPath
 }

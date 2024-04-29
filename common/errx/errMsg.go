@@ -20,6 +20,7 @@ func init() {
 	message[ErrAuth] = "无访问权限"
 	message[ErrReq] = "数据请求错误"
 	message[ErrTimeout] = "服务器响应超时"
+	message[FileOrDirectoryNotExist] = "文件或目录不存在"
 }
 
 func MapErrMsg(errcode uint32) string {
