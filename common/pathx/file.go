@@ -5,9 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/qiaogw/gocode/global"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -16,67 +14,64 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// NL defines a new line.
+// 常量定义
 const (
-	NL              = "\n"
-	goctlDir        = ".goctl"
-	gitDir          = ".git"
-	autoCompleteDir = ".auto_complete"
-	cacheDir        = "cache"
+	NL              = "\n"             // 换行符
+	goctlDir        = ".goctl"         // goctl 目录名称
+	gitDir          = ".git"           // git 目录名称
+	autoCompleteDir = ".auto_complete" // 自动补全目录名称
+	cacheDir        = "cache"          // 缓存目录名称
 )
 
-var goctlHome string
+var goctlHome string // 全局变量，用于存储 goctl 的主页路径
 
-// RegisterGoctlHome register goctl home path.
+// RegisterGoctlHome 注册 goctl 的主页路径
 func RegisterGoctlHome(home string) {
 	goctlHome = home
 }
 
-// CreateIfNotExist creates a file if it is not exists.
+// CreateIfNotExist 如果文件不存在，则创建该文件；如果文件已存在，则返回错误
 func CreateIfNotExist(file string) (*os.File, error) {
 	_, err := os.Stat(file)
 	if !os.IsNotExist(err) {
 		return nil, fmt.Errorf("%s already exist", file)
 	}
-
 	return os.Create(file)
 }
 
-// RemoveIfExist deletes the specified file if it is exists.
+// RemoveIfExist 如果指定文件存在，则删除该文件
 func RemoveIfExist(filename string) error {
 	if !FileExists(filename) {
 		return nil
 	}
-
 	return os.Remove(filename)
 }
 
-// RemoveOrQuit deletes the specified file if read a permit command from stdin.
+// RemoveOrQuit 如果指定文件存在，则提示用户输入确认信息，确认后删除该文件；否则直接返回
 func RemoveOrQuit(filename string) error {
 	if !FileExists(filename) {
 		return nil
 	}
-
 	fmt.Printf("%s exists, overwrite it?\nEnter to overwrite or Ctrl-C to cancel...",
 		aurora.BgRed(aurora.Bold(filename)))
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
-
 	return os.Remove(filename)
 }
 
-// FileExists returns true if the specified file is exists.
+// FileExists 判断指定的文件是否存在，存在则返回 true，否则返回 false
 func FileExists(file string) bool {
 	_, err := os.Stat(file)
 	return err == nil
 }
 
-// FileNameWithoutExt returns a file name without suffix.
+// FileNameWithoutExt 返回文件名去除扩展名后的部分
 func FileNameWithoutExt(file string) string {
 	return strings.TrimSuffix(file, filepath.Ext(file))
 }
 
-// GetGoctlHome returns the path value of the goctl, the default path is ~/.goctl, if the path has
-// been set by calling the RegisterGoctlHome method, the user-defined path refers to.
+// GetGoctlHome 返回 goctl 的路径
+// 默认路径为 ~/.goctl，如果通过 RegisterGoctlHome 设置了用户自定义路径，则返回该路径
+// 如果返回的路径存在且不是目录，则将其重命名为旧路径，并创建新的目录
 func GetGoctlHome() (home string, err error) {
 	defer func() {
 		if err != nil {
@@ -96,7 +91,7 @@ func GetGoctlHome() (home string, err error) {
 	return
 }
 
-// GetDefaultGoctlHome returns the path value of the goctl home where Join $HOME with .goctl.
+// GetDefaultGoctlHome 返回默认的 goctl 主页路径，即将 $HOME 与 .goctl 拼接后的结果
 func GetDefaultGoctlHome() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -105,165 +100,72 @@ func GetDefaultGoctlHome() (string, error) {
 	return filepath.Join(home, goctlDir), nil
 }
 
-// GetGitHome returns the git home of goctl.
+// GetGitHome 返回 goctl 下的 git 目录路径
 func GetGitHome() (string, error) {
 	goctlH, err := GetGoctlHome()
 	if err != nil {
 		return "", err
 	}
-
 	return filepath.Join(goctlH, gitDir), nil
 }
 
-// GetAutoCompleteHome returns the auto_complete home of goctl.
+// GetAutoCompleteHome 返回 goctl 下的自动补全目录路径
 func GetAutoCompleteHome() (string, error) {
 	goctlH, err := GetGoctlHome()
 	if err != nil {
 		return "", err
 	}
-
 	return filepath.Join(goctlH, autoCompleteDir), nil
 }
 
-// GetCacheDir returns the cache dit of goctl.
+// GetCacheDir 返回 goctl 下的缓存目录路径
 func GetCacheDir() (string, error) {
 	goctlH, err := GetGoctlHome()
 	if err != nil {
 		return "", err
 	}
-
 	return filepath.Join(goctlH, cacheDir), nil
 }
 
-// GetTemplateDir returns the category path value in GoctlHome where could get it by GetGoctlHome.
-func GetTemplateDir(category string) (string, error) {
-	home, err := GetGoctlHome()
-	if err != nil {
-		return "", err
-	}
-	if home == goctlHome {
-		// backward compatible, it will be removed in the feature
-		// backward compatible start.
-		beforeTemplateDir := filepath.Join(home, global.GenConfig.System.TemplatePath, category)
-		fs, _ := ioutil.ReadDir(beforeTemplateDir)
-		var hasContent bool
-		for _, e := range fs {
-			if e.Size() > 0 {
-				hasContent = true
-			}
-		}
-		if hasContent {
-			return beforeTemplateDir, nil
-		}
-		// backward compatible end.
-
-		return filepath.Join(home, category), nil
-	}
-
-	return filepath.Join(home, global.GenConfig.System.TemplatePath, category), nil
-}
-
-// InitTemplates creates template files GoctlHome where could get it by GetGoctlHome.
-func InitTemplates(category string, templates map[string]string) error {
-	dir, err := GetTemplateDir(category)
-	if err != nil {
-		return err
-	}
-
-	if err := MkdirIfNotExist(dir); err != nil {
-		return err
-	}
-
-	for k, v := range templates {
-		if err := CreateFile(filepath.Join(dir, k), v, false); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// CreateTemplate writes template into file even it is exists.
-func CreateTemplate(category, name, content string) error {
-	dir, err := GetTemplateDir(category)
-	if err != nil {
-		return err
-	}
-	return CreateFile(filepath.Join(dir, name), content, true)
-}
-
-// Clean deletes all templates and removes the parent directory.
-func Clean(category string) error {
-	dir, err := GetTemplateDir(category)
-	if err != nil {
-		return err
-	}
-	return os.RemoveAll(dir)
-}
-
-// LoadTemplate gets template content by the specified file.
-func LoadTemplate(category, file, builtin string) (string, error) {
-	dir, err := GetTemplateDir(category)
-	if err != nil {
-		return "", err
-	}
-
-	file = filepath.Join(dir, file)
-	if !FileExists(file) {
-		return builtin, nil
-	}
-
-	content, err := ioutil.ReadFile(file)
-	if err != nil {
-		return "", err
-	}
-
-	return string(content), nil
-}
-
-// SameFile compares the between path if the same path,
-// it maybe the same path in case case-ignore, such as:
-// /Users/go_zero and /Users/Go_zero, as far as we know,
-// this case maybe appear on macOS and Windows.
+// SameFile 判断两个路径是否指向同一个文件
+// 该函数考虑了文件系统大小写不敏感的情况，如 macOS 和 Windows 下的路径差异
 func SameFile(path1, path2 string) (bool, error) {
 	stat1, err := os.Stat(path1)
 	if err != nil {
 		return false, err
 	}
-
 	stat2, err := os.Stat(path2)
 	if err != nil {
 		return false, err
 	}
-
 	return os.SameFile(stat1, stat2), nil
 }
 
+// CreateFile 创建文件并写入内容
+// 参数 file 为文件路径，content 为要写入的内容，force 为是否强制覆盖（若文件存在时）
 func CreateFile(file, content string, force bool) error {
 	if FileExists(file) && !force {
 		return nil
 	}
-
 	f, err := os.Create(file)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-
 	_, err = f.WriteString(content)
 	return err
 }
 
-// MustTempDir creates a temporary directory.
+// MustTempDir 创建一个临时目录，创建失败时直接退出程序
 func MustTempDir() string {
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	return dir
 }
 
+// Copy 将源文件 src 复制到目标文件 dest
 func Copy(src, dest string) error {
 	f, err := os.Open(src)
 	if err != nil {
@@ -280,12 +182,14 @@ func Copy(src, dest string) error {
 	if err != nil {
 		return err
 	}
+	// 设置目标文件的权限
 	w.Chmod(os.ModePerm)
 	defer w.Close()
 	_, err = io.Copy(w, f)
 	return err
 }
 
+// Hash 计算指定文件的 MD5 哈希值，并以十六进制字符串返回
 func Hash(file string) (string, error) {
 	f, err := os.Open(file)
 	if err != nil {
@@ -302,24 +206,22 @@ func Hash(file string) (string, error) {
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
+// RenameFilesAndDirWithPrefixAndSuffix 为目录下的所有文件和子目录添加前缀和后缀
+// 递归修改目录内的文件和子目录名称
 func RenameFilesAndDirWithPrefixAndSuffix(dir, prefix, suffix string) error {
 	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}
-
 	for _, file := range files {
 		filePath := filepath.Join(dir, file.Name())
-
 		if file.IsDir() {
-			// 修改子目录的名称
+			// 修改子目录名称
 			newDirName := prefix + file.Name() + suffix
 			newDirPath := filepath.Join(dir, newDirName)
-
 			if err := os.Rename(filePath, newDirPath); err != nil {
 				return err
 			}
-
 			// 递归处理子目录下的文件和子目录
 			if err := RenameFilesWithPrefixAndSuffix(newDirPath, prefix, suffix); err != nil {
 				return err
@@ -328,38 +230,26 @@ func RenameFilesAndDirWithPrefixAndSuffix(dir, prefix, suffix string) error {
 			// 修改文件名
 			fileExt := filepath.Ext(file.Name())
 			fileBase := strings.TrimSuffix(file.Name(), fileExt)
-
 			newName := prefix + fileBase + suffix + fileExt
 			newPath := filepath.Join(dir, newName)
-
 			if err := os.Rename(filePath, newPath); err != nil {
 				return err
 			}
 		}
 	}
 	return nil
-
 }
 
+// RenameFilesWithPrefixAndSuffix 为指定目录下的所有文件（不递归子目录）添加前缀和后缀
 func RenameFilesWithPrefixAndSuffix(dir, prefix, suffix string) error {
 	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}
-
 	for _, file := range files {
 		filePath := filepath.Join(dir, file.Name())
-
 		if file.IsDir() {
-			// 修改子目录的名称
-			//newDirName := prefix + file.Name() + suffix
-			//newDirPath := filepath.Join(dir, newDirName)
-			//
-			//if err := os.Rename(filePath, newDirPath); err != nil {
-			//	return err
-			//}
-
-			// 递归处理子目录下的文件和子目录
+			// 如果是子目录，则递归处理该子目录内的文件和目录
 			if err := RenameFilesWithPrefixAndSuffix(filePath, prefix, suffix); err != nil {
 				return err
 			}
@@ -367,15 +257,28 @@ func RenameFilesWithPrefixAndSuffix(dir, prefix, suffix string) error {
 			// 修改文件名
 			fileExt := filepath.Ext(file.Name())
 			fileBase := strings.TrimSuffix(file.Name(), fileExt)
-
 			newName := prefix + fileBase + suffix + fileExt
 			newPath := filepath.Join(dir, newName)
-
 			if err := os.Rename(filePath, newPath); err != nil {
 				return err
 			}
 		}
 	}
 	return nil
+}
 
+// CountFiles 遍历指定路径，统计该路径下所有文件的数量（不统计目录）
+func CountFiles(path string) (int64, error) {
+	var count int64
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		// 如果当前项是文件，则计数加一
+		if !info.IsDir() {
+			count++
+		}
+		return nil
+	})
+	return count, err
 }

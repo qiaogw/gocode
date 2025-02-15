@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/qiaogw/gocode/util"
+	"github.com/qiaogw/gocode/common/filex"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
+// FileInsertInfoSeek 在文件中查找指定字符串，并在该字符串所在行后插入新内容
 func FileInsertInfoSeek(fileName, insertInfo, seekInfo string) (err error) {
 	// 打开要操作的文件 os.O_RDWR: 可读可写
 	pwd, _ := os.Getwd()
@@ -49,7 +50,7 @@ func FileInsertInfoSeek(fileName, insertInfo, seekInfo string) (err error) {
 
 	file.Close()
 	tempFile.Close()
-	err = util.FileMove(tempFileName, fileName)
+	err = filex.FileMove(tempFileName, fileName)
 	if err != nil {
 		return
 	}
@@ -61,6 +62,7 @@ func FileInsertInfoSeek(fileName, insertInfo, seekInfo string) (err error) {
 	return
 }
 
+// FileInsertInfoLine 在文件中指定行插入新内容
 func FileInsertInfoLine(fileName, insertInfo string, seekLine int) (err error) {
 	// 打开要操作的文件 os.O_RDWR: 可读可写
 	pwd, _ := os.Getwd()
@@ -101,7 +103,7 @@ func FileInsertInfoLine(fileName, insertInfo string, seekLine int) (err error) {
 
 	file.Close()
 	tempFile.Close()
-	err = util.FileMove(tempFileName, fileName)
+	err = filex.FileMove(tempFileName, fileName)
 	if err != nil {
 		return
 	}
@@ -122,7 +124,7 @@ func WriteFileString(path, info string, coverType bool) (err error) {
 	if coverType {
 		flag = os.O_TRUNC | os.O_WRONLY
 	}
-	if util.FileExist(path) { //如果文件存在
+	if filex.FileExist(path) { //如果文件存在
 		fl, err = os.OpenFile(path, flag, 0666) //打开文件
 		if err != nil {
 			err = errors.New(path + " 打开文件失败！" + err.Error())

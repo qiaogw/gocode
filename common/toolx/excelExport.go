@@ -13,22 +13,25 @@ import (
 )
 
 var (
-	defaultSheetName = "Sheet1" //默认Sheet名称
-	defaultHeight    = 25.0     //默认行高度
+	defaultSheetName = "Sheet1" // 默认的 Sheet 名称
+	defaultHeight    = 25.0     // 默认行高
 )
 
+// ExcelExport 定义了 Excel 导出所需的数据结构，包括 Excel 文件对象、Sheet 名称、参数设置、数据内容及导出路径
 type ExcelExport struct {
-	File      *excelize.File           `json:"file"`
-	SheetName string                   `json:"sheetName"` //可定义默认sheet名称
-	Params    []map[string]string      `json:"params"`
-	Data      []map[string]interface{} `json:"data"`
-	Path      string                   `json:"path"`
+	File      *excelize.File           `json:"file"`      // Excel 文件对象
+	SheetName string                   `json:"sheetName"` // Sheet 名称，可自定义
+	Params    []map[string]string      `json:"params"`    // 参数设置：每个 map 包含 key、title 和 width，用于列设置
+	Data      []map[string]interface{} `json:"data"`      // 数据内容：每行数据为一个 map
+	Path      string                   `json:"path"`      // 导出文件的保存路径
 }
 
+// NewMyExcel 根据传入的 Sheet 名称、标签数据（TagBody）和原始数据创建一个 ExcelExport 对象
 func NewMyExcel(sheetName string, tag TagBody, data interface{}) (*ExcelExport, error) {
 	e := new(ExcelExport)
 	e.SheetName = sheetName
 	e.File = createFile(sheetName)
+	// 根据 tag 中的 Keys 和 Header 构建列参数，每列默认宽度设为20
 	for i, v := range tag.Keys {
 		p := make(map[string]string)
 		p["key"] = v
@@ -36,6 +39,7 @@ func NewMyExcel(sheetName string, tag TagBody, data interface{}) (*ExcelExport, 
 		p["width"] = "20"
 		e.Params = append(e.Params, p)
 	}
+	// 将 data 序列化为 JSON，再反序列化为 []map[string]interface{}
 	dj, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
@@ -45,6 +49,7 @@ func NewMyExcel(sheetName string, tag TagBody, data interface{}) (*ExcelExport, 
 	if err != nil {
 		return nil, err
 	}
+	// 过滤 data 中的字段，只保留 tag 中定义的 key
 	for _, v := range dm {
 		st := make(map[string]interface{})
 		for _, o := range tag.Keys {
@@ -55,7 +60,7 @@ func NewMyExcel(sheetName string, tag TagBody, data interface{}) (*ExcelExport, 
 	return e, nil
 }
 
-// ExportToPath 导出基本的表格
+// ExportToPath 将 Excel 文件导出到指定路径，并返回生成的文件路径及可能的错误
 func (l *ExcelExport) ExportToPath() (string, error) {
 	l.export()
 	name := createFileName()
@@ -64,10 +69,10 @@ func (l *ExcelExport) ExportToPath() (string, error) {
 	return filePath, err
 }
 
+// ExportToWeb 将 Excel 文件导出为字节缓冲区，用于 Web 端下载或预览
 func ExportToWeb(m, list interface{}, name string) (*bytes.Buffer, error) {
-	tag := GetTag(m)
+	tag := GetTag(m) // 获取 TagBody 信息，此函数需在其他地方定义
 	ex, err := NewMyExcel(name, tag, list)
-
 	if err != nil {
 		return nil, err
 	}
@@ -75,11 +80,12 @@ func ExportToWeb(m, list interface{}, name string) (*bytes.Buffer, error) {
 	return ex.File.WriteToBuffer()
 }
 
+// ExportToWebTemplate 生成一个空模板 Excel 文件（只有表头）并返回缓冲区
 func ExportToWebTemplate(m interface{}, name string) (*bytes.Buffer, error) {
 	tag := GetTag(m)
+	// 空数据列表
 	list := make([]map[string]interface{}, 0)
 	ex, err := NewMyExcel(name, tag, list)
-
 	if err != nil {
 		return nil, err
 	}
@@ -87,6 +93,7 @@ func ExportToWebTemplate(m interface{}, name string) (*bytes.Buffer, error) {
 	return ex.File.WriteToBuffer()
 }
 
+// ExportToWebGin 使用 Gin 框架将 Excel 文件导出到浏览器进行下载
 func ExportToWebGin(c *gin.Context, m, list interface{}, name string) {
 	tag := GetTag(m)
 	ex, err := NewMyExcel(name, tag, list)
@@ -96,89 +103,113 @@ func ExportToWebGin(c *gin.Context, m, list interface{}, name string) {
 	ex.ExportToWeb(c)
 }
 
-// ExportToWeb 导出到浏览器。此处使用的gin框架 其他框架可自行修改ctx
+// ExportToWeb (方法) 将 Excel 文件导出到浏览器
+// 设置响应头，指定文件类型和文件名，然后写入缓冲区内容到响应流
 func (l *ExcelExport) ExportToWeb(ctx *gin.Context) {
 	l.export()
 	buffer, _ := l.File.WriteToBuffer()
-	//设置文件类型
+	// 设置文件类型为 Excel 文件
 	ctx.Header("Content-Type", "application/vnd.ms-excel;charset=utf8")
-	//设置文件名称
+	// 设置下载文件名称，并进行 URL 编码
 	ctx.Header("Content-Disposition", "attachment; filename="+url.QueryEscape(createFileName()))
 	_, _ = ctx.Writer.Write(buffer.Bytes())
 }
 
-// 设置首行
+// writeTop 在 Excel 文件中写入表头
 func (l *ExcelExport) writeTop() {
-	topStyle, _ := l.File.NewStyle(`{"font":{"bold":true},"alignment":{"horizontal":"center","vertical":"center"}}`)
+	// 定义表头样式：字体加粗，水平和垂直居中
+	style := excelize.Style{
+		Font: &excelize.Font{
+			Bold: true,
+		},
+		Alignment: &excelize.Alignment{
+			Horizontal: "center",
+			Vertical:   "center",
+		},
+	}
+	topStyle, _ := l.File.NewStyle(&style)
+
 	var word = 1
-	//首行写入
+	// 逐列写入表头数据
 	for _, conf := range l.Params {
 		title := conf["title"]
 		width, _ := strconv.ParseFloat(conf["width"], 64)
 		col, _ := excelize.ColumnNumberToName(word)
 		line := fmt.Sprintf("%s1", col)
-		//设置标题
+		// 写入单元格标题
 		_ = l.File.SetCellValue(l.SheetName, line, title)
-		//列宽
+		// 设置列宽
 		_ = l.File.SetColWidth(l.SheetName, col, col, width)
-		//设置样式
+		// 应用样式
 		_ = l.File.SetCellStyle(l.SheetName, line, line, topStyle)
 		word++
 	}
 }
 
-// 写入数据
+// writeData 将数据行写入 Excel 文件
 func (l *ExcelExport) writeData() {
-	lineStyle, _ := l.File.NewStyle(`{"alignment":{"horizontal":"center","vertical":"center"}}`)
-	//数据写入
-	var j = 2 //数据开始行数
+	// 定义数据行样式：内容水平和垂直居中
+	style := excelize.Style{
+		Alignment: &excelize.Alignment{
+			Horizontal: "center",
+			Vertical:   "center",
+		},
+	}
+	lineStyle, _ := l.File.NewStyle(&style)
+	// 数据从第二行开始写入
+	var j = 2
 	for i, val := range l.Data {
-		//设置行高
+		// 设置当前行的行高为默认值
 		_ = l.File.SetRowHeight(l.SheetName, i+1, defaultHeight)
-		//逐列写入
 		var word = 1
+		// 逐列写入数据
 		for _, conf := range l.Params {
 			valKey := conf["key"]
 			col, _ := excelize.ColumnNumberToName(word)
 			line := fmt.Sprintf("%s%v", col, j)
-			//设置值
+			// 写入单元格数据
 			_ = l.File.SetCellValue(l.SheetName, line, val[valKey])
-			//设置样式
+			// 设置单元格样式
 			_ = l.File.SetCellStyle(l.SheetName, line, line, lineStyle)
 			word++
 		}
 		j++
 	}
-	//设置行高 尾行
+	// 设置最后一行的行高
 	_ = l.File.SetRowHeight(l.SheetName, len(l.Data)+1, defaultHeight)
 }
 
+// export 整体执行 Excel 导出流程，包括写入表头和数据
 func (l *ExcelExport) export() {
 	l.writeTop()
 	l.writeData()
 }
 
+// createFile 根据传入的 Sheet 名称创建一个 Excel 文件对象
+// 如果未指定 Sheet 名称，则使用默认的 Sheet 名称；否则创建指定名称的 Sheet 并删除默认 Sheet
 func createFile(sheetNames ...string) *excelize.File {
 	f := excelize.NewFile()
-	// 创建一个默认工作表
-	//SheetName := defaultSheetName
 	var index int
 	if len(sheetNames) < 1 {
-		index = f.NewSheet(defaultSheetName)
+		index, _ = f.NewSheet(defaultSheetName)
 	} else {
 		for _, s := range sheetNames {
-			index = f.NewSheet(s)
+			index, _ = f.NewSheet(s)
 		}
-		f.DeleteSheet(defaultSheetName)
+		err := f.DeleteSheet(defaultSheetName)
+		if err != nil {
+			return nil
+		}
 	}
-	//index := f.NewSheet(sheetName)
-	// 设置工作簿的默认工作表
+	// 设置默认激活的工作表
 	f.SetActiveSheet(index)
 	return f
 }
 
+// createFileName 根据当前时间和随机数生成一个唯一的 Excel 文件名
 func createFileName() string {
 	name := time.Now().Format("2006-01-02-15-04-05")
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 	return fmt.Sprintf("excle-%v-%v.xlsx", name, rand.Int63n(time.Now().Unix()))
 }

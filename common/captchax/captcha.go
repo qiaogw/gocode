@@ -11,7 +11,7 @@ func SetStore(s base64Captcha.Store) {
 	base64Captcha.DefaultMemStore = s
 }
 
-//configJsonBody json request body.
+// configJsonBody json request body.
 type configJsonBody struct {
 	Id            string
 	CaptchaType   string
@@ -30,8 +30,10 @@ func DriverStringFunc() (id, b64s string, err error) {
 		&color.RGBA{240, 240, 246, 246}, nil,
 		[]string{"captcha-haha-mimi"})
 	driver := e.DriverString.ConvertFonts()
-	cap := base64Captcha.NewCaptcha(driver, base64Captcha.DefaultMemStore)
-	return cap.Generate()
+	// 创建验证码实例，并生成验证码
+	capt := base64Captcha.NewCaptcha(driver, base64Captcha.DefaultMemStore)
+	id, b64s, _, err = capt.Generate()
+	return id, b64s, err
 }
 
 func DriverDigitFunc() (id, b64s string, err error) {
@@ -39,8 +41,10 @@ func DriverDigitFunc() (id, b64s string, err error) {
 	e.Id = uuid.New().String()
 	e.DriverDigit = base64Captcha.NewDriverDigit(80, 240, 4, 0.7, 80)
 	driver := e.DriverDigit
-	cap := base64Captcha.NewCaptcha(driver, base64Captcha.DefaultMemStore)
-	return cap.Generate()
+	// 创建验证码实例，并生成验证码
+	capt := base64Captcha.NewCaptcha(driver, base64Captcha.DefaultMemStore)
+	id, b64s, _, err = capt.Generate()
+	return id, b64s, err
 }
 
 // Verify 校验验证码
